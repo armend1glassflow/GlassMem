@@ -1,0 +1,4 @@
+/* Global reset — GlassMemPage.css handles everything else */
+*, *::before, *::after { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; }
