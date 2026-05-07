@@ -18,7 +18,7 @@ const Logo = ({ size = 26 }) => (
   </svg>
 );
 
-/* ── Framework SVG logos (simplified, monochrome) ── */
+/* ── Framework SVG logos ── */
 const IconCursor = () => (
   <svg viewBox="0 0 24 24" fill="none" className="logos__icon">
     <path d="M5 3l14 9-7 1-4 7L5 3z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
@@ -80,165 +80,181 @@ const IconAutoGen = () => (
 );
 
 const LOGOS = [
-  { Icon: IconCursor,   name: 'Cursor'    },
-  { Icon: IconClaude,   name: 'Claude'    },
-  { Icon: IconCopilot,  name: 'Copilot'   },
-  { Icon: IconWindsurf, name: 'Windsurf'  },
-  { Icon: IconCline,    name: 'Cline'     },
-  { Icon: IconLangChain,name: 'LangChain' },
-  { Icon: IconOpenAI,   name: 'OpenAI'    },
-  { Icon: IconCrewAI,   name: 'CrewAI'    },
-  { Icon: IconAutoGen,  name: 'AutoGen'   },
+  { Icon: IconCursor,    name: 'Cursor'    },
+  { Icon: IconClaude,    name: 'Claude'    },
+  { Icon: IconCopilot,   name: 'Copilot'   },
+  { Icon: IconWindsurf,  name: 'Windsurf'  },
+  { Icon: IconCline,     name: 'Cline'     },
+  { Icon: IconLangChain, name: 'LangChain' },
+  { Icon: IconOpenAI,    name: 'OpenAI'    },
+  { Icon: IconCrewAI,    name: 'CrewAI'    },
+  { Icon: IconAutoGen,   name: 'AutoGen'   },
 ];
 
-/* ── Bento SVG illustrations ── */
-const ArtWrite = () => (
-  <svg width="88" height="72" viewBox="0 0 88 72" fill="none">
-    {/* Storage rectangle */}
-    <rect x="14" y="28" width="60" height="36" rx="5" stroke="rgba(255,255,255,0.22)" strokeWidth="1.5"/>
-    {/* Inner lines representing data */}
-    <line x1="22" y1="40" x2="66" y2="40" stroke="rgba(255,255,255,0.12)" strokeWidth="1"/>
-    <line x1="22" y1="48" x2="54" y2="48" stroke="rgba(255,255,255,0.12)" strokeWidth="1"/>
-    <line x1="22" y1="56" x2="60" y2="56" stroke="rgba(255,255,255,0.12)" strokeWidth="1"/>
-    {/* Arrow down (write = writing INTO storage) */}
-    <line x1="44" y1="6" x2="44" y2="24" stroke="#6ee7b7" strokeWidth="1.5" strokeLinecap="round" strokeDasharray="3 2"/>
-    <path d="M38 19 L44 26 L50 19" stroke="#6ee7b7" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-    {/* Dot on storage top */}
-    <circle cx="44" cy="28" r="2.5" fill="#6ee7b7" opacity="0.8"/>
+/* ── Why agents fail — column art ── */
+const ArtChatMemory = () => (
+  <svg width="96" height="72" viewBox="0 0 96 72" fill="none">
+    <rect x="10" y="10" width="52" height="30" rx="6" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5" fill="rgba(255,255,255,0.03)"/>
+    <line x1="18" y1="22" x2="48" y2="22" stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
+    <line x1="18" y1="30" x2="40" y2="30" stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
+    <path d="M10 40 L18 40" stroke="rgba(255,255,255,0.12)" strokeWidth="1.5" strokeLinecap="round"/>
+    <rect x="34" y="32" width="48" height="28" rx="6" stroke="rgba(255,255,255,0.1)" strokeWidth="1.5" fill="rgba(255,255,255,0.02)" strokeDasharray="4 3"/>
+    <line x1="42" y1="44" x2="72" y2="44" stroke="rgba(255,255,255,0.06)" strokeWidth="1"/>
+    <line x1="42" y1="51" x2="64" y2="51" stroke="rgba(255,255,255,0.06)" strokeWidth="1"/>
+    <text x="80" y="20" textAnchor="middle" fill="rgba(239,68,68,0.6)" fontSize="14" fontFamily="monospace">✕</text>
   </svg>
 );
 
-const ArtRead = () => (
-  <svg width="88" height="72" viewBox="0 0 88 72" fill="none">
-    {/* Storage rectangle */}
-    <rect x="14" y="8" width="60" height="36" rx="5" stroke="rgba(255,255,255,0.22)" strokeWidth="1.5"/>
-    {/* Inner data lines */}
-    <line x1="22" y1="20" x2="66" y2="20" stroke="rgba(255,255,255,0.12)" strokeWidth="1"/>
-    <line x1="22" y1="28" x2="54" y2="28" stroke="#6ee7b7" strokeWidth="1" opacity="0.6"/>
-    <line x1="22" y1="36" x2="60" y2="36" stroke="rgba(255,255,255,0.12)" strokeWidth="1"/>
-    {/* Arrow up (read = pulling OUT) */}
-    <line x1="44" y1="48" x2="44" y2="66" stroke="#6ee7b7" strokeWidth="1.5" strokeLinecap="round" strokeDasharray="3 2"/>
-    <path d="M38 53 L44 46 L50 53" stroke="#6ee7b7" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-    {/* Speed label */}
-    <text x="44" y="70" textAnchor="middle" fill="rgba(110,231,183,0.5)" fontSize="8" fontFamily="monospace">4ms</text>
-  </svg>
-);
-
-const ArtSync = () => (
-  <svg width="100" height="64" viewBox="0 0 100 64" fill="none">
-    {/* Left node */}
-    <rect x="2" y="18" width="28" height="28" rx="5" stroke="rgba(255,255,255,0.22)" strokeWidth="1.5" fill="rgba(255,255,255,0.03)"/>
-    <line x1="10" y1="28" x2="22" y2="28" stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
-    <line x1="10" y1="34" x2="18" y2="34" stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
-    <line x1="10" y1="40" x2="22" y2="40" stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
-    {/* Right node */}
-    <rect x="70" y="18" width="28" height="28" rx="5" stroke="rgba(255,255,255,0.22)" strokeWidth="1.5" fill="rgba(255,255,255,0.03)"/>
-    <line x1="78" y1="28" x2="90" y2="28" stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
-    <line x1="78" y1="34" x2="86" y2="34" stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
-    <line x1="78" y1="40" x2="90" y2="40" stroke="rgba(255,255,255,0.15)" strokeWidth="1"/>
-    {/* Sync line */}
-    <line x1="30" y1="32" x2="70" y2="32" stroke="rgba(110,231,183,0.35)" strokeWidth="1" strokeDasharray="4 3"/>
-    {/* Right arrow */}
-    <path d="M62 27 L70 32 L62 37" stroke="#6ee7b7" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-    {/* Left arrow */}
-    <path d="M38 27 L30 32 L38 37" stroke="#6ee7b7" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-    {/* CRDT label */}
-    <text x="50" y="58" textAnchor="middle" fill="rgba(110,231,183,0.4)" fontSize="8" fontFamily="monospace">CRDT</text>
-  </svg>
-);
-
-const ArtEvents = () => (
-  <svg width="100" height="64" viewBox="0 0 100 64" fill="none">
-    {/* Timeline axis */}
-    <line x1="8" y1="40" x2="92" y2="40" stroke="rgba(255,255,255,0.12)" strokeWidth="1"/>
-    {/* Event blips */}
-    {[16, 30, 46, 60, 76].map((x, i) => (
-      <g key={i}>
-        <line x1={x} y1="40" x2={x} y2={i % 2 === 0 ? 16 : 24} stroke={i % 2 === 0 ? "rgba(110,231,183,0.5)" : "rgba(255,255,255,0.15)"} strokeWidth="1" strokeDasharray="2 2"/>
-        <circle cx={x} cy="40" r={i % 2 === 0 ? 3.5 : 2.5} fill={i % 2 === 0 ? "#6ee7b7" : "rgba(255,255,255,0.2)"}/>
-        {i % 2 === 0 && (
-          <circle cx={x} cy={16} r="4" stroke="rgba(110,231,183,0.4)" strokeWidth="1" fill="rgba(110,231,183,0.08)"/>
-        )}
-      </g>
+const ArtVectors = () => (
+  <svg width="96" height="72" viewBox="0 0 96 72" fill="none">
+    {[[20,20],[48,14],[76,22],[14,50],[52,44],[80,52]].map(([x,y],i) => (
+      <circle key={i} cx={x} cy={y} r="4" stroke="rgba(255,255,255,0.18)" strokeWidth="1.2" fill="rgba(255,255,255,0.04)"/>
     ))}
-    {/* Arrow on timeline */}
-    <path d="M88 37 L93 40 L88 43" stroke="rgba(255,255,255,0.18)" strokeWidth="1" strokeLinecap="round" strokeLinejoin="round" fill="none"/>
-    <text x="50" y="58" textAnchor="middle" fill="rgba(255,255,255,0.18)" fontSize="8" fontFamily="monospace">event stream</text>
+    <circle cx="48" cy="36" r="10" stroke="rgba(255,231,183,0.25)" strokeWidth="1" strokeDasharray="3 2" fill="none"/>
+    <circle cx="48" cy="36" r="6" fill="rgba(255,231,183,0.08)" stroke="rgba(255,231,183,0.3)" strokeWidth="1"/>
+    <line x1="48" y1="14" x2="48" y2="26" stroke="rgba(255,255,255,0.08)" strokeWidth="1"/>
+    <line x1="20" y1="20" x2="38" y2="32" stroke="rgba(255,255,255,0.08)" strokeWidth="1"/>
+    <text x="80" y="20" textAnchor="middle" fill="rgba(239,68,68,0.6)" fontSize="14" fontFamily="monospace">✕</text>
   </svg>
 );
 
-const ArtScopes = () => (
-  <svg width="80" height="72" viewBox="0 0 80 72" fill="none">
-    {/* Outer namespace */}
-    <rect x="4" y="6" width="72" height="60" rx="6" stroke="rgba(255,255,255,0.18)" strokeWidth="1.5"/>
-    <text x="10" y="17" fill="rgba(255,255,255,0.2)" fontSize="8" fontFamily="monospace">tenant</text>
-    {/* Mid namespace */}
-    <rect x="14" y="22" width="52" height="36" rx="5" stroke="rgba(255,255,255,0.22)" strokeWidth="1.2"/>
-    <text x="20" y="33" fill="rgba(255,255,255,0.3)" fontSize="8" fontFamily="monospace">session</text>
-    {/* Inner namespace */}
-    <rect x="24" y="38" width="32" height="14" rx="3" fill="rgba(110,231,183,0.08)" stroke="#6ee7b7" strokeWidth="1.2" opacity="0.8"/>
-    <text x="40" y="47" textAnchor="middle" fill="rgba(110,231,183,0.7)" fontSize="8" fontFamily="monospace">agent</text>
+const ArtToolCalls = () => (
+  <svg width="96" height="72" viewBox="0 0 96 72" fill="none">
+    <rect x="6" y="24" width="28" height="24" rx="5" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5" fill="rgba(255,255,255,0.03)"/>
+    <text x="20" y="39" textAnchor="middle" fill="rgba(255,255,255,0.2)" fontSize="9" fontFamily="monospace">fn()</text>
+    <rect x="62" y="24" width="28" height="24" rx="5" stroke="rgba(255,255,255,0.2)" strokeWidth="1.5" fill="rgba(255,255,255,0.03)"/>
+    <text x="76" y="39" textAnchor="middle" fill="rgba(255,255,255,0.2)" fontSize="9" fontFamily="monospace">ctx</text>
+    <line x1="34" y1="36" x2="48" y2="36" stroke="rgba(239,68,68,0.4)" strokeWidth="1.5" strokeDasharray="3 2"/>
+    <line x1="48" y1="36" x2="62" y2="36" stroke="rgba(239,68,68,0.4)" strokeWidth="1.5" strokeDasharray="3 2"/>
+    <text x="48" y="34" textAnchor="middle" fill="rgba(239,68,68,0.7)" fontSize="14" fontFamily="monospace">✕</text>
   </svg>
 );
 
-const ArtBackends = () => (
-  <svg width="80" height="72" viewBox="0 0 80 72" fill="none">
-    {/* Top cylinder */}
-    <ellipse cx="40" cy="14" rx="26" ry="7" stroke="rgba(255,255,255,0.22)" strokeWidth="1.5" fill="rgba(255,255,255,0.03)"/>
-    <line x1="14" y1="14" x2="14" y2="28" stroke="rgba(255,255,255,0.22)" strokeWidth="1.5"/>
-    <line x1="66" y1="14" x2="66" y2="28" stroke="rgba(255,255,255,0.22)" strokeWidth="1.5"/>
-    <ellipse cx="40" cy="28" rx="26" ry="7" stroke="rgba(255,255,255,0.22)" strokeWidth="1.5" fill="rgba(255,255,255,0.02)"/>
-    {/* Connector */}
-    <line x1="40" y1="35" x2="40" y2="41" stroke="rgba(110,231,183,0.4)" strokeWidth="1.5" strokeDasharray="3 2" strokeLinecap="round"/>
-    {/* Bottom cylinder */}
-    <ellipse cx="40" cy="48" rx="26" ry="7" stroke="rgba(110,231,183,0.5)" strokeWidth="1.5" fill="rgba(110,231,183,0.05)"/>
-    <line x1="14" y1="48" x2="14" y2="62" stroke="rgba(110,231,183,0.5)" strokeWidth="1.5"/>
-    <line x1="66" y1="48" x2="66" y2="62" stroke="rgba(110,231,183,0.5)" strokeWidth="1.5"/>
-    <ellipse cx="40" cy="62" rx="26" ry="7" stroke="rgba(110,231,183,0.5)" strokeWidth="1.5" fill="rgba(110,231,183,0.04)"/>
-    <text x="40" y="66" textAnchor="middle" fill="rgba(110,231,183,0.45)" fontSize="8" fontFamily="monospace">redis · pg</text>
-  </svg>
-);
-
-/* ── Memory table for wide bento cell ── */
-const MemTable = () => {
-  const rows = [
-    { key: 'user_intent',    val: '"book_flight"',    ttl: '90d' },
-    { key: 'last_context',   val: '{id: "9dk21…"}',  ttl: '90d' },
-    { key: 'search_results', val: '["JFK", "LAX"]',  ttl: '1h'  },
-    { key: 'preferences',    val: '{theme: "dark"}',  ttl: '90d' },
-    { key: 'session_state',  val: '"authenticated"',  ttl: '24h' },
+/* ── Memory graph SVG ── */
+const MemoryGraph = () => {
+  const nodes = [
+    { id: 'user',        x: 140, y: 130, label: 'User',        em: true  },
+    { id: 'cafe',        x: 280, y: 60,  label: 'Cafe',        em: false },
+    { id: 'coffee',      x: 380, y: 140, label: 'Flat White',  em: false },
+    { id: 'friday',      x: 240, y: 210, label: 'Friday',      em: false },
+    { id: 'time',        x: 370, y: 240, label: '10AM',        em: false },
+    { id: 'work',        x: 100, y: 230, label: 'Work',        em: false },
+    { id: 'productive',  x: 60,  y: 130, label: 'Productive',  em: false },
   ];
+  const edges = [
+    { from: 'user',    to: 'cafe',       label: 'visits'   },
+    { from: 'user',    to: 'work',       label: 'works at' },
+    { from: 'user',    to: 'productive', label: 'feels'    },
+    { from: 'cafe',    to: 'coffee',     label: 'serves'   },
+    { from: 'user',    to: 'coffee',     label: 'orders'   },
+    { from: 'user',    to: 'friday',     label: 'on'       },
+    { from: 'friday',  to: 'time',       label: 'at'       },
+  ];
+  const nodeMap = Object.fromEntries(nodes.map(n => [n.id, n]));
   return (
-    <div className="mem-table">
-      <div className="mem-table__bar">
-        <span className="mem-table__ns">
-          <span className="mem-table__ns-dot" />
-          namespace: user_42
-        </span>
-        <span className="mem-table__live-tag">LIVE</span>
-      </div>
-      <div className="mem-table__head">
-        <span>key</span>
-        <span>value</span>
-        <span>ttl</span>
-        <span>state</span>
-      </div>
-      {rows.map(r => (
-        <div key={r.key} className="mem-table__row">
-          <span className="mem-table__key">{r.key}</span>
-          <span className="mem-table__val">{r.val}</span>
-          <span className="mem-table__ttl">{r.ttl}</span>
-          <span className="mem-table__live">
-            <span className="mem-table__dot" />
-            live
-          </span>
-        </div>
+    <svg width="100%" viewBox="0 0 460 310" fill="none" style={{ display:'block' }}>
+      {edges.map((e, i) => {
+        const a = nodeMap[e.from];
+        const b = nodeMap[e.to];
+        const mx = (a.x + b.x) / 2;
+        const my = (a.y + b.y) / 2;
+        return (
+          <g key={i}>
+            <line x1={a.x} y1={a.y} x2={b.x} y2={b.y}
+              stroke="rgba(255,255,255,0.08)" strokeWidth="1.5"/>
+            <text x={mx} y={my - 4} textAnchor="middle"
+              fill="rgba(255,255,255,0.2)" fontSize="9"
+              fontFamily="'Fira Code', monospace">{e.label}</text>
+          </g>
+        );
+      })}
+      {nodes.map(n => (
+        <g key={n.id}>
+          <circle cx={n.x} cy={n.y} r={n.em ? 22 : 18}
+            fill={n.em ? 'rgba(110,231,183,0.1)' : 'rgba(255,255,255,0.04)'}
+            stroke={n.em ? '#6ee7b7' : 'rgba(255,255,255,0.16)'}
+            strokeWidth={n.em ? 1.5 : 1}/>
+          <text x={n.x} y={n.y + 4} textAnchor="middle"
+            fill={n.em ? '#6ee7b7' : 'rgba(255,255,255,0.55)'}
+            fontSize={n.em ? 11 : 10}
+            fontFamily="'Inter', sans-serif"
+            fontWeight={n.em ? '600' : '400'}>{n.label}</text>
+        </g>
       ))}
-    </div>
+    </svg>
   );
 };
 
-/* ── Scroll reveal ── */
+/* ── Analytics line chart ── */
+const AnalyticsChart = () => {
+  const pts = [12, 28, 22, 45, 38, 62, 55, 80, 72, 94, 88, 100];
+  const w = 320, h = 100;
+  const padX = 8, padY = 8;
+  const xs = pts.map((_, i) => padX + (i / (pts.length - 1)) * (w - padX * 2));
+  const ys = pts.map(v => h - padY - (v / 100) * (h - padY * 2));
+  const path = xs.map((x, i) => `${i === 0 ? 'M' : 'L'}${x},${ys[i]}`).join(' ');
+  const area = `${path} L${xs[xs.length-1]},${h} L${xs[0]},${h} Z`;
+  return (
+    <svg width="100%" viewBox={`0 0 ${w} ${h}`} fill="none" style={{ display:'block' }}>
+      <defs>
+        <linearGradient id="chartGrad" x1="0" y1="0" x2="0" y2="1">
+          <stop offset="0%" stopColor="#6ee7b7" stopOpacity="0.18"/>
+          <stop offset="100%" stopColor="#6ee7b7" stopOpacity="0"/>
+        </linearGradient>
+      </defs>
+      {[0,25,50,75,100].map(v => {
+        const y = h - padY - (v / 100) * (h - padY * 2);
+        return <line key={v} x1={padX} y1={y} x2={w - padX} y2={y}
+          stroke="rgba(255,255,255,0.05)" strokeWidth="1"/>;
+      })}
+      <path d={area} fill="url(#chartGrad)"/>
+      <path d={path} stroke="#6ee7b7" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
+      <circle cx={xs[xs.length-1]} cy={ys[ys.length-1]} r="3.5" fill="#6ee7b7"/>
+      <circle cx={xs[xs.length-1]} cy={ys[ys.length-1]} r="6" fill="rgba(110,231,183,0.15)"/>
+    </svg>
+  );
+};
+
+/* ── Terminal code ── */
+const CODE_LINES = [
+  { n: 1,  t: [{ c:'#7dd3fc',t:'import'},{c:'#e2e8f0',t:' { GlassMem } '},{c:'#7dd3fc',t:'from'},{c:'#86efac',t:" 'glassmem'"}] },
+  { n: 2,  t: [] },
+  { n: 3,  t: [{ c:'#7dd3fc',t:'const'},{c:'#e2e8f0',t:' mem '},{c:'#94a3b8',t:'='},{c:'#7dd3fc',t:' new'},{c:'#fcd34d',t:' GlassMem'},{c:'#e2e8f0',t:"({ backend: '"},{c:'#86efac',t:'redis'},{c:'#e2e8f0',t:"' })"}] },
+  { n: 4,  t: [] },
+  { n: 5,  t: [{ c:'#64748b',t:'// Write — persists instantly to backend' }] },
+  { n: 6,  t: [{ c:'#7dd3fc',t:'await'},{c:'#e2e8f0',t:' mem.'},{c:'#93c5fd',t:'write'},{c:'#e2e8f0',t:"('user_intent', intent)"}] },
+  { n: 7,  t: [] },
+  { n: 8,  t: [{ c:'#64748b',t:'// Read — 4ms, served from in-process cache' }] },
+  { n: 9,  t: [{ c:'#7dd3fc',t:'const'},{c:'#e2e8f0',t:' ctx '},{c:'#94a3b8',t:'='},{c:'#7dd3fc',t:' await'},{c:'#e2e8f0',t:' mem.'},{c:'#93c5fd',t:'read'},{c:'#e2e8f0',t:"('user_intent')"}] },
+  { n: 10, t: [] },
+  { n: 11, t: [{ c:'#64748b',t:'// Subscribe — react to changes without polling' }] },
+  { n: 12, t: [{ c:'#e2e8f0',t:'mem.'},{c:'#93c5fd',t:'on'},{c:'#e2e8f0',t:"('user_intent', val => agent.update(val))"}] },
+];
+
+const FEATURES = [
+  { name: 'Sub-10ms reads',           desc: 'Served from an in-process cache with async write-through. Your agents never block on state.' },
+  { name: 'CRDT conflict resolution', desc: 'Writes propagate across replicas using a grow-only CRDT. No manual merging, no last-write-wins surprises.' },
+  { name: 'Namespaced isolation',     desc: 'Per-agent, per-session, and per-tenant namespaces built in. No configuration required to isolate workloads.' },
+  { name: 'Streaming event bus',      desc: 'Every mutation emits a typed event. Build reactive pipelines without a single setTimeout or polling loop.' },
+  { name: 'Pluggable backends',       desc: 'In-memory, Redis, PostgreSQL, or Supabase. Swap backends without changing a line of agent code.' },
+  { name: 'OpenTelemetry native',     desc: 'Full trace context on every read and write. Debug exactly where memory adds latency — no guessing.' },
+];
+
+const PLANS = [
+  { tier:'Hobby',      price:'$0',     period:'/mo', desc:'For side projects',     featured:false, feats:['1 project','100K ops / mo','1-day TTL','In-memory backend','Community support'] },
+  { tier:'Pro',        price:'$49',    period:'/mo', desc:'For production agents', featured:true,  feats:['Unlimited projects','10M ops / mo','90-day TTL','Redis + Postgres backends','Streaming events','Priority support'] },
+  { tier:'Enterprise', price:'Custom', period:'',    desc:'For teams at scale',    featured:false, feats:['SLA guarantee','Unlimited ops','Custom TTL','VPC deployment','SOC 2 compliant','Dedicated support'] },
+];
+
+const EVENTS = [
+  { color: '#6ee7b7', method: 'memory.write()',  detail: 'user_42 · intent="book_flight"', ms: '0ms' },
+  { color: '#a3a3a3', method: 'memory.read()',   detail: 'user_42 · cache hit',             ms: '4ms' },
+  { color: '#6ee7b7', method: 'memory.sync()',   detail: 'pool · 3 replicas reconciled',    ms: '8ms' },
+  { color: '#a3a3a3', method: 'event.emit()',    detail: 'key=last_intent · 2 subscribers', ms: '2ms' },
+  { color: '#6ee7b7', method: 'memory.scope()', detail: 'tenant_99 · isolated namespace',   ms: '1ms' },
+];
+
+/* ── Hooks ── */
 function useReveal() {
   useEffect(() => {
     const io = new IntersectionObserver(
@@ -258,61 +274,16 @@ function useCopy(text) {
   return [ok, copy];
 }
 
-/* ── Data ── */
-const EVENTS = [
-  { color: '#6ee7b7', method: 'memory.write()',  detail: 'user_42 · intent="book_flight"',  ms: '0ms' },
-  { color: '#a3a3a3', method: 'memory.read()',   detail: 'user_42 · cache hit',              ms: '4ms' },
-  { color: '#6ee7b7', method: 'memory.sync()',   detail: 'pool · 3 replicas reconciled',     ms: '8ms' },
-  { color: '#a3a3a3', method: 'event.emit()',    detail: 'key=last_intent · 2 subscribers',  ms: '2ms' },
-  { color: '#6ee7b7', method: 'memory.scope()', detail: 'tenant_99 · isolated namespace',    ms: '1ms' },
-];
-
-const PROBLEMS = [
-  { num: '01', title: 'State evaporates between calls', text: 'Every invocation starts cold. Your agent re-fetches facts, re-derives context, and burns tokens on reasoning it already completed — every single time.' },
-  { num: '02', title: 'Redundant compute compounds at scale', text: 'Without shared memory, every agent in your pool duplicates work independently. At 1,000 RPM, you pay for the same inference 1,000 times.' },
-  { num: '03', title: 'Multi-agent coordination is fragile', text: 'Multi-agent pipelines need a shared source of truth. Bolting Redis on top gives you race conditions and stale reads. GlassMem solves this at the primitive level.' },
-];
-
-const CODE_LINES = [
-  { n: 1,  t: [{ c:'#7dd3fc',t:'import'},{c:'#e2e8f0',t:' { GlassMem } '},{c:'#7dd3fc',t:'from'},{c:'#86efac',t:" 'glassmem'"}] },
-  { n: 2,  t: [] },
-  { n: 3,  t: [{ c:'#7dd3fc',t:'const'},{c:'#e2e8f0',t:' mem '},{c:'#94a3b8',t:'='},{c:'#7dd3fc',t:' new'},{c:'#fcd34d',t:' GlassMem'},{c:'#e2e8f0',t:"({ backend: '"},{c:'#86efac',t:'redis'},{c:'#e2e8f0',t:"' })"}] },
-  { n: 4,  t: [] },
-  { n: 5,  t: [{ c:'#64748b',t:'// Write — persists instantly to backend' }] },
-  { n: 6,  t: [{ c:'#7dd3fc',t:'await'},{c:'#e2e8f0',t:' mem.'},{c:'#93c5fd',t:'write'},{c:'#e2e8f0',t:"('user_intent', intent)"}] },
-  { n: 7,  t: [] },
-  { n: 8,  t: [{ c:'#64748b',t:'// Read — 4ms, served from in-process cache' }] },
-  { n: 9,  t: [{ c:'#7dd3fc',t:'const'},{c:'#e2e8f0',t:' ctx '},{c:'#94a3b8',t:'='},{c:'#7dd3fc',t:' await'},{c:'#e2e8f0',t:' mem.'},{c:'#93c5fd',t:'read'},{c:'#e2e8f0',t:"('user_intent')"}] },
-  { n: 10, t: [] },
-  { n: 11, t: [{ c:'#64748b',t:'// Subscribe — react to changes without polling' }] },
-  { n: 12, t: [{ c:'#e2e8f0',t:'mem.'},{c:'#93c5fd',t:'on'},{c:'#e2e8f0',t:"('user_intent', val => agent.update(val))"}] },
-];
-
-const FEATURES = [
-  { name: 'Sub-10ms reads',       desc: 'Served from an in-process cache with async write-through. Your agents never block on state.' },
-  { name: 'CRDT conflict resolution', desc: 'Writes propagate across replicas using a grow-only CRDT. No manual merging, no last-write-wins surprises.' },
-  { name: 'Namespaced isolation', desc: 'Per-agent, per-session, and per-tenant namespaces built in. No configuration required to isolate workloads.' },
-  { name: 'Streaming event bus',  desc: 'Every mutation emits a typed event. Build reactive pipelines without a single setTimeout or polling loop.' },
-  { name: 'Pluggable backends',   desc: 'In-memory, Redis, PostgreSQL, or Supabase. Swap backends without changing a line of agent code.' },
-  { name: 'OpenTelemetry native', desc: 'Full trace context on every read and write. Debug exactly where memory adds latency — no guessing.' },
-];
-
-const PLANS = [
-  { tier:'Hobby',      price:'$0',     period:'/mo', desc:'For side projects',      featured:false, feats:['1 project','100K ops / mo','1-day TTL','In-memory backend','Community support'] },
-  { tier:'Pro',        price:'$49',    period:'/mo', desc:'For production agents',  featured:true,  feats:['Unlimited projects','10M ops / mo','90-day TTL','Redis + Postgres backends','Streaming events','Priority support'] },
-  { tier:'Enterprise', price:'Custom', period:'',    desc:'For teams at scale',     featured:false, feats:['SLA guarantee','Unlimited ops','Custom TTL','VPC deployment','SOC 2 compliant','Dedicated support'] },
-];
-
 /* ══════════════════════════════════════════════════
    PAGE
 ══════════════════════════════════════════════════ */
 export function GlassMemPage() {
   useReveal();
 
-  const [scrolled, setScrolled] = useState(false);
-  const [mobOpen,  setMobOpen]  = useState(false);
-  const [activeEv, setActiveEv] = useState(0);
-  const [copied,   copy]        = useCopy('npm install glassmem');
+  const [scrolled,  setScrolled]  = useState(false);
+  const [mobOpen,   setMobOpen]   = useState(false);
+  const [activeEv,  setActiveEv]  = useState(0);
+  const [copied,    copy]         = useCopy('npm install glassmem');
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 8);
@@ -328,7 +299,7 @@ export function GlassMemPage() {
   return (
     <div>
 
-      {/* ═══ NAV ═══════════════════════════════════ */}
+      {/* ═══ NAV ════════════════════════════════════ */}
       <nav className="nav" style={{ borderBottomColor: scrolled ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.06)' }}>
         <div className="nav__row">
           <a href="/" className="nav__logo">
@@ -357,7 +328,7 @@ export function GlassMemPage() {
         </div>
       </nav>
 
-      {/* ═══ HERO ══════════════════════════════════ */}
+      {/* ═══ HERO ═══════════════════════════════════ */}
       <section className="hero">
         <div className="hero__fade" />
         <div className="w">
@@ -368,10 +339,10 @@ export function GlassMemPage() {
                 Public beta — v0.4
               </div>
               <h1 className="h1 hero__h1 enter-2">
-                Persistent memory<br />for AI agents
+                Your agent<br />just knows.
               </h1>
               <p className="body-lg hero__sub enter-3">
-                Your agents forget everything between calls. GlassMem gives them sub-10ms read/write memory with automatic sync across replicas — without managing any infrastructure.
+                GlassMem gives AI agents persistent, structured memory — so they remember who users are, what they care about, and what happened last time. No Redis wrangling, no stale context.
               </p>
               <div className="hero__ctas enter-4">
                 <a href="#Pricing" className="btn btn--em btn--lg">Start free</a>
@@ -379,7 +350,7 @@ export function GlassMemPage() {
               </div>
               <button className="hero__install enter-5" onClick={copy}>
                 <span className="hero__install-p">$</span>
-                <span style={{ color:'rgba(255,255,255,0.65)' }}>npm install glassmem</span>
+                <span style={{ color: 'rgba(255,255,255,0.65)' }}>npm install glassmem</span>
                 <span className="hero__install-hint">{copied ? '✓ copied' : 'copy'}</span>
               </button>
             </div>
@@ -390,7 +361,11 @@ export function GlassMemPage() {
                 <span className="hero__panel-live"><span className="hero__panel-dot" />LIVE</span>
               </div>
               <div className="hero__stats">
-                {[{val:'4ms',lbl:'avg read latency'},{val:'100%',lbl:'cache hit rate'},{val:'3',lbl:'active agents'}].map(s => (
+                {[
+                  { val: '4ms',  lbl: 'avg read latency'  },
+                  { val: '100%', lbl: 'cache hit rate'     },
+                  { val: '3',    lbl: 'active agents'      },
+                ].map(s => (
                   <div key={s.lbl} className="hero__stat">
                     <div className="hero__stat-val">{s.val}</div>
                     <div className="hero__stat-lbl">{s.lbl}</div>
@@ -398,9 +373,9 @@ export function GlassMemPage() {
                 ))}
               </div>
               {EVENTS.map((ev, i) => (
-                <div key={i} className="hero__event" style={{ opacity: i === activeEv ? 1 : 0.3, transition:'opacity 0.4s' }}>
+                <div key={i} className="hero__event" style={{ opacity: i === activeEv ? 1 : 0.3, transition: 'opacity 0.4s' }}>
                   <span className="hero__event-dot" style={{ background: ev.color }} />
-                  <div style={{ flex:1, minWidth:0 }}>
+                  <div style={{ flex: 1, minWidth: 0 }}>
                     <div className="hero__event-method" style={{ color: ev.color }}>{ev.method}</div>
                     <div className="hero__event-detail">{ev.detail}</div>
                   </div>
@@ -412,7 +387,7 @@ export function GlassMemPage() {
         </div>
       </section>
 
-      {/* ═══ LOGOS STRIP ═══════════════════════════ */}
+      {/* ═══ LOGOS STRIP ════════════════════════════ */}
       <div className="logos">
         <div className="logos__inner">
           <span className="logos__label">Works with</span>
@@ -429,117 +404,321 @@ export function GlassMemPage() {
         </div>
       </div>
 
-      {/* ═══ PROBLEM ═══════════════════════════════ */}
+      {/* ═══ WHY AGENTS FAIL ════════════════════════ */}
       <section id="Features" className="sec">
         <div className="w">
-          <div className="problem__top reveal">
+          <div className="fail__intro reveal">
             <div>
               <span className="label">The problem</span>
-              <h2 className="h2">Stateless agents<br />are broken by design</h2>
+              <h2 className="h2">Every memory solution<br />has a fatal flaw</h2>
             </div>
-            <p className="body-lg" style={{ maxWidth:'48ch' }}>
-              AI frameworks give you routing, tool use, and streaming — but no memory. You bolt on Redis, hand-write sync logic, debug race conditions, and start again every time requirements change.
+            <p className="body-lg" style={{ maxWidth: '46ch' }}>
+              Teams reach for chat history, vector stores, or custom tool calls. Each solves a narrow slice of the problem — and breaks under real usage patterns.
             </p>
           </div>
-          {PROBLEMS.map((p, i) => (
-            <div key={i} className="problem__item reveal" style={{ transitionDelay:`${i*0.06}s` }}>
-              <span className="problem__num mono">{p.num}</span>
-              <div>
-                <p className="problem__title">{p.title}</p>
-                <p className="body problem__text">{p.text}</p>
+
+          <div className="fail__table reveal">
+            {/* Column 1 — Chat Memory */}
+            <div className="fail__col">
+              <span className="fail__col-tag">Approach 01</span>
+              <div className="fail__col-art"><ArtChatMemory /></div>
+              <p className="fail__col-title">Chat Memory</p>
+              <p className="fail__col-desc">Stuffing prior messages into the context window. Works until it doesn't.</p>
+              <div className="fail__issues">
+                {[
+                  'Context window fills up fast',
+                  'Costs grow with every token',
+                  'No cross-session persistence',
+                  'Breaks multi-agent setups',
+                ].map(issue => (
+                  <div key={issue} className="fail__issue">
+                    <span className="fail__x">✕</span>
+                    <span>{issue}</span>
+                  </div>
+                ))}
               </div>
             </div>
-          ))}
+
+            {/* Column 2 — RAG / Vectors */}
+            <div className="fail__col">
+              <span className="fail__col-tag">Approach 02</span>
+              <div className="fail__col-art"><ArtVectors /></div>
+              <p className="fail__col-title">RAG / Vectors</p>
+              <p className="fail__col-desc">Embedding memories and retrieving by similarity. Powerful for documents, wrong tool for agent state.</p>
+              <div className="fail__issues">
+                {[
+                  'Slow writes block agent flow',
+                  'Fuzzy recall misfires on facts',
+                  'No structured relationships',
+                  'High infra and embedding cost',
+                ].map(issue => (
+                  <div key={issue} className="fail__issue">
+                    <span className="fail__x">✕</span>
+                    <span>{issue}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Column 3 — Tool Calls */}
+            <div className="fail__col">
+              <span className="fail__col-tag">Approach 03</span>
+              <div className="fail__col-art"><ArtToolCalls /></div>
+              <p className="fail__col-title">Tool Calls</p>
+              <p className="fail__col-desc">Letting the agent decide when to save and retrieve. Sounds agentic. Fails constantly.</p>
+              <div className="fail__issues">
+                {[
+                  'LLMs forget to call the tool',
+                  'Non-deterministic on edge cases',
+                  'Doubles latency per turn',
+                  'Invisible to other agents',
+                ].map(issue => (
+                  <div key={issue} className="fail__issue">
+                    <span className="fail__x">✕</span>
+                    <span>{issue}</span>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      {/* ═══ HOW IT WORKS — BENTO GRID ══════════════ */}
+      {/* ═══ BIG CLAIM ══════════════════════════════ */}
+      <div className="claim">
+        <div className="w">
+          <p className="claim__eyebrow reveal">a different approach</p>
+          <h2 className="claim__text reveal">
+            Bring your context.<br />
+            We build <em>understanding.</em><br />
+            Your agent just knows.
+          </h2>
+          <p className="claim__sub reveal">
+            GlassMem structures agent memory as a typed knowledge graph — not a key-value store, not a vector index. Facts, relationships, and timing wired together. Retrieved in 4ms.
+          </p>
+          <div className="claim__ctas reveal">
+            <a href="#Pricing" className="btn btn--em btn--lg">Start free</a>
+            <a href="https://docs.glassmem.ai" className="btn btn--ghost btn--lg">Read the docs</a>
+          </div>
+        </div>
+      </div>
+
+      {/* ═══ ADD / LEARN / RETRIEVE ═════════════════ */}
+      <section className="sec">
+        <div className="w">
+          <div className="alr__grid">
+            {/* Left — steps */}
+            <div>
+              <div className="alr__intro reveal">
+                <span className="label">How it works</span>
+                <h2 className="h2">Three things your<br />agent does with memory</h2>
+                <p className="body-lg" style={{ marginTop: 14, maxWidth: '46ch' }}>
+                  GlassMem sits between your agent and its state. Every interaction leaves a trace. Every future call benefits from it.
+                </p>
+              </div>
+              <div className="alr__steps">
+                {[
+                  {
+                    num: '01',
+                    title: 'Add — capture what matters',
+                    desc: 'After each interaction, GlassMem extracts entities, preferences, and facts. Stored as structured nodes, not raw text.',
+                  },
+                  {
+                    num: '02',
+                    title: 'Learn — build relationships',
+                    desc: 'Connections form between facts over time. The more your agent interacts, the richer the graph — without any manual curation.',
+                  },
+                  {
+                    num: '03',
+                    title: 'Retrieve — recall in 4ms',
+                    desc: 'Every call gets a memory context automatically prepended. Relevant facts, ranked by recency and salience. No vector search, no prompt engineering.',
+                  },
+                ].map((step, i) => (
+                  <div key={i} className="alr__step reveal" style={{ transitionDelay: `${i * 0.07}s` }}>
+                    <span className="alr__step-num">{step.num}</span>
+                    <div>
+                      <p className="alr__step-title">{step.title}</p>
+                      <p className="alr__step-desc">{step.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right — chat mockup */}
+            <div className="alr__mockup reveal">
+              <div className="alr__mockup-bar">
+                <span className="alr__mockup-dot alr__mockup-dot--r" />
+                <span className="alr__mockup-dot alr__mockup-dot--y" />
+                <span className="alr__mockup-dot alr__mockup-dot--g" />
+                <span className="alr__mockup-title">agent · session_7</span>
+              </div>
+              <div className="alr__chat">
+                <div className="alr__msg alr__msg--user">
+                  Book me my usual Friday coffee spot.
+                </div>
+                <div className="alr__msg alr__msg--sys">
+                  Sure — should I book Prufrock at 10AM again?
+                </div>
+                <div className="alr__msg alr__msg--user">
+                  Yes, same as last week.
+                </div>
+              </div>
+              <div className="alr__processing">
+                <span className="alr__processing-dot" />
+                mem.retrieve() · 4ms · 6 nodes matched
+              </div>
+              <div className="alr__memories">
+                <p className="alr__memories-label">recalled context</p>
+                {[
+                  'Prefers Prufrock Cafe',
+                  'Friday · 10AM routine',
+                  'Orders flat white',
+                  'Works nearby on Fridays',
+                  'Productivity-focused mornings',
+                ].map(pill => (
+                  <span key={pill} className="alr__pill">
+                    <span className="alr__pill-dot" />
+                    {pill}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ MEMORY GRAPH ═══════════════════════════ */}
       <section className="sec sec--alt">
         <div className="w">
-          <div className="bento-head reveal">
-            <div>
-              <span className="label">How it works</span>
-              <h2 className="h2">One import.<br />Infinite memory.</h2>
-            </div>
-            <p className="body-lg" style={{ maxWidth:'46ch' }}>
-              GlassMem sits between your agent and its state. Reads hit an in-process cache in under 10ms. Writes propagate to all replicas via a conflict-free CRDT.
-            </p>
-          </div>
-
-          <div className="bento-grid reveal">
-            {/* Row 1 */}
-            <div className="bento-cell">
-              <div className="bento-cell__art"><ArtWrite /></div>
-              <p className="bento-cell__title">Write memory</p>
-              <p className="bento-cell__desc">mem.write() persists a key instantly to your configured backend — in-memory, Redis, or Postgres.</p>
-            </div>
-
-            <div className="bento-cell bento-cell--wide">
-              <div className="mem-table-wrap" style={{ padding:'4px 0 16px' }}>
-                <MemTable />
+          <div className="graph__grid">
+            {/* Left — graph visual */}
+            <div className="graph__visual reveal">
+              <div className="graph__visual-bar">
+                <span className="graph__visual-title">knowledge graph · user_42</span>
+                <span className="graph__visual-live">
+                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#6ee7b7', display: 'inline-block', marginRight: 4, animation: 'pulse 2s ease-in-out infinite' }} />
+                  live
+                </span>
               </div>
-              <p className="bento-cell__title">Live memory namespace</p>
-              <p className="bento-cell__desc">Every key, value, and TTL is visible in real time. Scoped per agent, session, or tenant.</p>
+              <MemoryGraph />
             </div>
 
-            <div className="bento-cell">
-              <div className="bento-cell__art"><ArtRead /></div>
-              <p className="bento-cell__title">Read anywhere</p>
-              <p className="bento-cell__desc">mem.read() returns in 4ms from any agent instance, any region — served from the local cache.</p>
-            </div>
-
-            {/* Row 2 */}
-            <div className="bento-cell">
-              <div className="bento-cell__art"><ArtSync /></div>
-              <p className="bento-cell__title">CRDT sync</p>
-              <p className="bento-cell__desc">Writes converge automatically across all replicas. No manual merging, no race conditions.</p>
-            </div>
-
-            <div className="bento-cell">
-              <div className="bento-cell__art"><ArtEvents /></div>
-              <p className="bento-cell__title">Event stream</p>
-              <p className="bento-cell__desc">Every mutation emits a typed event. Build reactive agent pipelines without polling.</p>
-            </div>
-
-            <div className="bento-cell">
-              <div className="bento-cell__art"><ArtScopes /></div>
-              <p className="bento-cell__title">Namespaces</p>
-              <p className="bento-cell__desc">Per-agent, per-session, per-tenant isolation out of the box. No configuration required.</p>
-            </div>
-
-            <div className="bento-cell">
-              <div className="bento-cell__art"><ArtBackends /></div>
-              <p className="bento-cell__title">Pluggable backends</p>
-              <p className="bento-cell__desc">Swap in-memory for Redis or Postgres without changing a line of agent code.</p>
+            {/* Right — prose + layers */}
+            <div className="graph__prose reveal">
+              <span className="label">Memory architecture</span>
+              <h2 className="h2">Not a flat store.<br />A structured graph.</h2>
+              <p className="body-lg" style={{ marginTop: 14, maxWidth: '44ch' }}>
+                Agents need more than facts. They need to understand how facts relate — who, what, when, and why. GlassMem models this as a typed knowledge graph with four memory layers.
+              </p>
+              <div className="graph__layers">
+                {[
+                  { name: 'Semantic',  desc: 'User preferences, identities, and stable facts. Long TTL.',     tag: 'ttl: 90d'   },
+                  { name: 'Causal',    desc: 'Why things happened. Links between events and outcomes.',        tag: 'ttl: 30d'   },
+                  { name: 'Temporal',  desc: 'When things happen. Routines, recurrence, and timing patterns.', tag: 'ttl: 14d'  },
+                  { name: 'Entity',    desc: 'Named things — people, places, products — with typed relations.', tag: 'typed nodes' },
+                ].map(layer => (
+                  <div key={layer.name} className="graph__layer">
+                    <div>
+                      <p className="graph__layer-name">{layer.name}</p>
+                      <p className="graph__layer-tag">{layer.tag}</p>
+                    </div>
+                    <p className="graph__layer-desc">{layer.desc}</p>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ═══ FEATURES SPLIT ════════════════════════ */}
+      {/* ═══ ANALYTICS ══════════════════════════════ */}
       <section className="sec">
+        <div className="w">
+          <div className="analytics__grid">
+            {/* Left — prose */}
+            <div className="analytics__prose reveal">
+              <span className="label">Observability</span>
+              <h2 className="h2">See exactly what<br />your agents remember</h2>
+              <p className="body-lg" style={{ marginTop: 14, maxWidth: '44ch' }}>
+                Every memory operation is logged, traced, and visible. Know which memories fire most, when context degrades, and where latency hides.
+              </p>
+              <div className="analytics__points">
+                {[
+                  { title: 'Per-agent memory graphs',    desc: 'Inspect what each agent has learned, broken down by memory layer and entity type.'    },
+                  { title: 'Cache hit analytics',         desc: 'Track hit rates over time. Identify cold-start patterns before they become problems.' },
+                  { title: 'OpenTelemetry traces',        desc: 'Every read and write carries full trace context. Plug into your existing stack.'      },
+                ].map(pt => (
+                  <div key={pt.title} className="analytics__point">
+                    <span className="analytics__point-dot" />
+                    <div>
+                      <p className="analytics__point-title">{pt.title}</p>
+                      <p className="analytics__point-desc">{pt.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right — dashboard */}
+            <div className="analytics__dashboard reveal">
+              <div className="analytics__dash-bar">
+                <span className="analytics__dash-title">Memory Analytics</span>
+                <span className="analytics__dash-period">last 30 days</span>
+              </div>
+              <div className="analytics__stats">
+                <div className="analytics__stat">
+                  <div className="analytics__stat-val">12,847</div>
+                  <div className="analytics__stat-lbl">memories stored</div>
+                </div>
+                <div className="analytics__stat">
+                  <div className="analytics__stat-val analytics__stat-em">94.2%</div>
+                  <div className="analytics__stat-lbl">cache hit rate</div>
+                </div>
+                <div className="analytics__stat">
+                  <div className="analytics__stat-val">4ms</div>
+                  <div className="analytics__stat-lbl">avg recall</div>
+                </div>
+              </div>
+              <div className="analytics__chart-area">
+                <div className="analytics__chart-label">
+                  <span>memory recalls / day</span>
+                  <span style={{ color: '#6ee7b7' }}>+38% this month</span>
+                </div>
+                <div className="analytics__chart-wrap">
+                  <AnalyticsChart />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ FEATURES SPLIT ═════════════════════════ */}
+      <section className="sec sec--alt">
         <div className="w">
           <div className="split">
             <div className="split__sticky reveal">
               <span className="label">Under the hood</span>
-              <h2 className="h2" style={{ marginBottom:16 }}>Built for<br />production</h2>
-              <p className="body-lg" style={{ maxWidth:'40ch' }}>
+              <h2 className="h2" style={{ marginBottom: 16 }}>Built for<br />production</h2>
+              <p className="body-lg" style={{ maxWidth: '40ch' }}>
                 GlassMem is not a key-value wrapper. It is a purpose-built memory layer with conflict resolution, streaming, and full observability.
               </p>
-
-              <div className="term" style={{ marginTop:32 }}>
+              <div className="term" style={{ marginTop: 32 }}>
                 <div className="term__bar">
                   <div className="term__dots">
-                    <span className="term__dot term__dot--r"/><span className="term__dot term__dot--y"/><span className="term__dot term__dot--g"/>
+                    <span className="term__dot term__dot--r" />
+                    <span className="term__dot term__dot--y" />
+                    <span className="term__dot term__dot--g" />
                   </div>
                   <span className="term__file">agent.ts</span>
-                  <span style={{width:48}}/>
+                  <span style={{ width: 48 }} />
                 </div>
                 <div className="term__body">
                   {CODE_LINES.map(line => (
                     <div key={line.n} className="term__row">
                       <span className="term__ln">{line.n}</span>
-                      <span>{line.t.map((tok,j) => <span key={j} style={{color:tok.c}}>{tok.t}</span>)}</span>
+                      <span>{line.t.map((tok, j) => <span key={j} style={{ color: tok.c }}>{tok.t}</span>)}</span>
                     </div>
                   ))}
                 </div>
@@ -547,8 +726,8 @@ export function GlassMemPage() {
             </div>
 
             <div className="split__features">
-              {FEATURES.map((f,i) => (
-                <div key={i} className="split__feat reveal" style={{transitionDelay:`${i*0.05}s`}}>
+              {FEATURES.map((f, i) => (
+                <div key={i} className="split__feat reveal" style={{ transitionDelay: `${i * 0.05}s` }}>
                   <p className="split__feat-name">{f.name}</p>
                   <p className="body split__feat-desc">{f.desc}</p>
                 </div>
@@ -558,26 +737,38 @@ export function GlassMemPage() {
         </div>
       </section>
 
-      {/* ═══ PRICING ═══════════════════════════════ */}
-      <section id="Pricing" className="sec sec--alt">
+      {/* ═══ PRICING ════════════════════════════════ */}
+      <section id="Pricing" className="sec">
         <div className="w">
-          <div style={{textAlign:'center',marginBottom:48}} className="reveal">
+          <div style={{ textAlign: 'center', marginBottom: 48 }} className="reveal">
             <span className="label">Pricing</span>
-            <h2 className="h2" style={{marginBottom:10}}>Simple, transparent pricing</h2>
-            <p className="body-lg" style={{maxWidth:'42ch',margin:'0 auto'}}>Start free. Scale when your agents do. No hidden costs.</p>
+            <h2 className="h2" style={{ marginBottom: 10 }}>Simple, transparent pricing</h2>
+            <p className="body-lg" style={{ maxWidth: '42ch', margin: '0 auto' }}>
+              Start free. Scale when your agents do. No hidden costs.
+            </p>
           </div>
           <div className="pricing__grid reveal">
-            {PLANS.map((p,i) => (
-              <div key={i} className={`plan${p.featured?' plan--feat':''}`}>
-                <div className="plan__tier">{p.tier}{p.featured&&<span className="plan__badge">Most popular</span>}</div>
-                <div className="plan__price">{p.price}<span className="plan__period">{p.period}</span></div>
+            {PLANS.map((p, i) => (
+              <div key={i} className={`plan${p.featured ? ' plan--feat' : ''}`}>
+                <div className="plan__tier">
+                  {p.tier}
+                  {p.featured && <span className="plan__badge">Most popular</span>}
+                </div>
+                <div className="plan__price">
+                  {p.price}
+                  <span className="plan__period">{p.period}</span>
+                </div>
                 <div className="plan__desc">{p.desc}</div>
-                <div className="plan__rule"/>
+                <div className="plan__rule" />
                 <ul className="plan__feats">
-                  {p.feats.map(f=><li key={f} className="plan__feat"><span className="plan__check">✓</span>{f}</li>)}
+                  {p.feats.map(f => (
+                    <li key={f} className="plan__feat">
+                      <span className="plan__check">✓</span>{f}
+                    </li>
+                  ))}
                 </ul>
-                <a href="#" className={`btn btn--lg${p.featured?' btn--em':' btn--ghost'}`} style={{justifyContent:'center'}}>
-                  {p.price==='Custom'?'Talk to us':'Get started'}
+                <a href="#" className={`btn btn--lg${p.featured ? ' btn--em' : ' btn--ghost'}`} style={{ justifyContent: 'center' }}>
+                  {p.price === 'Custom' ? 'Talk to us' : 'Get started'}
                 </a>
               </div>
             ))}
@@ -592,21 +783,30 @@ export function GlassMemPage() {
             <div className="reveal">
               <span className="label">Get started</span>
               <h2 className="cta__h2">Give your agents<br />memory today</h2>
-              <p className="body-lg cta__sub">Stop rebuilding state management. Ship agents that remember context, share state, and improve over time.</p>
+              <p className="body-lg cta__sub">
+                Stop rebuilding state management. Ship agents that remember context, share state, and improve over time.
+              </p>
               <div className="cta__btns">
                 <a href="#Pricing" className="btn btn--em btn--lg">Start free</a>
                 <a href="https://docs.glassmem.ai" className="btn btn--ghost btn--lg">Read the docs</a>
               </div>
               <button className="cta__install" onClick={copy}>
                 <span className="cta__install-p">$</span>
-                <span style={{color:'rgba(255,255,255,0.65)'}}>npm install glassmem</span>
-                <span className="hero__install-hint">{copied?'✓ copied':'copy'}</span>
+                <span style={{ color: 'rgba(255,255,255,0.65)' }}>npm install glassmem</span>
+                <span className="hero__install-hint">{copied ? '✓ copied' : 'copy'}</span>
               </button>
             </div>
             <div className="cta__checklist reveal">
-              {['Free tier — no credit card required','Production-ready in under 5 minutes','Works with your existing agent framework','Open-source core, MIT license','Deploy to your own infrastructure','Dedicated support on Pro and Enterprise'].map(item=>(
+              {[
+                'Free tier — no credit card required',
+                'Production-ready in under 5 minutes',
+                'Works with your existing agent framework',
+                'Open-source core, MIT license',
+                'Deploy to your own infrastructure',
+                'Dedicated support on Pro and Enterprise',
+              ].map(item => (
                 <div key={item} className="cta__check-item">
-                  <span className="cta__check-dot"/>{item}
+                  <span className="cta__check-dot" />{item}
                 </div>
               ))}
             </div>
@@ -614,12 +814,17 @@ export function GlassMemPage() {
         </div>
       </section>
 
-      {/* ═══ FOOTER ════════════════════════════════ */}
+      {/* ═══ FOOTER ═════════════════════════════════ */}
       <footer className="footer">
         <div className="footer__inner">
-          <div className="footer__brand"><Logo size={18}/><span className="footer__word">GlassMem</span></div>
+          <div className="footer__brand">
+            <Logo size={18} />
+            <span className="footer__word">GlassMem</span>
+          </div>
           <div className="footer__links">
-            {['Docs','GitHub','Twitter','Discord','Blog'].map(l=><a key={l} href="#" className="footer__link">{l}</a>)}
+            {['Docs', 'GitHub', 'Twitter', 'Discord', 'Blog'].map(l => (
+              <a key={l} href="#" className="footer__link">{l}</a>
+            ))}
           </div>
           <span className="footer__copy">© 2025 GlassMem · MIT License</span>
         </div>
