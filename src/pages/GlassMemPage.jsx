@@ -185,117 +185,49 @@ const MemoryGraph = () => {
   );
 };
 
-/* ── Hero visualization — multi-agent temporal memory ── */
-const AGENT_DEFS = [
+/* ── Hero visualization — SF → Stockholm travel scenario ── */
+const AGENTS = [
   {
-    id: 'R',
-    name: 'Research Agent',
-    color: '#a78bfa',
-    bg: 'rgba(167,139,250,0.14)',
-    msg: '"I always prefer window seats"',
-    tag: '3 weeks ago',
-    tagType: 'time',
-    msgType: 'dim',
-    phase: 0,
+    pip: '#a78bfa',
+    label: 'CALENDAR',
+    change: '9AM standup\n→ 6PM Stockholm',
+    detail: 'All meetings shifted\n+9 hours automatically',
+    revert: 'Reverts Jun 11',
   },
   {
-    id: 'S',
-    name: 'Support Agent',
-    color: '#fb923c',
-    bg: 'rgba(251,146,60,0.14)',
-    msg: '"Need aisle now — bad knee"',
-    tag: 'override',
-    tagType: 'override',
-    msgType: 'warn',
-    phase: 1,
+    pip: '#6ee7b7',
+    label: 'MEDICINE',
+    change: 'Metformin\n8AM → 5PM',
+    detail: '7 reminders adjusted\nfor Stockholm time',
+    revert: 'Reverts Jun 11',
   },
   {
-    id: 'T',
-    name: 'Travel Agent',
-    color: '#6ee7b7',
-    bg: 'rgba(110,231,183,0.12)',
-    msg: 'retrieving seat preference…',
-    tag: 'querying',
-    tagType: 'query',
-    msgType: 'em',
-    phase: 2,
+    pip: '#fb923c',
+    label: 'DIET',
+    change: 'Meal windows\nshifted +9h',
+    detail: 'Jet lag protocol\nactive this week',
+    revert: 'Reverts Jun 11',
   },
 ];
 
-const VizTimeline = ({ phase }) => {
-  const W = 340, H = 56;
-  const pts = [
-    { x: 20,  top: 'window seat',   bot: '3w ago',  col: '#a78bfa', show: phase >= 0 },
-    { x: 170, top: 'OVERRIDE',      bot: '2d ago',  col: '#fb923c', show: phase >= 1 },
-    { x: 320, top: 'querying…',     bot: 'now',     col: '#6ee7b7', show: phase >= 2 },
-  ];
-  const fillEnd = phase === 0 ? 20 : phase === 1 ? 170 : 320;
-  return (
-    <svg width="100%" viewBox={`0 0 ${W} ${H}`} fill="none" style={{ display: 'block' }}>
-      {/* Base track */}
-      <line x1="20" y1="24" x2="320" y2="24" stroke="rgba(255,255,255,0.07)" strokeWidth="1.5" strokeLinecap="round"/>
-      {/* Active fill */}
-      <line x1="20" y1="24" x2={fillEnd} y2="24"
-        stroke="rgba(110,231,183,0.28)" strokeWidth="1.5" strokeLinecap="round"
-        style={{ transition: 'x2 0.6s cubic-bezier(0.16,1,0.3,1)' }}/>
-      {pts.map((pt, i) => (
-        <g key={i}>
-          {/* Outer glow ring */}
-          {pt.show && (
-            <circle cx={pt.x} cy={24} r={i === 1 ? 10 : 8}
-              fill="none" stroke={pt.col} strokeWidth="1" opacity="0.2"/>
-          )}
-          {/* Main dot */}
-          <circle cx={pt.x} cy={24} r={i === 1 ? 6 : 5}
-            fill={pt.show ? pt.col : 'rgba(255,255,255,0.08)'}
-            style={{ transition: 'fill 0.45s' }}/>
-          {/* Top label */}
-          <text x={pt.x} y={11} textAnchor="middle"
-            fill={pt.show ? pt.col : 'transparent'}
-            fontSize="8" fontFamily="'Fira Code', monospace" fontWeight="500"
-            style={{ transition: 'fill 0.45s' }}>
-            {pt.top}
-          </text>
-          {/* Bottom label */}
-          <text x={pt.x} y={44} textAnchor="middle"
-            fill={pt.show ? 'rgba(255,255,255,0.3)' : 'transparent'}
-            fontSize="8" fontFamily="'Fira Code', monospace"
-            style={{ transition: 'fill 0.45s' }}>
-            {pt.bot}
-          </text>
-        </g>
-      ))}
-      {/* Override arrow between pts 0 and 1 */}
-      {phase >= 1 && (
-        <text x="95" y="18" textAnchor="middle"
-          fill="rgba(251,146,60,0.55)" fontSize="8" fontFamily="'Fira Code', monospace">
-          ↳ overrides
-        </text>
-      )}
-    </svg>
-  );
-};
-
 const HeroViz = () => {
-  const [phase, setPhase] = useState(0);
+  const [step, setStep] = useState(0);
+  // 0 → intro card (full panel)
+  // 1 → context card visible, intro gone
+  // 2 → agents visible
+  // 3 → verdict visible (long pause)
+  // loops back to 0
 
   useEffect(() => {
-    const durations = [2400, 2400, 3600];
+    const delays = [3600, 1600, 1400, 4400];
     let tid;
-    const advance = (p) => {
-      tid = setTimeout(() => {
-        setPhase(prev => {
-          const next = (prev + 1) % 3;
-          advance(next);
-          return next;
-        });
-      }, durations[p]);
+    const tick = (s) => {
+      const next = (s + 1) % 4;
+      tid = setTimeout(() => { setStep(next); tick(next); }, delays[s]);
     };
-    advance(0);
+    tick(0);
     return () => clearTimeout(tid);
   }, []);
-
-  const isActive = (i) => phase === i;
 
   return (
     <div className="hviz">
@@ -303,7 +235,7 @@ const HeroViz = () => {
       <div className="hviz__bar">
         <span className="hviz__bar-title">
           <Logo size={13} />
-          3 agents · shared memory layer
+          GlassMem · shared temporal context
         </span>
         <span className="hviz__bar-live">
           <span className="hero__panel-dot" style={{ marginRight: 4 }} />
@@ -311,60 +243,83 @@ const HeroViz = () => {
         </span>
       </div>
 
-      {/* Agent rows */}
+      {/* Intro card — step 0 only */}
+      <div className={`hviz__intro${step !== 0 ? ' hviz__intro--hidden' : ''}`}>
+        <p className="hviz__intro-eyebrow">the problem with agents today</p>
+        <h3 className="hviz__intro-heading">
+          Imagine you're traveling<br />through <em>time zones.</em>
+        </h3>
+        <p className="hviz__intro-body">
+          Your context changes — temporarily. Your calendar, your medicine schedule, your meals all shift. Three agents need to know. And in one week, everything reverts.
+        </p>
+        <div className="hviz__intro-divider" />
+        <div className="hviz__intro-footer">
+          <span className="hviz__intro-footer-dot" />
+          <span className="hviz__intro-footer-text">
+            GlassMem shares temporal context across all your agents — automatically.
+          </span>
+        </div>
+      </div>
+
+      {/* Shared context card — step 1+ */}
+      <div className={`hviz__ctx${step < 1 ? ' hviz__ctx--hidden' : ''}`}>
+        <div className="hviz__ctx-row1">
+          <span className="hviz__ctx-route">SF &rarr; Stockholm</span>
+          <span className="hviz__ctx-temp">TEMPORARY · 7 days</span>
+        </div>
+        <div className="hviz__ctx-meta">
+          <span className="hviz__ctx-tag hviz__ctx-tag--em">+9 hours</span>
+          <span className="hviz__ctx-dot">·</span>
+          <span className="hviz__ctx-tag">UTC-7 → UTC+2</span>
+          <span className="hviz__ctx-dot">·</span>
+          <span className="hviz__ctx-tag">Jun 4 – Jun 11</span>
+        </div>
+      </div>
+
+      {/* Connector */}
+      <div className={`hviz__connector${step < 2 ? ' hviz__connector--hidden' : ''}`}>
+        <div className="hviz__connector-line" />
+        <span className="hviz__connector-label">read by 3 agents</span>
+        <div className="hviz__connector-line--r" />
+      </div>
+
+      {/* Three agent cards */}
       <div className="hviz__agents">
-        {AGENT_DEFS.map((ag, i) => (
-          <div key={ag.id} className={`hviz__agent${isActive(i) ? ' hviz__agent--active' : ''}`}>
-            <div className="hviz__agent-icon" style={{
-              background: isActive(i) ? ag.bg : 'rgba(255,255,255,0.04)',
-              color: isActive(i) ? ag.color : 'rgba(255,255,255,0.2)',
-            }}>
-              {ag.id}
+        {AGENTS.map((ag, i) => (
+          <div
+            key={ag.label}
+            className={`hviz__agent-card${step < 2 ? ' hviz__agent-card--hidden' : ''}`}
+            style={{ transitionDelay: step >= 2 ? `${i * 0.12}s` : '0s' }}
+          >
+            <div className="hviz__agent-icon-row">
+              <span className="hviz__agent-pip" style={{ background: ag.pip }} />
+              <span className="hviz__agent-label">{ag.label}</span>
             </div>
-            <div>
-              <div className="hviz__agent-name">{ag.name}</div>
-              <div className={`hviz__agent-msg hviz__agent-msg--${isActive(i) ? ag.msgType : 'dim'}`}>
-                {phase >= i ? ag.msg : '—'}
-              </div>
+            <div className="hviz__agent-change">
+              {ag.change.split('\n').map((line, j) => (
+                <span key={j}>{line}{j === 0 ? <br /> : null}</span>
+              ))}
             </div>
-            <span className={`hviz__agent-tag hviz__agent-tag--${ag.tagType}`}
-              style={{ opacity: phase >= i ? 1 : 0 }}>
-              {ag.tag}
-            </span>
+            <div className="hviz__agent-detail">
+              {ag.detail.split('\n').map((line, j) => (
+                <span key={j}>{line}{j === 0 ? <br /> : null}</span>
+              ))}
+            </div>
+            <div className="hviz__agent-revert">↺ {ag.revert}</div>
           </div>
         ))}
       </div>
 
-      {/* Timeline */}
-      <div className="hviz__timeline">
-        <div className="hviz__tl-label">temporal context</div>
-        <VizTimeline phase={phase} />
-      </div>
-
-      {/* Comparison */}
-      <div className="hviz__compare">
-        <div className="hviz__compare-label">context served to travel agent</div>
-
-        {/* Vector DB — wrong */}
-        <div className="hviz__cmp-row hviz__cmp-row--wrong"
-          style={{ opacity: phase === 2 ? 1 : 0.22, transform: phase === 2 ? 'none' : 'translateY(4px)' }}>
-          <span className="hviz__cmp-source">Vector DB</span>
-          <div className="hviz__cmp-body">
-            <div className="hviz__cmp-val hviz__cmp-val--wrong">"window seat"</div>
-            <div className="hviz__cmp-note">semantic match · ignores time · stale</div>
-          </div>
-          <span className="hviz__cmp-icon" style={{ color: 'rgba(239,68,68,0.7)' }}>✕</span>
+      {/* Verdict */}
+      <div className={`hviz__verdict${step < 3 ? ' hviz__verdict--hidden' : ''}`}>
+        <div className="hviz__verdict-label">without vs. with glassmem</div>
+        <div className="hviz__verdict-row">
+          <span className="hviz__verdict-src">Vector DB</span>
+          <span className="hviz__verdict-wrong">Each agent asks where you are. None know it's temporary. ✕</span>
         </div>
-
-        {/* GlassMem — right */}
-        <div className="hviz__cmp-row hviz__cmp-row--right"
-          style={{ opacity: phase === 2 ? 1 : 0.22, transform: phase === 2 ? 'none' : 'translateY(4px)' }}>
-          <span className="hviz__cmp-source">GlassMem</span>
-          <div className="hviz__cmp-body">
-            <div className="hviz__cmp-val hviz__cmp-val--right">"aisle seat"</div>
-            <div className="hviz__cmp-note">temporal override · 2d ago · cross-agent</div>
-          </div>
-          <span className="hviz__cmp-icon" style={{ color: 'var(--em)' }}>✓</span>
+        <div className="hviz__verdict-row">
+          <span className="hviz__verdict-src">GlassMem</span>
+          <span className="hviz__verdict-right">One update. All 3 adjusted. Auto-reverts Jun 11. ✓</span>
         </div>
       </div>
     </div>
@@ -466,20 +421,14 @@ function useCopy(text) {
 export function GlassMemPage() {
   useReveal();
 
-  const [scrolled,  setScrolled]  = useState(false);
-  const [mobOpen,   setMobOpen]   = useState(false);
-  const [activeEv,  setActiveEv]  = useState(0);
-  const [copied,    copy]         = useCopy('npm install glassmem');
+  const [scrolled, setScrolled] = useState(false);
+  const [mobOpen,  setMobOpen]  = useState(false);
+  const [copied,   copy]        = useCopy('npm install glassmem');
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 8);
     window.addEventListener('scroll', fn, { passive: true });
     return () => window.removeEventListener('scroll', fn);
-  }, []);
-
-  useEffect(() => {
-    const t = setInterval(() => setActiveEv(i => (i + 1) % EVENTS.length), 1800);
-    return () => clearInterval(t);
   }, []);
 
   return (
