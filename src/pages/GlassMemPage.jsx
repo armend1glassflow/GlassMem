@@ -186,48 +186,31 @@ const MemoryGraph = () => {
 };
 
 /* ── Hero visualization — SF → Stockholm travel scenario ── */
-const AGENTS = [
-  {
-    pip: '#a78bfa',
-    label: 'CALENDAR',
-    change: '9AM standup\n→ 6PM Stockholm',
-    detail: 'All meetings shifted\n+9 hours automatically',
-    revert: 'Reverts Jun 11',
-  },
-  {
-    pip: '#6ee7b7',
-    label: 'MEDICINE',
-    change: 'Metformin\n8AM → 5PM',
-    detail: '7 reminders adjusted\nfor Stockholm time',
-    revert: 'Reverts Jun 11',
-  },
-  {
-    pip: '#fb923c',
-    label: 'DIET',
-    change: 'Meal windows\nshifted +9h',
-    detail: 'Jet lag protocol\nactive this week',
-    revert: 'Reverts Jun 11',
-  },
+const VIZ_AGENTS = [
+  { pip: '#a78bfa', label: 'CALENDAR', change: '9AM standup → 6PM Stockholm', revert: '↺ Jun 11' },
+  { pip: '#6ee7b7', label: 'MEDICINE', change: 'Metformin 8AM → 5PM local',   revert: '↺ Jun 11' },
+  { pip: '#fb923c', label: 'DIET',     change: 'Meal windows shifted +9h',     revert: '↺ Jun 11' },
 ];
 
 const HeroViz = () => {
   const [step, setStep] = useState(0);
-  // 0 → intro card (full panel)
-  // 1 → context card visible, intro gone
-  // 2 → agents visible
-  // 3 → verdict visible (long pause)
-  // loops back to 0
+  // 0 — intro fills full width
+  // 1 — intro slides left (narrow), right col fades in (ctx + agents)
+  // 2 — verdict row appears
+  // loops
 
   useEffect(() => {
-    const delays = [3600, 1600, 1400, 4400];
+    const delays = [3600, 3000, 4000];
     let tid;
     const tick = (s) => {
-      const next = (s + 1) % 4;
+      const next = (s + 1) % 3;
       tid = setTimeout(() => { setStep(next); tick(next); }, delays[s]);
     };
     tick(0);
     return () => clearTimeout(tid);
   }, []);
+
+  const narrow = step >= 1;
 
   return (
     <div className="hviz">
@@ -243,84 +226,96 @@ const HeroViz = () => {
         </span>
       </div>
 
-      {/* Intro card — step 0 only */}
-      <div className={`hviz__intro${step !== 0 ? ' hviz__intro--hidden' : ''}`}>
-        <p className="hviz__intro-eyebrow">the problem with agents today</p>
-        <h3 className="hviz__intro-heading">
-          Imagine you're traveling<br />through <em>time zones.</em>
-        </h3>
-        <p className="hviz__intro-body">
-          Your context changes — temporarily. Your calendar, your medicine schedule, your meals all shift. Three agents need to know. And in one week, everything reverts.
-        </p>
-        <div className="hviz__intro-divider" />
-        <div className="hviz__intro-footer">
-          <span className="hviz__intro-footer-dot" />
-          <span className="hviz__intro-footer-text">
-            GlassMem shares temporal context across all your agents — automatically.
-          </span>
-        </div>
-      </div>
+      <div className="hviz__body">
 
-      {/* Shared context card — step 1+ */}
-      <div className={`hviz__ctx${step < 1 ? ' hviz__ctx--hidden' : ''}`}>
-        <div className="hviz__ctx-row1">
-          <span className="hviz__ctx-route">SF &rarr; Stockholm</span>
-          <span className="hviz__ctx-temp">TEMPORARY · 7 days</span>
-        </div>
-        <div className="hviz__ctx-meta">
-          <span className="hviz__ctx-tag hviz__ctx-tag--em">+9 hours</span>
-          <span className="hviz__ctx-dot">·</span>
-          <span className="hviz__ctx-tag">UTC-7 → UTC+2</span>
-          <span className="hviz__ctx-dot">·</span>
-          <span className="hviz__ctx-tag">Jun 4 – Jun 11</span>
-        </div>
-      </div>
+        {/* ── Left column ── */}
+        <div className={`hviz__left${narrow ? ' hviz__left--narrow' : ''}`}>
 
-      {/* Connector */}
-      <div className={`hviz__connector${step < 2 ? ' hviz__connector--hidden' : ''}`}>
-        <div className="hviz__connector-line" />
-        <span className="hviz__connector-label">read by 3 agents</span>
-        <div className="hviz__connector-line--r" />
-      </div>
-
-      {/* Three agent cards */}
-      <div className="hviz__agents">
-        {AGENTS.map((ag, i) => (
-          <div
-            key={ag.label}
-            className={`hviz__agent-card${step < 2 ? ' hviz__agent-card--hidden' : ''}`}
-            style={{ transitionDelay: step >= 2 ? `${i * 0.12}s` : '0s' }}
-          >
-            <div className="hviz__agent-icon-row">
-              <span className="hviz__agent-pip" style={{ background: ag.pip }} />
-              <span className="hviz__agent-label">{ag.label}</span>
+          {/* Wide intro — visible in step 0 */}
+          <div className={`hviz__intro-wide${narrow ? ' hviz__intro-wide--out' : ''}`}>
+            <p className="hviz__intro-eyebrow">the problem with agents today</p>
+            <h3 className="hviz__intro-heading">
+              Imagine you're traveling<br />through <em>time zones.</em>
+            </h3>
+            <p className="hviz__intro-body">
+              Your context changes — temporarily. Calendar, medicine, meals all shift by 9 hours. Three agents need to know. And in one week, everything reverts.
+            </p>
+            <div className="hviz__intro-rule" />
+            <div className="hviz__intro-note">
+              <span className="hviz__intro-note-dot" />
+              <span className="hviz__intro-note-text">
+                GlassMem shares temporal context across all agents — automatically.
+              </span>
             </div>
-            <div className="hviz__agent-change">
-              {ag.change.split('\n').map((line, j) => (
-                <span key={j}>{line}{j === 0 ? <br /> : null}</span>
-              ))}
-            </div>
-            <div className="hviz__agent-detail">
-              {ag.detail.split('\n').map((line, j) => (
-                <span key={j}>{line}{j === 0 ? <br /> : null}</span>
-              ))}
-            </div>
-            <div className="hviz__agent-revert">↺ {ag.revert}</div>
           </div>
-        ))}
-      </div>
 
-      {/* Verdict */}
-      <div className={`hviz__verdict${step < 3 ? ' hviz__verdict--hidden' : ''}`}>
-        <div className="hviz__verdict-label">without vs. with glassmem</div>
-        <div className="hviz__verdict-row">
-          <span className="hviz__verdict-src">Vector DB</span>
-          <span className="hviz__verdict-wrong">Each agent asks where you are. None know it's temporary. ✕</span>
+          {/* Narrow summary — visible in steps 1+ */}
+          <div className={`hviz__intro-narrow${!narrow ? ' hviz__intro-narrow--hidden' : ''}`}>
+            <p className="hviz__narrow-eyebrow">the problem</p>
+            <p className="hviz__narrow-heading">Traveling through time zones.</p>
+            <div className="hviz__narrow-points">
+              {[
+                { pip: '#a78bfa', text: 'Temporary context' },
+                { pip: '#6ee7b7', text: 'Cross-agent sync'  },
+                { pip: '#fb923c', text: 'Auto-reverts'      },
+              ].map(pt => (
+                <div key={pt.text} className="hviz__narrow-point">
+                  <span className="hviz__narrow-point-pip" style={{ background: pt.pip }} />
+                  <span className="hviz__narrow-point-text">{pt.text}</span>
+                </div>
+              ))}
+            </div>
+            <div className="hviz__narrow-rule" />
+            <span className="hviz__narrow-brand">GlassMem does<br />this for you.</span>
+          </div>
         </div>
-        <div className="hviz__verdict-row">
-          <span className="hviz__verdict-src">GlassMem</span>
-          <span className="hviz__verdict-right">One update. All 3 adjusted. Auto-reverts Jun 11. ✓</span>
+
+        {/* ── Right column ── */}
+        <div className={`hviz__right${!narrow ? ' hviz__right--hidden' : ''}`}>
+
+          {/* Context strip */}
+          <div className="hviz__ctx">
+            <div className="hviz__ctx-route">SF → Stockholm</div>
+            <div className="hviz__ctx-meta">
+              <span className="hviz__ctx-tag hviz__ctx-tag--em">+9 hours</span>
+              <span className="hviz__ctx-dot">·</span>
+              <span className="hviz__ctx-tag">Jun 4 – Jun 11</span>
+              <span className="hviz__ctx-dot">·</span>
+              <span className="hviz__ctx-tag hviz__ctx-tag--warn">TEMPORARY</span>
+            </div>
+          </div>
+
+          {/* Agent cards */}
+          <div className="hviz__agents">
+            {VIZ_AGENTS.map((ag, i) => (
+              <div
+                key={ag.label}
+                className={`hviz__agent-card${!narrow ? ' hviz__agent-card--hidden' : ''}`}
+                style={{ transitionDelay: narrow ? `${0.1 + i * 0.1}s` : '0s' }}
+              >
+                <div className="hviz__agent-pip-row">
+                  <span className="hviz__agent-pip" style={{ background: ag.pip }} />
+                  <span className="hviz__agent-label">{ag.label}</span>
+                </div>
+                <div className="hviz__agent-change">{ag.change}</div>
+                <div className="hviz__agent-revert">{ag.revert}</div>
+              </div>
+            ))}
+          </div>
+
+          {/* Verdict */}
+          <div className={`hviz__verdict${step < 2 ? ' hviz__verdict--hidden' : ''}`}>
+            <div className="hviz__verdict-row">
+              <span className="hviz__verdict-src">Vector DB</span>
+              <span className="hviz__verdict-wrong">Each agent asks. None know it's temporary. ✕</span>
+            </div>
+            <div className="hviz__verdict-row">
+              <span className="hviz__verdict-src">GlassMem</span>
+              <span className="hviz__verdict-right">One update. All 3 adjusted. Reverts Jun 11. ✓</span>
+            </div>
+          </div>
         </div>
+
       </div>
     </div>
   );
