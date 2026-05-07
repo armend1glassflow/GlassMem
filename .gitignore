@@ -1,1 +1,20 @@
+# dependencies
+node_modules/
+
+# production build
+build/
+
+# Vercel
 .vercel
+
+# local env
+.env
+.env.local
+
+# misc
+.DS_Store
+*.log
+
+# agent tooling (local only)
+.agents/
+.claude/skills/

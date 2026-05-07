@@ -1,0 +1,277 @@
+@import url('https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Inter:wght@400;500&family=Fira+Code:wght@400;500&display=swap');
+
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+body {
+  background: #0a0a0a;
+  color: #fff;
+  font-family: 'Inter', -apple-system, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ── Layout ── */
+.app {
+  display: flex;
+  min-height: 100vh;
+}
+
+/* ── Sidebar ── */
+.app__sidebar {
+  width: 210px;
+  flex-shrink: 0;
+  background: #0d0d0d;
+  border-right: 1px solid rgba(255,255,255,0.07);
+  display: flex;
+  flex-direction: column;
+  padding: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+}
+
+.app__sidebar-logo {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 18px 20px 16px;
+  border-bottom: 1px solid rgba(255,255,255,0.06);
+}
+.app__sidebar-wordmark {
+  font-family: 'Manrope', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  color: #fff;
+}
+
+/* Nav groups */
+.app__nav-group {
+  padding: 20px 0 8px;
+}
+.app__nav-group-label {
+  display: block;
+  font-family: 'Fira Code', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.22);
+  padding: 0 20px 8px;
+}
+.app__nav-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 7px 20px;
+  cursor: default;
+}
+.app__nav-item-name {
+  font-size: 13px;
+  color: rgba(255,255,255,0.35);
+}
+.app__nav-soon {
+  font-family: 'Fira Code', monospace;
+  font-size: 9px;
+  letter-spacing: 0.06em;
+  color: rgba(110,231,183,0.55);
+  background: rgba(110,231,183,0.06);
+  border: 1px solid rgba(110,231,183,0.15);
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+/* Sidebar footer */
+.app__sidebar-footer {
+  margin-top: auto;
+  padding: 16px 20px 20px;
+  border-top: 1px solid rgba(255,255,255,0.06);
+}
+.app__signed-label {
+  font-family: 'Fira Code', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.22);
+  margin-bottom: 6px;
+}
+.app__signed-email {
+  font-size: 12px;
+  color: rgba(255,255,255,0.45);
+  word-break: break-all;
+  margin-bottom: 12px;
+}
+.app__logout {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: rgba(255,255,255,0.3);
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 0;
+  font-family: inherit;
+  transition: color 0.15s;
+}
+.app__logout:hover { color: rgba(255,255,255,0.6); }
+
+/* ── Main content ── */
+.app__main {
+  flex: 1;
+  padding: 40px;
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+  max-width: 820px;
+}
+
+/* ── Cards ── */
+.app__card {
+  background: #111;
+  border: 1px solid rgba(255,255,255,0.09);
+  border-radius: 12px;
+  padding: 32px 36px;
+}
+
+.app__card-label {
+  display: block;
+  font-family: 'Fira Code', monospace;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  color: #6ee7b7;
+  margin-bottom: 14px;
+}
+.app__card-heading {
+  font-family: 'Manrope', sans-serif;
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: #fff;
+  margin-bottom: 16px;
+}
+.app__card-body {
+  font-size: 14px;
+  line-height: 1.7;
+  color: rgba(255,255,255,0.55);
+}
+.app__card-body strong {
+  color: #fff;
+  font-weight: 600;
+}
+.app__card-sub {
+  font-size: 13px;
+  color: rgba(255,255,255,0.4);
+  margin-bottom: 28px;
+}
+
+/* ── Form ── */
+.app__form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+.app__form-section { display: flex; flex-direction: column; gap: 12px; }
+.app__form-label {
+  font-family: 'Fira Code', monospace;
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  color: rgba(255,255,255,0.3);
+}
+
+/* Chips */
+.app__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.app__chip {
+  padding: 7px 16px;
+  background: #1a1a1a;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  font-size: 13px;
+  color: rgba(255,255,255,0.5);
+  cursor: pointer;
+  font-family: inherit;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.app__chip:hover {
+  border-color: rgba(255,255,255,0.2);
+  color: rgba(255,255,255,0.75);
+}
+.app__chip--on {
+  border-color: rgba(110,231,183,0.5);
+  background: rgba(110,231,183,0.07);
+  color: #6ee7b7;
+}
+
+/* Textarea */
+.app__textarea {
+  width: 100%;
+  padding: 11px 14px;
+  background: #1a1a1a;
+  border: 1px solid rgba(255,255,255,0.1);
+  border-radius: 8px;
+  color: #fff;
+  font-family: inherit;
+  font-size: 13px;
+  resize: vertical;
+  outline: none;
+  transition: border-color 0.15s;
+  line-height: 1.55;
+}
+.app__textarea::placeholder { color: rgba(255,255,255,0.2); }
+.app__textarea:focus { border-color: rgba(110,231,183,0.4); }
+
+.app__form-err {
+  font-size: 13px;
+  color: #f87171;
+}
+
+.app__submit {
+  align-self: flex-start;
+  padding: 11px 28px;
+  background: #6ee7b7;
+  color: #000;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: opacity 0.15s, transform 0.1s;
+}
+.app__submit:hover:not(:disabled) { opacity: 0.85; transform: translateY(-1px); }
+.app__submit:disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Success state */
+.app__success {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 20px;
+  background: rgba(110,231,183,0.06);
+  border: 1px solid rgba(110,231,183,0.2);
+  border-radius: 8px;
+}
+.app__success-icon {
+  font-size: 18px;
+  color: #6ee7b7;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
+.app__success-title {
+  font-size: 14px;
+  font-weight: 600;
+  color: #fff;
+  margin-bottom: 4px;
+}
+.app__success-sub {
+  font-size: 13px;
+  color: rgba(255,255,255,0.45);
+}
+
+/* ── Responsive ── */
+@media (max-width: 700px) {
+  .app__sidebar { display: none; }
+  .app__main { padding: 24px 20px; }
+  .app__card { padding: 24px 20px; }
+}
