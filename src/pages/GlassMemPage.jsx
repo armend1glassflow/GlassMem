@@ -185,6 +185,192 @@ const MemoryGraph = () => {
   );
 };
 
+/* ── Hero visualization — multi-agent temporal memory ── */
+const AGENT_DEFS = [
+  {
+    id: 'R',
+    name: 'Research Agent',
+    color: '#a78bfa',
+    bg: 'rgba(167,139,250,0.14)',
+    msg: '"I always prefer window seats"',
+    tag: '3 weeks ago',
+    tagType: 'time',
+    msgType: 'dim',
+    phase: 0,
+  },
+  {
+    id: 'S',
+    name: 'Support Agent',
+    color: '#fb923c',
+    bg: 'rgba(251,146,60,0.14)',
+    msg: '"Need aisle now — bad knee"',
+    tag: 'override',
+    tagType: 'override',
+    msgType: 'warn',
+    phase: 1,
+  },
+  {
+    id: 'T',
+    name: 'Travel Agent',
+    color: '#6ee7b7',
+    bg: 'rgba(110,231,183,0.12)',
+    msg: 'retrieving seat preference…',
+    tag: 'querying',
+    tagType: 'query',
+    msgType: 'em',
+    phase: 2,
+  },
+];
+
+const VizTimeline = ({ phase }) => {
+  const W = 340, H = 56;
+  const pts = [
+    { x: 20,  top: 'window seat',   bot: '3w ago',  col: '#a78bfa', show: phase >= 0 },
+    { x: 170, top: 'OVERRIDE',      bot: '2d ago',  col: '#fb923c', show: phase >= 1 },
+    { x: 320, top: 'querying…',     bot: 'now',     col: '#6ee7b7', show: phase >= 2 },
+  ];
+  const fillEnd = phase === 0 ? 20 : phase === 1 ? 170 : 320;
+  return (
+    <svg width="100%" viewBox={`0 0 ${W} ${H}`} fill="none" style={{ display: 'block' }}>
+      {/* Base track */}
+      <line x1="20" y1="24" x2="320" y2="24" stroke="rgba(255,255,255,0.07)" strokeWidth="1.5" strokeLinecap="round"/>
+      {/* Active fill */}
+      <line x1="20" y1="24" x2={fillEnd} y2="24"
+        stroke="rgba(110,231,183,0.28)" strokeWidth="1.5" strokeLinecap="round"
+        style={{ transition: 'x2 0.6s cubic-bezier(0.16,1,0.3,1)' }}/>
+      {pts.map((pt, i) => (
+        <g key={i}>
+          {/* Outer glow ring */}
+          {pt.show && (
+            <circle cx={pt.x} cy={24} r={i === 1 ? 10 : 8}
+              fill="none" stroke={pt.col} strokeWidth="1" opacity="0.2"/>
+          )}
+          {/* Main dot */}
+          <circle cx={pt.x} cy={24} r={i === 1 ? 6 : 5}
+            fill={pt.show ? pt.col : 'rgba(255,255,255,0.08)'}
+            style={{ transition: 'fill 0.45s' }}/>
+          {/* Top label */}
+          <text x={pt.x} y={11} textAnchor="middle"
+            fill={pt.show ? pt.col : 'transparent'}
+            fontSize="8" fontFamily="'Fira Code', monospace" fontWeight="500"
+            style={{ transition: 'fill 0.45s' }}>
+            {pt.top}
+          </text>
+          {/* Bottom label */}
+          <text x={pt.x} y={44} textAnchor="middle"
+            fill={pt.show ? 'rgba(255,255,255,0.3)' : 'transparent'}
+            fontSize="8" fontFamily="'Fira Code', monospace"
+            style={{ transition: 'fill 0.45s' }}>
+            {pt.bot}
+          </text>
+        </g>
+      ))}
+      {/* Override arrow between pts 0 and 1 */}
+      {phase >= 1 && (
+        <text x="95" y="18" textAnchor="middle"
+          fill="rgba(251,146,60,0.55)" fontSize="8" fontFamily="'Fira Code', monospace">
+          ↳ overrides
+        </text>
+      )}
+    </svg>
+  );
+};
+
+const HeroViz = () => {
+  const [phase, setPhase] = useState(0);
+
+  useEffect(() => {
+    const durations = [2400, 2400, 3600];
+    let tid;
+    const advance = (p) => {
+      tid = setTimeout(() => {
+        setPhase(prev => {
+          const next = (prev + 1) % 3;
+          advance(next);
+          return next;
+        });
+      }, durations[p]);
+    };
+    advance(0);
+    return () => clearTimeout(tid);
+  }, []);
+
+  const isActive = (i) => phase === i;
+
+  return (
+    <div className="hviz">
+      {/* Bar */}
+      <div className="hviz__bar">
+        <span className="hviz__bar-title">
+          <Logo size={13} />
+          3 agents · shared memory layer
+        </span>
+        <span className="hviz__bar-live">
+          <span className="hero__panel-dot" style={{ marginRight: 4 }} />
+          LIVE
+        </span>
+      </div>
+
+      {/* Agent rows */}
+      <div className="hviz__agents">
+        {AGENT_DEFS.map((ag, i) => (
+          <div key={ag.id} className={`hviz__agent${isActive(i) ? ' hviz__agent--active' : ''}`}>
+            <div className="hviz__agent-icon" style={{
+              background: isActive(i) ? ag.bg : 'rgba(255,255,255,0.04)',
+              color: isActive(i) ? ag.color : 'rgba(255,255,255,0.2)',
+            }}>
+              {ag.id}
+            </div>
+            <div>
+              <div className="hviz__agent-name">{ag.name}</div>
+              <div className={`hviz__agent-msg hviz__agent-msg--${isActive(i) ? ag.msgType : 'dim'}`}>
+                {phase >= i ? ag.msg : '—'}
+              </div>
+            </div>
+            <span className={`hviz__agent-tag hviz__agent-tag--${ag.tagType}`}
+              style={{ opacity: phase >= i ? 1 : 0 }}>
+              {ag.tag}
+            </span>
+          </div>
+        ))}
+      </div>
+
+      {/* Timeline */}
+      <div className="hviz__timeline">
+        <div className="hviz__tl-label">temporal context</div>
+        <VizTimeline phase={phase} />
+      </div>
+
+      {/* Comparison */}
+      <div className="hviz__compare">
+        <div className="hviz__compare-label">context served to travel agent</div>
+
+        {/* Vector DB — wrong */}
+        <div className="hviz__cmp-row hviz__cmp-row--wrong"
+          style={{ opacity: phase === 2 ? 1 : 0.22, transform: phase === 2 ? 'none' : 'translateY(4px)' }}>
+          <span className="hviz__cmp-source">Vector DB</span>
+          <div className="hviz__cmp-body">
+            <div className="hviz__cmp-val hviz__cmp-val--wrong">"window seat"</div>
+            <div className="hviz__cmp-note">semantic match · ignores time · stale</div>
+          </div>
+          <span className="hviz__cmp-icon" style={{ color: 'rgba(239,68,68,0.7)' }}>✕</span>
+        </div>
+
+        {/* GlassMem — right */}
+        <div className="hviz__cmp-row hviz__cmp-row--right"
+          style={{ opacity: phase === 2 ? 1 : 0.22, transform: phase === 2 ? 'none' : 'translateY(4px)' }}>
+          <span className="hviz__cmp-source">GlassMem</span>
+          <div className="hviz__cmp-body">
+            <div className="hviz__cmp-val hviz__cmp-val--right">"aisle seat"</div>
+            <div className="hviz__cmp-note">temporal override · 2d ago · cross-agent</div>
+          </div>
+          <span className="hviz__cmp-icon" style={{ color: 'var(--em)' }}>✓</span>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 /* ── Analytics line chart ── */
 const AnalyticsChart = () => {
   const pts = [12, 28, 22, 45, 38, 62, 55, 80, 72, 94, 88, 100];
@@ -355,34 +541,7 @@ export function GlassMemPage() {
               </button>
             </div>
 
-            <div className="hero__panel">
-              <div className="hero__panel-bar">
-                <span className="hero__panel-title"><Logo size={14} />GlassMem · live stream</span>
-                <span className="hero__panel-live"><span className="hero__panel-dot" />LIVE</span>
-              </div>
-              <div className="hero__stats">
-                {[
-                  { val: '4ms',  lbl: 'avg read latency'  },
-                  { val: '100%', lbl: 'cache hit rate'     },
-                  { val: '3',    lbl: 'active agents'      },
-                ].map(s => (
-                  <div key={s.lbl} className="hero__stat">
-                    <div className="hero__stat-val">{s.val}</div>
-                    <div className="hero__stat-lbl">{s.lbl}</div>
-                  </div>
-                ))}
-              </div>
-              {EVENTS.map((ev, i) => (
-                <div key={i} className="hero__event" style={{ opacity: i === activeEv ? 1 : 0.3, transition: 'opacity 0.4s' }}>
-                  <span className="hero__event-dot" style={{ background: ev.color }} />
-                  <div style={{ flex: 1, minWidth: 0 }}>
-                    <div className="hero__event-method" style={{ color: ev.color }}>{ev.method}</div>
-                    <div className="hero__event-detail">{ev.detail}</div>
-                  </div>
-                  <span className="hero__event-time">{ev.ms}</span>
-                </div>
-              ))}
-            </div>
+            <HeroViz />
           </div>
         </div>
       </section>
