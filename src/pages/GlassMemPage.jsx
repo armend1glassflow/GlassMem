@@ -18,77 +18,18 @@ const Logo = ({ size = 26 }) => (
   </svg>
 );
 
-/* ── Framework SVG logos ── */
-const IconCursor = () => (
-  <svg viewBox="0 0 24 24" fill="none" className="logos__icon">
-    <path d="M5 3l14 9-7 1-4 7L5 3z" stroke="currentColor" strokeWidth="1.5" strokeLinejoin="round"/>
-  </svg>
-);
-const IconClaude = () => (
-  <svg viewBox="0 0 24 24" fill="none" className="logos__icon">
-    <line x1="12" y1="3"  x2="12" y2="21" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-    <line x1="3"  y1="7.5" x2="21" y2="16.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-    <line x1="3"  y1="16.5" x2="21" y2="7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-  </svg>
-);
-const IconCopilot = () => (
-  <svg viewBox="0 0 24 24" fill="none" className="logos__icon">
-    <circle cx="12" cy="8" r="4" stroke="currentColor" strokeWidth="1.5"/>
-    <path d="M4 20c0-3.5 3.6-6 8-6s8 2.5 8 6" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-  </svg>
-);
-const IconWindsurf = () => (
-  <svg viewBox="0 0 24 24" fill="none" className="logos__icon">
-    <path d="M3 18 L6 7 L9.5 14 L13 7 L16.5 14 L20 7 L22 18" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
-const IconCline = () => (
-  <svg viewBox="0 0 24 24" fill="none" className="logos__icon">
-    <rect x="3" y="3" width="18" height="18" rx="3" stroke="currentColor" strokeWidth="1.5"/>
-    <path d="M8 12h8M14 9l3 3-3 3" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
-const IconLangChain = () => (
-  <svg viewBox="0 0 24 24" fill="none" className="logos__icon">
-    <circle cx="7"  cy="12" r="3.5" stroke="currentColor" strokeWidth="1.5"/>
-    <circle cx="17" cy="12" r="3.5" stroke="currentColor" strokeWidth="1.5"/>
-    <line x1="10.5" y1="12" x2="13.5" y2="12" stroke="currentColor" strokeWidth="1.5"/>
-  </svg>
-);
-const IconOpenAI = () => (
-  <svg viewBox="0 0 24 24" fill="none" className="logos__icon">
-    <path d="M12 2C9 2 6.5 4 6 7c-1.5.5-3 2-3 4s1.5 3.5 3 4c.5 3 3 5 6 5s5.5-2 6-5c1.5-.5 3-2 3-4s-1.5-3.5-3-4c-.5-3-3-5-6-5z" stroke="currentColor" strokeWidth="1.5"/>
-    <circle cx="12" cy="12" r="2" fill="currentColor"/>
-  </svg>
-);
-const IconCrewAI = () => (
-  <svg viewBox="0 0 24 24" fill="none" className="logos__icon">
-    <circle cx="8"  cy="8"  r="3" stroke="currentColor" strokeWidth="1.5"/>
-    <circle cx="16" cy="8"  r="3" stroke="currentColor" strokeWidth="1.5"/>
-    <circle cx="12" cy="16" r="3" stroke="currentColor" strokeWidth="1.5"/>
-    <line x1="10.6" y1="10.6" x2="12" y2="13.3" stroke="currentColor" strokeWidth="1" opacity="0.5"/>
-    <line x1="13.4" y1="10.6" x2="12" y2="13.3" stroke="currentColor" strokeWidth="1" opacity="0.5"/>
-  </svg>
-);
-const IconAutoGen = () => (
-  <svg viewBox="0 0 24 24" fill="none" className="logos__icon">
-    <path d="M12 4a8 8 0 0 1 7.7 5.9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-    <path d="M12 20a8 8 0 0 1-7.7-5.9" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round"/>
-    <path d="M17.5 7.5 L19.7 9.9 L22 7.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-    <path d="M6.5 16.5 L4.3 14.1 L2 16.5" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-  </svg>
-);
-
+/* ── Real brand logos — served from /public/logos/ ── */
+// style: CSS filter string to apply on dark background
+// h: display height in px (width auto-scales)
 const LOGOS = [
-  { Icon: IconCursor,    name: 'Cursor'    },
-  { Icon: IconClaude,    name: 'Claude'    },
-  { Icon: IconCopilot,   name: 'Copilot'   },
-  { Icon: IconWindsurf,  name: 'Windsurf'  },
-  { Icon: IconCline,     name: 'Cline'     },
-  { Icon: IconLangChain, name: 'LangChain' },
-  { Icon: IconOpenAI,    name: 'OpenAI'    },
-  { Icon: IconCrewAI,    name: 'CrewAI'    },
-  { Icon: IconAutoGen,   name: 'AutoGen'   },
+  { img: '/logos/cursor.png',    name: 'Cursor',    h: 22, style: { filter: 'brightness(0) invert(1)', opacity: 0.7  } },
+  { img: '/logos/claude.svg',    name: 'Claude',    h: 22, style: { opacity: 0.85 } },
+  { img: '/logos/copilot.png',   name: 'Copilot',   h: 24, style: { opacity: 0.75 } },
+  { img: '/logos/windsurf.png',  name: 'Windsurf',  h: 22, style: { opacity: 0.75 } },
+  { img: '/logos/langchain.webp',name: 'LangChain', h: 28, style: { filter: 'brightness(0) invert(1)', opacity: 0.75 } },
+  { img: '/logos/openai.svg',    name: 'OpenAI',    h: 22, style: { filter: 'brightness(0) invert(1)', opacity: 0.7  } },
+  { img: '/logos/crewai.png',    name: 'CrewAI',    h: 22, style: { opacity: 0.75 } },
+  { img: '/logos/arcade.png',    name: 'Arcade',    h: 22, style: { opacity: 0.75 } },
 ];
 
 /* ── Memory graph SVG ── */
@@ -424,14 +365,8 @@ export function GlassMemPage() {
                 GlassMem lets OpenAI, Claude, MCP, and local agents share user context that updates, expires, and stays synchronized automatically.
               </p>
               <div className="hero__ctas enter-4">
-                <a href="/signup" className="btn btn--em btn--lg">Start free</a>
-                <a href="https://docs.glassmem.ai" className="btn btn--ghost btn--lg">View docs</a>
+                <a href="/signup" className="btn btn--em btn--lg">Get started</a>
               </div>
-              <button className="hero__install enter-5" onClick={copy}>
-                <span className="hero__install-p">$</span>
-                <span style={{ color: 'rgba(255,255,255,0.65)' }}>npm install glassmem</span>
-                <span className="hero__install-hint">{copied ? '✓ copied' : 'copy'}</span>
-              </button>
             </div>
 
             <div className="hero__viz-col">
@@ -448,9 +383,9 @@ export function GlassMemPage() {
           <span className="logos__label">Works with</span>
           <div className="logos__track-wrap">
             <div className="logos__track">
-              {[...LOGOS, ...LOGOS].map(({ Icon, name }, i) => (
+              {[...LOGOS, ...LOGOS].map(({ img, name, h, style }, i) => (
                 <div key={i} className="logos__item">
-                  <Icon />
+                  <img src={img} alt={name} className="logos__img" height={h} style={style} />
                   <span className="logos__item-name">{name}</span>
                 </div>
               ))}

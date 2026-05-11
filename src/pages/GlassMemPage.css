@@ -549,6 +549,7 @@ img { display: block; max-width: 100%; }
 .logos__item:hover { color: var(--tx-2); }
 .logos__item-name { font-size: 14px; font-weight: 500; letter-spacing: -0.01em; }
 .logos__icon { width: 20px; height: 20px; flex-shrink: 0; opacity: 0.55; }
+.logos__img  { width: auto; flex-shrink: 0; display: block; }
 @media (max-width: 768px) {
   .logos__inner { padding: 0 24px; }
   .logos__label { display: none; }
