@@ -957,6 +957,18 @@ img { display: block; max-width: 100%; }
 }
 .cta__sub   { margin-bottom: 28px; max-width: 44ch; }
 .cta__btns  { display: flex; align-items: center; gap: 10px; margin-bottom: 20px; }
+.cta__email-form {
+  display: flex; gap: 8px; margin-bottom: 20px;
+}
+.cta__email-input {
+  flex: 1; padding: 10px 16px;
+  background: var(--bg-2); border: 1px solid var(--bd-2);
+  border-radius: var(--r); color: var(--tx);
+  font-family: var(--f-body); font-size: 14px;
+  transition: border-color 0.15s; outline: none;
+}
+.cta__email-input:focus       { border-color: var(--em); }
+.cta__email-input::placeholder { color: var(--tx-3); }
 .cta__install {
   display: inline-flex; align-items: center; gap: 10px;
   font-family: var(--f-code); font-size: 13px; color: var(--tx-2);

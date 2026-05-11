@@ -19,8 +19,6 @@ const Logo = ({ size = 26 }) => (
 );
 
 /* ── Real brand logos — served from /public/logos/ ── */
-// style: CSS filter string to apply on dark background
-// h: display height in px (width auto-scales)
 const LOGOS = [
   { img: '/logos/cursor.png',    name: 'Cursor',    h: 22, style: { filter: 'brightness(0) invert(1)', opacity: 0.7  } },
   { img: '/logos/claude.svg',    name: 'Claude',    h: 22, style: { opacity: 0.85 } },
@@ -32,74 +30,18 @@ const LOGOS = [
   { img: '/logos/arcade.png',    name: 'Arcade',    h: 22, style: { opacity: 0.75 } },
 ];
 
-/* ── Memory graph SVG ── */
-const MemoryGraph = () => {
-  const nodes = [
-    { id: 'user',        x: 140, y: 130, label: 'User',        em: true  },
-    { id: 'cafe',        x: 280, y: 60,  label: 'Cafe',        em: false },
-    { id: 'coffee',      x: 380, y: 140, label: 'Flat White',  em: false },
-    { id: 'friday',      x: 240, y: 210, label: 'Friday',      em: false },
-    { id: 'time',        x: 370, y: 240, label: '10AM',        em: false },
-    { id: 'work',        x: 100, y: 230, label: 'Work',        em: false },
-    { id: 'productive',  x: 60,  y: 130, label: 'Productive',  em: false },
-  ];
-  const edges = [
-    { from: 'user',    to: 'cafe',       label: 'visits'   },
-    { from: 'user',    to: 'work',       label: 'works at' },
-    { from: 'user',    to: 'productive', label: 'feels'    },
-    { from: 'cafe',    to: 'coffee',     label: 'serves'   },
-    { from: 'user',    to: 'coffee',     label: 'orders'   },
-    { from: 'user',    to: 'friday',     label: 'on'       },
-    { from: 'friday',  to: 'time',       label: 'at'       },
-  ];
-  const nodeMap = Object.fromEntries(nodes.map(n => [n.id, n]));
-  return (
-    <svg width="100%" viewBox="0 0 460 310" fill="none" style={{ display:'block' }}>
-      {edges.map((e, i) => {
-        const a = nodeMap[e.from];
-        const b = nodeMap[e.to];
-        const mx = (a.x + b.x) / 2;
-        const my = (a.y + b.y) / 2;
-        return (
-          <g key={i}>
-            <line x1={a.x} y1={a.y} x2={b.x} y2={b.y}
-              stroke="rgba(255,255,255,0.08)" strokeWidth="1.5"/>
-            <text x={mx} y={my - 4} textAnchor="middle"
-              fill="rgba(255,255,255,0.2)" fontSize="9"
-              fontFamily="'Fira Code', monospace">{e.label}</text>
-          </g>
-        );
-      })}
-      {nodes.map(n => (
-        <g key={n.id}>
-          <circle cx={n.x} cy={n.y} r={n.em ? 22 : 18}
-            fill={n.em ? 'rgba(110,231,183,0.1)' : 'rgba(255,255,255,0.04)'}
-            stroke={n.em ? '#6ee7b7' : 'rgba(255,255,255,0.16)'}
-            strokeWidth={n.em ? 1.5 : 1}/>
-          <text x={n.x} y={n.y + 4} textAnchor="middle"
-            fill={n.em ? '#6ee7b7' : 'rgba(255,255,255,0.55)'}
-            fontSize={n.em ? 11 : 10}
-            fontFamily="'Inter', sans-serif"
-            fontWeight={n.em ? '600' : '400'}>{n.label}</text>
-        </g>
-      ))}
-    </svg>
-  );
-};
-
-/* ── Hero visualization — SF → Stockholm travel scenario ── */
+/* ── Hero visualization — coding agent context ── */
 const VIZ_AGENTS = [
-  { pip: '#a78bfa', name: 'Calendar Agent', change: '9AM standup → 6PM Stockholm', revert: '↺ Jun 11' },
-  { pip: '#6ee7b7', name: 'Medicine Agent', change: 'Metformin 8AM → 5PM local',   revert: '↺ Jun 11' },
-  { pip: '#fb923c', name: 'Diet Agent',     change: 'Meal windows shifted +9h',     revert: '↺ Jun 11' },
+  { pip: '#a78bfa', name: 'Cursor',      change: 'FastAPI backend · no Prisma in prod',       revert: '↺ synced' },
+  { pip: '#6ee7b7', name: 'Claude Code', change: 'PostgreSQL for auth · REST over GraphQL',   revert: '↺ synced' },
+  { pip: '#fb923c', name: 'Cline',       change: 'No billing changes until Friday',           revert: '↺ expires Fri' },
 ];
 
 const HeroViz = () => {
   const [step, setStep] = useState(0);
-  // 0 = intro full-width, 1 = slide left + agents, 2 = verdict. Loops.
 
   useEffect(() => {
-    const delays = [4500, 3750, 5000]; // +25% from original timing
+    const delays = [4500, 3750, 5000];
     let tid;
     const tick = (s) => {
       const next = (s + 1) % 3;
@@ -116,7 +58,7 @@ const HeroViz = () => {
       <div className="hviz__bar">
         <span className="hviz__bar-title">
           <Logo size={13} />
-          GlassMem · shared temporal memory
+          GlassMem · project memory
         </span>
         <span className="hviz__bar-live">
           <span className="hero__panel-dot" style={{ marginRight: 4 }} />
@@ -133,16 +75,16 @@ const HeroViz = () => {
           <div className={`hviz__intro-wide${narrow ? ' hviz__intro-wide--out' : ''}`}>
             <p className="hviz__intro-eyebrow">example scenario</p>
             <h3 className="hviz__intro-heading">
-              SF → Stockholm.<br />Three agents,<br /><em>one sync.</em>
+              New session.<br />Zero cold start.<br /><em>Context already loaded.</em>
             </h3>
             <p className="hviz__intro-body">
-              User lands in Stockholm. Calendar, Medicine, and Diet agents all need a temporary +9h shift. GlassMem syncs it once — to all of them. Auto-reverts June 11.
+              A developer opens a new Cursor, Claude Code, or Cline session. GlassMem loads project decisions, coding conventions, and active constraints before the first line of code is written.
             </p>
             <div className="hviz__intro-rule" />
             <div className="hviz__intro-note">
               <span className="hviz__intro-note-dot" />
               <span className="hviz__intro-note-text">
-                One memory.write() — all agents updated. Expires automatically.
+                memory.recall() — context loaded in &lt;5ms before inference.
               </span>
             </div>
           </div>
@@ -150,12 +92,12 @@ const HeroViz = () => {
           {/* Narrow summary — visible in steps 1+ */}
           <div className={`hviz__intro-narrow${!narrow ? ' hviz__intro-narrow--hidden' : ''}`}>
             <p className="hviz__narrow-eyebrow">Example</p>
-            <p className="hviz__narrow-heading">SF → Stockholm.</p>
+            <p className="hviz__narrow-heading">New session.</p>
             <div className="hviz__narrow-points">
               {[
-                { pip: '#a78bfa', text: 'Temporary +9h' },
-                { pip: '#6ee7b7', text: '3 agents sync'  },
-                { pip: '#fb923c', text: 'Reverts Jun 11' },
+                { pip: '#a78bfa', text: 'Decisions loaded' },
+                { pip: '#6ee7b7', text: 'Style respected'  },
+                { pip: '#fb923c', text: 'Constraints active' },
               ].map(pt => (
                 <div key={pt.text} className="hviz__narrow-point">
                   <span className="hviz__narrow-point-pip" style={{ background: pt.pip }} />
@@ -173,13 +115,13 @@ const HeroViz = () => {
 
           {/* Context strip */}
           <div className="hviz__ctx">
-            <div className="hviz__ctx-route">SF → Stockholm</div>
+            <div className="hviz__ctx-route">Project context loaded</div>
             <div className="hviz__ctx-meta">
-              <span className="hviz__ctx-tag hviz__ctx-tag--em">+9 hours</span>
+              <span className="hviz__ctx-tag hviz__ctx-tag--em">3 agents</span>
               <span className="hviz__ctx-dot">·</span>
-              <span className="hviz__ctx-tag">Jun 4 – Jun 11</span>
+              <span className="hviz__ctx-tag">2 decisions · 1 constraint</span>
               <span className="hviz__ctx-dot">·</span>
-              <span className="hviz__ctx-tag hviz__ctx-tag--warn">TEMPORARY</span>
+              <span className="hviz__ctx-tag hviz__ctx-tag--warn">1 TEMPORARY</span>
             </div>
           </div>
 
@@ -205,11 +147,11 @@ const HeroViz = () => {
           <div className={`hviz__verdict${step < 2 ? ' hviz__verdict--hidden' : ''}`}>
             <div className="hviz__verdict-row">
               <span className="hviz__verdict-src">Without</span>
-              <span className="hviz__verdict-wrong">Every agent stores its own stale context. ✕</span>
+              <span className="hviz__verdict-wrong">Cold start. Re-reads repo. Forgets prior decisions. ✕</span>
             </div>
             <div className="hviz__verdict-row">
               <span className="hviz__verdict-src">GlassMem</span>
-              <span className="hviz__verdict-right">One update. All 3 sync. Reverts Jun 11. ✓</span>
+              <span className="hviz__verdict-right">Context loaded. Decisions intact. Constraints respected. ✓</span>
             </div>
           </div>
         </div>
@@ -219,7 +161,7 @@ const HeroViz = () => {
   );
 };
 
-/* ── Analytics line chart ── */
+/* ── Analytics chart ── */
 const AnalyticsChart = () => {
   const pts = [12, 28, 22, 45, 38, 62, 55, 80, 72, 94, 88, 100];
   const w = 320, h = 100;
@@ -249,35 +191,30 @@ const AnalyticsChart = () => {
   );
 };
 
-/* ── Terminal code — remember/recall API ── */
+/* ── Code lines — remember / recall API ── */
 const CODE_LINES = [
   { n: 1,  t: [{ c:'#7dd3fc',t:'import'},{c:'#e2e8f0',t:' { GlassMem } '},{c:'#7dd3fc',t:'from'},{c:'#86efac',t:" 'glassmem'"}] },
   { n: 2,  t: [] },
-  { n: 3,  t: [{ c:'#7dd3fc',t:'const'},{c:'#e2e8f0',t:' memory '},{c:'#94a3b8',t:'='},{c:'#7dd3fc',t:' new'},{c:'#fcd34d',t:' GlassMem'},{c:'#e2e8f0',t:"({ apiKey })"}] },
+  { n: 3,  t: [{ c:'#7dd3fc',t:'const'},{c:'#e2e8f0',t:' memory '},{c:'#94a3b8',t:'='},{c:'#7dd3fc',t:' new'},{c:'#fcd34d',t:' GlassMem'},{c:'#e2e8f0',t:'()'}] },
   { n: 4,  t: [] },
-  { n: 5,  t: [{ c:'#64748b',t:'// Save expiring memory — every agent sees this' }] },
-  { n: 6,  t: [{ c:'#7dd3fc',t:'await'},{c:'#e2e8f0',t:' memory.'},{c:'#93c5fd',t:'remember'},{c:'#e2e8f0',t:'(userId, {'}] },
-  { n: 7,  t: [{ c:'#e2e8f0',t:'  timezone: '},{c:'#86efac',t:'"Stockholm"'},{c:'#e2e8f0',t:','}] },
-  { n: 8,  t: [{ c:'#e2e8f0',t:'  expires:  '},{c:'#86efac',t:'"Jun 11"'}] },
-  { n: 9,  t: [{ c:'#e2e8f0',t:'})'}] },
-  { n: 10, t: [] },
-  { n: 11, t: [{ c:'#64748b',t:'// Recall before inference — 4ms, shared across agents' }] },
-  { n: 12, t: [{ c:'#7dd3fc',t:'const'},{c:'#e2e8f0',t:' ctx '},{c:'#94a3b8',t:'='},{c:'#7dd3fc',t:' await'},{c:'#e2e8f0',t:' memory.'},{c:'#93c5fd',t:'recall'},{c:'#e2e8f0',t:'(userId)'}] },
+  { n: 5,  t: [{ c:'#64748b',t:'// Remember an architecture decision' }] },
+  { n: 6,  t: [{ c:'#7dd3fc',t:'await'},{c:'#e2e8f0',t:' memory.'},{c:'#93c5fd',t:'remember'},{c:'#e2e8f0',t:'('}] },
+  { n: 7,  t: [{ c:'#86efac',t:'  "Use PostgreSQL for auth state"'},{c:'#e2e8f0',t:', {'}] },
+  { n: 8,  t: [{ c:'#e2e8f0',t:'  type:    '},{c:'#86efac',t:'"architecture_decision"'},{c:'#e2e8f0',t:','}] },
+  { n: 9,  t: [{ c:'#e2e8f0',t:'  source:  '},{c:'#86efac',t:'"Claude Code"'},{c:'#e2e8f0',t:','}] },
+  { n: 10, t: [{ c:'#e2e8f0',t:'  expires: '},{c:'#fcd34d',t:'null'}] },
+  { n: 11, t: [{ c:'#e2e8f0',t:'})'}] },
+  { n: 12, t: [] },
+  { n: 13, t: [{ c:'#64748b',t:'// Recall before the agent edits code' }] },
+  { n: 14, t: [{ c:'#7dd3fc',t:'const'},{c:'#e2e8f0',t:' context '},{c:'#94a3b8',t:'='},{c:'#7dd3fc',t:' await'},{c:'#e2e8f0',t:' memory.'},{c:'#93c5fd',t:'recall'},{c:'#e2e8f0',t:'('},{c:'#86efac',t:'"auth refactor"'},{c:'#e2e8f0',t:')'}] },
 ];
 
-const FEATURES = [
-  { name: 'Sub-10ms reads',           desc: 'Served from an in-process cache with async write-through. Your agents never block on state.' },
-  { name: 'CRDT conflict resolution', desc: 'Writes propagate across replicas using a grow-only CRDT. No manual merging, no last-write-wins surprises.' },
-  { name: 'Namespaced isolation',     desc: 'Per-agent, per-session, and per-tenant namespaces built in. No configuration required to isolate workloads.' },
-  { name: 'Streaming event bus',      desc: 'Every mutation emits a typed event. Build reactive pipelines without a single setTimeout or polling loop.' },
-  { name: 'Pluggable backends',       desc: 'In-memory, Redis, PostgreSQL, or Supabase. Swap backends without changing a line of agent code.' },
-  { name: 'OpenTelemetry native',     desc: 'Full trace context on every read and write. Debug exactly where memory adds latency — no guessing.' },
-];
-
-const PLANS = [
-  { tier:'Hobby',      price:'$0',     period:'/mo', desc:'For side projects',     featured:false, feats:['1 project','100K ops / mo','1-day TTL','In-memory backend','Community support'] },
-  { tier:'Pro',        price:'$49',    period:'/mo', desc:'For production agents', featured:true,  feats:['Unlimited projects','10M ops / mo','90-day TTL','Redis + Postgres backends','Streaming events','Priority support'] },
-  { tier:'Enterprise', price:'Custom', period:'',    desc:'For teams at scale',    featured:false, feats:['SLA guarantee','Unlimited ops','Custom TTL','VPC deployment','SOC 2 compliant','Dedicated support'] },
+/* ── Memory items for local-first mockup ── */
+const MEMORY_ITEMS = [
+  { dot: '#6ee7b7', label: '"Use FastAPI for backend endpoints"',               type: 'Architecture decision', meta: 'Claude Code session · 2 days ago',  status: 'Active'   },
+  { dot: '#fb923c', label: '"Do not modify Stripe billing until migration"',    type: 'Temporary constraint',  meta: 'Expires Fri 18:00',                  status: 'Temporary'},
+  { dot: '#f87171', label: '"Previous Redis cache approach caused stale reads"',type: 'Failed attempt',        meta: 'Bugfix session · 1 week ago',         status: 'Active'   },
+  { dot: '#a78bfa', label: '"Prefer small PRs with tests"',                     type: 'User preference',       meta: 'Persistent',                          status: 'Active'   },
 ];
 
 /* ── Hooks ── */
@@ -306,15 +243,22 @@ function useCopy(text) {
 export function GlassMemPage() {
   useReveal();
 
-  const [scrolled, setScrolled] = useState(false);
-  const [mobOpen,  setMobOpen]  = useState(false);
-  const [copied,   copy]        = useCopy('npm install glassmem');
+  const [scrolled,  setScrolled]  = useState(false);
+  const [mobOpen,   setMobOpen]   = useState(false);
+  const [copied,    copy]         = useCopy('glassmem init');
+  const [ctaEmail,  setCtaEmail]  = useState('');
+  const [ctaSent,   setCtaSent]   = useState(false);
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 8);
     window.addEventListener('scroll', fn, { passive: true });
     return () => window.removeEventListener('scroll', fn);
   }, []);
+
+  const handleCtaSubmit = (e) => {
+    e.preventDefault();
+    if (ctaEmail) setCtaSent(true);
+  };
 
   return (
     <div>
@@ -327,23 +271,22 @@ export function GlassMemPage() {
             <span className="nav__wordmark">GlassMem</span>
           </a>
           <div className="nav__links">
-            {['Features', 'Pricing'].map(l => (
-              <a key={l} href={`#${l}`} className="nav__link">{l}</a>
-            ))}
+            <a href="#how-it-works" className="nav__link">How it works</a>
+            <a href="#compare"      className="nav__link">Compare</a>
             <a href="https://docs.glassmem.ai" className="nav__link">Docs</a>
             <a href="https://github.com/glassmem" className="nav__link">GitHub</a>
           </div>
           <div className="nav__right">
-            <a href="/app" className="btn btn--ghost btn--sm">Log in</a>
-            <a href="/signup" className="btn btn--em btn--sm">Get started</a>
+            <a href="/app"    className="btn btn--ghost btn--sm">Log in</a>
+            <a href="/signup" className="btn btn--em btn--sm">Join waitlist</a>
           </div>
           <button className="nav__mob-toggle" onClick={() => setMobOpen(o => !o)} aria-label="Menu">
             {mobOpen ? '✕' : '☰'}
           </button>
         </div>
         <div className={`nav__mob-menu${mobOpen ? ' open' : ''}`}>
-          {['Features','Pricing','Docs','GitHub'].map(l => (
-            <a key={l} href={`#${l}`} className="nav__mob-link" onClick={() => setMobOpen(false)}>{l}</a>
+          {['How it works','Compare','Docs','GitHub'].map(l => (
+            <a key={l} href={`#${l.toLowerCase().replace(/ /g,'-')}`} className="nav__mob-link" onClick={() => setMobOpen(false)}>{l}</a>
           ))}
         </div>
       </nav>
@@ -356,21 +299,25 @@ export function GlassMemPage() {
             <div>
               <div className="hero__badge enter">
                 <span className="hero__badge-dot" />
-                Public beta — v0.4
+                Local-first · MCP-native · Built for coding agents
               </div>
               <h1 className="h1 hero__h1 enter-2">
-                Shared memory<br />for AI agents.
+                Stop explaining<br />your project to<br />every new agent<br />session.
               </h1>
               <p className="body-lg hero__sub enter-3">
-                GlassMem lets OpenAI, Claude, MCP, and local agents share user context that updates, expires, and stays synchronized automatically.
+                GlassMem gives Claude Code, Cursor, Cline, Windsurf, Codex, and MCP agents shared project memory that stays local, inspectable, and fresh.
               </p>
               <div className="hero__ctas enter-4">
-                <a href="/signup" className="btn btn--em btn--lg">Get started</a>
+                <a href="/signup" className="btn btn--em btn--lg">Join waitlist</a>
+                <a href="https://github.com/glassmem" className="btn btn--ghost btn--lg">View GitHub</a>
               </div>
+              <p className="body-sm enter-5" style={{ color: 'var(--tx-3)', marginTop: 8 }}>
+                Local-first. MCP-native. Built for coding agents.
+              </p>
             </div>
 
             <div className="hero__viz-col">
-              <p className="hero__viz-label">Example: one temporary update, every agent adjusts.</p>
+              <p className="hero__viz-label">Live example: agent loads project context on session start.</p>
               <HeroViz />
             </div>
           </div>
@@ -380,7 +327,7 @@ export function GlassMemPage() {
       {/* ═══ LOGOS STRIP ════════════════════════════ */}
       <div className="logos">
         <div className="logos__inner">
-          <span className="logos__label">Works with</span>
+          <span className="logos__label">Works with your tools</span>
           <div className="logos__track-wrap">
             <div className="logos__track">
               {[...LOGOS, ...LOGOS].map(({ img, name, h, style }, i) => (
@@ -394,44 +341,100 @@ export function GlassMemPage() {
         </div>
       </div>
 
-      {/* ═══ WHAT GLASSMEM ACTUALLY DOES ════════════ */}
+      {/* ═══ PROBLEM ════════════════════════════════ */}
       <section className="sec">
+        <div className="w">
+          <div className="fail__intro reveal">
+            <div>
+              <span className="label">The problem</span>
+              <h2 className="h2">Your agent is rebuilding<br />the same context over and over.</h2>
+            </div>
+            <p className="body-lg" style={{ maxWidth: '44ch' }}>
+              Every new session starts cold. Your agent has no memory of what you built, what you decided, or what constraints are still active.
+            </p>
+          </div>
+
+          <div className="fail__table reveal">
+            {[
+              {
+                tag: '01',
+                title: 'Project amnesia',
+                desc:  'Every new session starts cold. Your agent has to rediscover architecture, conventions, file structure, and open decisions.',
+                issues: ['Re-reads the entire repo', 'Asks questions you already answered', 'Misses context buried in old chats'],
+              },
+              {
+                tag: '02',
+                title: 'Stale context',
+                desc:  'Old instructions and outdated assumptions stick around forever. Your agent may follow decisions that are no longer true.',
+                issues: ['No concept of expiration', 'Follows revoked constraints', 'Treats old and new context equally'],
+              },
+              {
+                tag: '03',
+                title: 'Tool silos',
+                desc:  'Claude Code, Cursor, Cline, and other agents each maintain fragmented memory. Nothing stays in sync across sessions or tools.',
+                issues: ['Each tool starts fresh', 'No shared project state', 'Repeated decisions per agent'],
+              },
+            ].map((col) => (
+              <div key={col.tag} className="fail__col">
+                <div className="fail__col-tag">{col.tag}</div>
+                <div className="fail__col-title">{col.title}</div>
+                <p className="fail__col-desc">{col.desc}</p>
+                <div className="fail__issues">
+                  {col.issues.map(iss => (
+                    <div key={iss} className="fail__issue">
+                      <span className="fail__x">✕</span>
+                      <span>{iss}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <p className="body-lg reveal" style={{ marginTop: 40, textAlign: 'center', maxWidth: '56ch', margin: '40px auto 0', color: 'var(--tx-3)' }}>
+            This is not a model problem. It is a memory problem.
+          </p>
+        </div>
+      </section>
+
+      {/* ═══ WHAT GLASSMEM DOES ═════════════════════ */}
+      <section className="sec sec--alt">
         <div className="w">
           <div className="does__intro reveal">
             <span className="label">What it does</span>
-            <h2 className="h2">What GlassMem<br />actually does</h2>
-            <p className="body-lg" style={{ maxWidth: '46ch', marginTop: 14 }}>
-              A concrete answer — not an abstract pitch.
+            <h2 className="h2">Shared memory<br />for coding agents</h2>
+            <p className="body-lg" style={{ maxWidth: '48ch', marginTop: 14 }}>
+              GlassMem stores the context your agent should not have to rediscover.
             </p>
           </div>
           <div className="does__grid reveal">
             <div className="does__col">
-              <p className="does__col-title">GlassMem stores and retrieves</p>
               {[
-                'User preferences',
-                'Temporary instructions',
-                'Schedules and routines',
-                'Project context',
-                'Prior conversations',
-                'Agent state',
-              ].map(item => (
-                <div key={item} className="does__item">
-                  <span className="does__item-dot" />
-                  <span>{item}</span>
+                { title: 'Project decisions',   desc: 'Remember why you chose Postgres over Mongo, REST over GraphQL, or one package over another.' },
+                { title: 'Coding conventions',  desc: 'Store naming patterns, folder structure, testing rules, linting expectations, and style preferences.' },
+                { title: 'Temporary constraints', desc: 'Remember short-lived context like "do not touch billing this week" or "use mock data until Friday."' },
+              ].map(f => (
+                <div key={f.title} className="does__item" style={{ flexDirection: 'column', alignItems: 'flex-start', padding: '16px 0' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+                    <span className="does__item-check">✓</span>
+                    <span style={{ fontFamily: 'var(--f-disp)', fontSize: 15, fontWeight: 600, color: 'var(--tx)' }}>{f.title}</span>
+                  </div>
+                  <span style={{ fontSize: 14, color: 'var(--tx-2)', lineHeight: 1.6 }}>{f.desc}</span>
                 </div>
               ))}
             </div>
             <div className="does__col">
-              <p className="does__col-title">GlassMem automatically</p>
               {[
-                'Shares memory across agents',
-                'Expires outdated context',
-                'Resolves stale temporary state',
-                'Returns compact context at inference time',
-              ].map(item => (
-                <div key={item} className="does__item">
-                  <span className="does__item-check">✓</span>
-                  <span>{item}</span>
+                { title: 'Bug history',         desc: 'Remember failed approaches and edge cases so the agent does not repeat them.' },
+                { title: 'User preferences',    desc: 'Remember how the developer likes code, explanations, diffs, and commits.' },
+                { title: 'Cross-agent context', desc: 'Share memory across Claude Code, Cursor, Cline, Windsurf, Codex, and any MCP-compatible agent.' },
+              ].map(f => (
+                <div key={f.title} className="does__item" style={{ flexDirection: 'column', alignItems: 'flex-start', padding: '16px 0' }}>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginBottom: 6 }}>
+                    <span className="does__item-check">✓</span>
+                    <span style={{ fontFamily: 'var(--f-disp)', fontSize: 15, fontWeight: 600, color: 'var(--tx)' }}>{f.title}</span>
+                  </div>
+                  <span style={{ fontSize: 14, color: 'var(--tx-2)', lineHeight: 1.6 }}>{f.desc}</span>
                 </div>
               ))}
             </div>
@@ -439,16 +442,152 @@ export function GlassMemPage() {
         </div>
       </section>
 
-      {/* ═══ WHY NOT A VECTOR DB ════════════════════ */}
-      <section id="Features" className="sec sec--alt">
+      {/* ═══ HOW IT WORKS ═══════════════════════════ */}
+      <section id="how-it-works" className="sec">
+        <div className="w">
+          <div className="alr__grid">
+            {/* Left — steps */}
+            <div>
+              <div className="alr__intro reveal">
+                <span className="label">How it works</span>
+                <h2 className="h2">Three commands.<br />Persistent context.</h2>
+                <p className="body-lg" style={{ marginTop: 14, maxWidth: '46ch' }}>
+                  Your agent gets the right project context before it edits code — without re-reading your whole repo or stuffing giant summaries into prompts.
+                </p>
+              </div>
+              <div className="alr__steps">
+                {[
+                  {
+                    num: '01',
+                    title: 'Initialize memory',
+                    desc: 'Run glassmem init in your project. Creates a local memory store. No cloud required.',
+                    code: 'glassmem init',
+                  },
+                  {
+                    num: '02',
+                    title: 'Connect your agent',
+                    desc: 'Run glassmem mcp start to expose memory over MCP. Every MCP-compatible agent picks it up automatically.',
+                    code: 'glassmem mcp start',
+                  },
+                  {
+                    num: '03',
+                    title: 'Remember and recall',
+                    desc: 'Call memory.remember() to save project context. Call memory.recall() before inference. Done.',
+                    code: 'memory.recall("auth refactor")',
+                  },
+                ].map((step, i) => (
+                  <div key={i} className="alr__step reveal" style={{ transitionDelay: `${i * 0.07}s` }}>
+                    <span className="alr__step-num">{step.num}</span>
+                    <div>
+                      <p className="alr__step-title">{step.title}</p>
+                      <p className="alr__step-desc">{step.desc}</p>
+                      <code style={{
+                        display: 'inline-block', marginTop: 10,
+                        fontFamily: 'var(--f-code)', fontSize: 12,
+                        color: 'var(--em)', background: 'rgba(110,231,183,0.07)',
+                        border: '1px solid rgba(110,231,183,0.15)',
+                        padding: '3px 10px', borderRadius: 5,
+                      }}>$ {step.code}</code>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right — code block */}
+            <div className="alr__mockup reveal">
+              <div className="alr__mockup-bar">
+                <span className="alr__mockup-dot alr__mockup-dot--r" />
+                <span className="alr__mockup-dot alr__mockup-dot--y" />
+                <span className="alr__mockup-dot alr__mockup-dot--g" />
+                <span className="alr__mockup-title">agent.ts</span>
+              </div>
+
+              {/* Terminal install block */}
+              <div style={{ padding: '16px 22px 0', background: '#0c0d11', borderBottom: '1px solid rgba(255,255,255,0.06)' }}>
+                {[
+                  ['$', 'npm install glassmem'],
+                  ['$', 'glassmem init'],
+                  ['$', 'glassmem mcp start'],
+                ].map(([p, cmd], i) => (
+                  <div key={i} className="term__row" style={{ marginBottom: 6 }}>
+                    <span style={{ color: 'var(--em)', fontFamily: 'var(--f-code)', fontSize: 13, minWidth: 16 }}>{p}</span>
+                    <span style={{ color: 'rgba(255,255,255,0.55)', fontFamily: 'var(--f-code)', fontSize: 13 }}>{cmd}</span>
+                  </div>
+                ))}
+                <div style={{ height: 16 }} />
+              </div>
+
+              <div className="term__body" style={{ padding: '20px 22px', background: '#0c0d11' }}>
+                {CODE_LINES.map(line => (
+                  <div key={line.n} className="term__row">
+                    <span className="term__ln">{line.n}</span>
+                    <span>{line.t.map((tok, j) => <span key={j} style={{ color: tok.c }}>{tok.t}</span>)}</span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="eco__badges">
+                <p className="eco__label">Works with</p>
+                <div className="eco__row">
+                  {['Claude Code', 'Cursor', 'Cline', 'Windsurf', 'Codex', 'MCP', 'TypeScript', 'Python'].map(b => (
+                    <span key={b} className="eco__badge">{b}</span>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ WHY NOT CLAUDE.MD ══════════════════════ */}
+      <section id="compare" className="sec sec--alt">
         <div className="w">
           <div className="compare__intro reveal">
             <div>
-              <span className="label">The right tool</span>
-              <h2 className="h2">Why not just use<br />a vector database?</h2>
+              <span className="label">vs CLAUDE.md</span>
+              <h2 className="h2">CLAUDE.md is a good start.<br />GlassMem is the memory system.</h2>
             </div>
             <p className="body-lg" style={{ maxWidth: '44ch' }}>
-              Vector databases retrieve similar text. GlassMem manages changing agent memory. They solve different problems.
+              Keep your CLAUDE.md. GlassMem keeps it from becoming a 400-line dumping ground.
+            </p>
+          </div>
+
+          <div className="compare__table reveal">
+            <div className="compare__head">
+              <div className="compare__head-blank" />
+              <div className="compare__head-col">CLAUDE.md / AGENTS.md</div>
+              <div className="compare__head-col compare__head-col--em">GlassMem</div>
+            </div>
+            {[
+              ['Format',       'Static markdown file',                  'Structured memories'                    ],
+              ['Maintenance',  'Manually updated by you',               'Written by agents, updated automatically'],
+              ['Freshness',    'Grows messy over time',                 'Stale context can be invalidated'       ],
+              ['Expiration',   'No expiration',                         'Temporary memories expire on schedule'  ],
+              ['Source',       'No history of who wrote what or when',  'Source and timestamp on every memory'   ],
+              ['Cross-tool',   'Copy-paste across tools',               'Shared through MCP — one source of truth'],
+              ['Inspectable',  'Hard to know what is still current',    'Local memory UI — see exactly what agents know'],
+            ].map(([feature, neg, pos]) => (
+              <div key={feature} className="compare__row">
+                <div className="compare__cell compare__cell--feat">{feature}</div>
+                <div className="compare__cell compare__cell--neg">{neg}</div>
+                <div className="compare__cell compare__cell--pos">{pos}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ WHY NOT A VECTOR DB ════════════════════ */}
+      <section className="sec">
+        <div className="w">
+          <div className="compare__intro reveal">
+            <div>
+              <span className="label">vs vector databases</span>
+              <h2 className="h2">Vector databases retrieve<br />similar text. GlassMem manages<br />project memory.</h2>
+            </div>
+            <p className="body-lg" style={{ maxWidth: '44ch' }}>
+              Your problem is not storing more text. Your problem is knowing what your agent should believe right now.
             </p>
           </div>
 
@@ -459,11 +598,13 @@ export function GlassMemPage() {
               <div className="compare__head-col compare__head-col--em">GlassMem</div>
             </div>
             {[
-              ['Stores',           'Text chunks',                          'Structured agent memory'                   ],
-              ['Retrieves by',     'Similarity',                           'Relevance, recency & validity'             ],
-              ['Expiration',       'No built-in expiration',               'Auto-expires stale state'                  ],
-              ['Multi-agent',      'Each agent manages memory separately', 'Memory syncs across all agents'            ],
-              ['Temp context',     'Treats old and new equally',           'Understands and reverts temporary state'   ],
+              ['Stores',        'Text chunks',                              'Structured project memory'               ],
+              ['Retrieves by',  'Semantic similarity',                      'Relevance, recency, and validity'         ],
+              ['Expiration',    'No built-in expiration',                   'Temporary memories expire automatically'  ],
+              ['Decisions',     'Treats all chunks equally',                'Tracks decisions and their rationale'     ],
+              ['Temp context',  'Cannot distinguish stale from current',    'Marks and reverts temporary constraints'  ],
+              ['Conflict',      'Weak at handling contradictions',          'Understands what supersedes what'         ],
+              ['Designed for',  'Document retrieval',                       'Coding-agent workflows'                   ],
             ].map(([feature, vdb, gm]) => (
               <div key={feature} className="compare__row">
                 <div className="compare__cell compare__cell--feat">{feature}</div>
@@ -475,56 +616,166 @@ export function GlassMemPage() {
         </div>
       </section>
 
-      {/* ═══ BIG CLAIM ══════════════════════════════ */}
-      <div className="claim">
+      {/* ═══ LOCAL-FIRST ════════════════════════════ */}
+      <section className="sec sec--alt">
         <div className="w">
-          <p className="claim__eyebrow reveal">a different approach</p>
-          <h2 className="claim__text reveal">
-            Shared memory.<br />
-            Expires when <em>you say so.</em><br />
-            All agents in sync.
-          </h2>
-          <p className="claim__sub reveal">
-            GlassMem structures agent memory as a typed knowledge graph — facts, relationships, and timing wired together. Retrieved in 4ms, expired on schedule, and shared across every agent in your stack.
-          </p>
-          <div className="claim__ctas reveal">
-            <a href="/signup" className="btn btn--em btn--lg">Start free</a>
-            <a href="https://docs.glassmem.ai" className="btn btn--ghost btn--lg">View docs</a>
+          <div className="analytics__grid">
+            {/* Left — prose */}
+            <div className="analytics__prose reveal">
+              <span className="label">Local-first</span>
+              <h2 className="h2">Your project context<br />should not start in<br />someone else's cloud.</h2>
+              <p className="body-lg" style={{ marginTop: 14, maxWidth: '44ch' }}>
+                GlassMem starts local. Your memory is inspectable, editable, and portable.
+              </p>
+              <div className="analytics__points">
+                {[
+                  { title: 'SQLite-backed local memory',    desc: 'Your project memory lives on disk in a human-readable format. No account required to get started.' },
+                  { title: 'Inspectable memory timeline',   desc: 'See every memory your agents have written — what it is, where it came from, and when it expires.' },
+                  { title: 'Import, export, and own it',    desc: 'Your memories are yours. Export anytime, move between machines, or back up with your repo.' },
+                ].map(pt => (
+                  <div key={pt.title} className="analytics__point">
+                    <span className="analytics__point-dot" />
+                    <div>
+                      <p className="analytics__point-title">{pt.title}</p>
+                      <p className="analytics__point-desc">{pt.desc}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+
+            {/* Right — memory UI mockup */}
+            <div className="analytics__dashboard reveal">
+              <div className="analytics__dash-bar">
+                <span className="analytics__dash-title">Project Memory</span>
+                <span className="analytics__dash-period">my-saas-project</span>
+              </div>
+              <div className="analytics__stats">
+                <div className="analytics__stat">
+                  <div className="analytics__stat-val">14</div>
+                  <div className="analytics__stat-lbl">memories</div>
+                </div>
+                <div className="analytics__stat">
+                  <div className="analytics__stat-val analytics__stat-em">1</div>
+                  <div className="analytics__stat-lbl">expiring soon</div>
+                </div>
+                <div className="analytics__stat">
+                  <div className="analytics__stat-val">3</div>
+                  <div className="analytics__stat-lbl">agents synced</div>
+                </div>
+              </div>
+
+              {/* Memory items */}
+              {MEMORY_ITEMS.map((item, i) => (
+                <div key={i} className="hero__event">
+                  <span className="hero__event-dot" style={{ background: item.dot }} />
+                  <div style={{ flex: 1, minWidth: 0 }}>
+                    <div className="hero__event-method" style={{ color: 'rgba(255,255,255,0.75)', fontFamily: 'var(--f-code)', fontSize: 12 }}>{item.label}</div>
+                    <div className="hero__event-detail">{item.type} · {item.meta}</div>
+                  </div>
+                  <span className="hero__event-time" style={{
+                    color: item.status === 'Temporary' ? '#fb923c' : 'var(--tx-3)',
+                    border: item.status === 'Temporary' ? '1px solid rgba(251,146,60,0.3)' : '1px solid var(--bd)',
+                    padding: '2px 7px', borderRadius: 4, fontSize: 10,
+                    fontFamily: 'var(--f-code)',
+                  }}>{item.status}</span>
+                </div>
+              ))}
+
+              <div className="analytics__chart-area">
+                <div className="analytics__chart-label">
+                  <span>memory recalls / day</span>
+                  <span style={{ color: '#6ee7b7' }}>+3 agents active</span>
+                </div>
+                <div className="analytics__chart-wrap">
+                  <AnalyticsChart />
+                </div>
+              </div>
+            </div>
           </div>
         </div>
-      </div>
+      </section>
 
-      {/* ═══ BUILT FOR BUILDERS ═════════════════════ */}
+      {/* ═══ USE CASES ══════════════════════════════ */}
       <section className="sec">
         <div className="w">
+          <div className="fail__intro reveal">
+            <div>
+              <span className="label">Use cases</span>
+              <h2 className="h2">Built for the work<br />agents actually do.</h2>
+            </div>
+            <p className="body-lg" style={{ maxWidth: '44ch' }}>
+              From solo vibecoders to small AI-native teams.
+            </p>
+          </div>
+          <div className="fail__table reveal">
+            {[
+              {
+                tag: 'Refactors',
+                title: 'Long-running refactors',
+                desc:  'A refactor that spans days or weeks needs persistent context. GlassMem keeps architecture decisions and open TODOs alive across every session.',
+                issues: ['Multi-session continuity', 'Decision trail preserved', 'No re-explaining on day 3'],
+              },
+              {
+                tag: 'Vibecoding',
+                title: 'Vibecoded apps',
+                desc:  'When you are moving fast and building with agents, GlassMem keeps your stack decisions, naming conventions, and rough edges in memory — not in your head.',
+                issues: ['Fast iteration with context', 'No repeated conventions talk', 'Constraints survive reloads'],
+              },
+              {
+                tag: 'Teams',
+                title: 'AI-native teams',
+                desc:  'When multiple developers use different coding agents on the same project, shared memory means everyone is working from the same project truth.',
+                issues: ['Shared project memory', 'Consistent conventions', 'One source of agent context'],
+              },
+            ].map((col) => (
+              <div key={col.tag} className="fail__col">
+                <div className="fail__col-tag">{col.tag}</div>
+                <div className="fail__col-title">{col.title}</div>
+                <p className="fail__col-desc">{col.desc}</p>
+                <div className="fail__issues">
+                  {col.issues.map(iss => (
+                    <div key={iss} className="fail__issue">
+                      <span style={{ color: 'var(--em)', flexShrink: 0, marginTop: 1 }}>✓</span>
+                      <span>{iss}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ DEVELOPER EXPERIENCE ═══════════════════ */}
+      <section className="sec sec--alt">
+        <div className="w">
           <div className="alr__grid">
-            {/* Left — steps */}
+            {/* Left */}
             <div>
               <div className="alr__intro reveal">
-                <span className="label">Built for builders</span>
-                <h2 className="h2">Memory infrastructure<br />in 5 minutes</h2>
+                <span className="label">Developer experience</span>
+                <h2 className="h2">Made for developers<br />who just want it to work.</h2>
                 <p className="body-lg" style={{ marginTop: 14, maxWidth: '46ch' }}>
-                  No RAG pipeline. No Redis wrangling. No memory engineering. Just{' '}
-                  <span className="inline-code">remember()</span>,{' '}
-                  <span className="inline-code">recall()</span>, and ship.
+                  No RAG pipeline. No Redis wrangling. No vector tuning. No memory research project.
                 </p>
               </div>
               <div className="alr__steps">
                 {[
                   {
                     num: '01',
-                    title: 'Install the SDK',
-                    desc: 'npm install glassmem. Works with OpenAI, Claude, LangChain, CrewAI, AutoGen, MCP, and any local LLM.',
+                    title: 'Install in 30 seconds',
+                    desc:  'npm install glassmem and glassmem init. Works locally with zero cloud config.',
                   },
                   {
                     num: '02',
-                    title: 'Save memory with expiry',
-                    desc: 'Call memory.remember(userId, { ...context, expires }) after any interaction. Writes through to your backend instantly.',
+                    title: 'MCP-native out of the box',
+                    desc:  'glassmem mcp start exposes memory to every MCP-compatible agent automatically. Claude Code, Cursor, Cline, Windsurf — they all pick it up.',
                   },
                   {
                     num: '03',
-                    title: 'Recall before every agent call',
-                    desc: 'Call memory.recall(userId) before inference. Get compact, ranked, valid context in 4ms — shared across every agent.',
+                    title: 'TypeScript and Python SDKs',
+                    desc:  'memory.remember() and memory.recall(). That is the core API. Both TypeScript and Python SDKs available.',
                   },
                 ].map((step, i) => (
                   <div key={i} className="alr__step reveal" style={{ transitionDelay: `${i * 0.07}s` }}>
@@ -538,16 +789,24 @@ export function GlassMemPage() {
               </div>
             </div>
 
-            {/* Right — code block + ecosystem badges */}
+            {/* Right — badges */}
             <div className="alr__mockup reveal">
               <div className="alr__mockup-bar">
                 <span className="alr__mockup-dot alr__mockup-dot--r" />
                 <span className="alr__mockup-dot alr__mockup-dot--y" />
                 <span className="alr__mockup-dot alr__mockup-dot--g" />
-                <span className="alr__mockup-title">agent.ts</span>
+                <span className="alr__mockup-title">glassmem.config.ts</span>
               </div>
-              <div className="term__body" style={{ padding: '20px 22px', background: '#0c0d11' }}>
-                {CODE_LINES.map(line => (
+              <div className="term__body" style={{ padding: '20px 22px', background: '#0c0d11', minHeight: 200 }}>
+                {[
+                  { n: 1,  t: [{ c:'#7dd3fc',t:'import'},{c:'#e2e8f0',t:' { defineConfig } '},{c:'#7dd3fc',t:'from'},{c:'#86efac',t:" 'glassmem'"}] },
+                  { n: 2,  t: [] },
+                  { n: 3,  t: [{ c:'#7dd3fc',t:'export default'},{c:'#fcd34d',t:' defineConfig'},{c:'#e2e8f0',t:'({'}] },
+                  { n: 4,  t: [{ c:'#e2e8f0',t:'  storage:  '},{c:'#86efac',t:'"local"'},{c:'#e2e8f0',t:', // sqlite on disk'}] },
+                  { n: 5,  t: [{ c:'#e2e8f0',t:'  mcp:      '},{c:'#fcd34d',t:'true'},{c:'#e2e8f0',t:",   // expose via MCP"}] },
+                  { n: 6,  t: [{ c:'#e2e8f0',t:'  agents:   '},{c:'#86efac',t:'["cursor","claude-code","cline"]'}] },
+                  { n: 7,  t: [{ c:'#e2e8f0',t:'})'}] },
+                ].map(line => (
                   <div key={line.n} className="term__row">
                     <span className="term__ln">{line.n}</span>
                     <span>{line.t.map((tok, j) => <span key={j} style={{ color: tok.c }}>{tok.t}</span>)}</span>
@@ -555,9 +814,9 @@ export function GlassMemPage() {
                 ))}
               </div>
               <div className="eco__badges">
-                <p className="eco__label">Works with</p>
+                <p className="eco__label">Compatible with</p>
                 <div className="eco__row">
-                  {['OpenAI', 'Anthropic', 'Claude Code', 'Cursor', 'MCP', 'LangChain', 'CrewAI', 'AutoGen', 'Local LLMs'].map(b => (
+                  {['MCP-native','Claude Code','Cursor','Cline','Windsurf','Codex','TypeScript SDK','Python SDK','Local-first','Open core'].map(b => (
                     <span key={b} className="eco__badge">{b}</span>
                   ))}
                 </div>
@@ -567,222 +826,76 @@ export function GlassMemPage() {
         </div>
       </section>
 
-      {/* ═══ MEMORY GRAPH ═══════════════════════════ */}
-      <section className="sec sec--alt">
+      {/* ═══ OPEN-CORE ══════════════════════════════ */}
+      <div className="claim">
         <div className="w">
-          <div className="graph__grid">
-            {/* Left — graph visual */}
-            <div className="graph__visual reveal">
-              <div className="graph__visual-bar">
-                <span className="graph__visual-title">knowledge graph · user_42</span>
-                <span className="graph__visual-live">
-                  <span style={{ width: 6, height: 6, borderRadius: '50%', background: '#6ee7b7', display: 'inline-block', marginRight: 4, animation: 'pulse 2s ease-in-out infinite' }} />
-                  live
-                </span>
-              </div>
-              <MemoryGraph />
-            </div>
-
-            {/* Right — prose + layers */}
-            <div className="graph__prose reveal">
-              <span className="label">Memory architecture</span>
-              <h2 className="h2">Not a flat store.<br />A structured graph.</h2>
-              <p className="body-lg" style={{ marginTop: 14, maxWidth: '44ch' }}>
-                Agents need more than facts. They need to understand how facts relate — who, what, when, and why. GlassMem models memory as a typed knowledge graph with four layers.
-              </p>
-              <div className="graph__layers">
-                {[
-                  { name: 'Semantic',  desc: 'User preferences, identities, and stable facts. Long TTL.',      tag: 'ttl: 90d'    },
-                  { name: 'Causal',    desc: 'Why things happened. Links between events and outcomes.',          tag: 'ttl: 30d'    },
-                  { name: 'Temporal',  desc: 'When things happen. Routines, recurrence, and timing patterns.',   tag: 'ttl: 14d'    },
-                  { name: 'Entity',    desc: 'Named things — people, places, products — with typed relations.',  tag: 'typed nodes' },
-                ].map(layer => (
-                  <div key={layer.name} className="graph__layer">
-                    <div>
-                      <p className="graph__layer-name">{layer.name}</p>
-                      <p className="graph__layer-tag">{layer.tag}</p>
-                    </div>
-                    <p className="graph__layer-desc">{layer.desc}</p>
-                  </div>
-                ))}
-              </div>
-            </div>
+          <p className="claim__eyebrow reveal">open core</p>
+          <h2 className="claim__text reveal">
+            Open where trust matters.<br />
+            Hosted where teams<br />
+            need <em>scale.</em>
+          </h2>
+          <p className="claim__sub reveal">
+            GlassMem should be usable locally by every developer. The core memory engine, MCP server, and SDKs are designed to be open source. Paid hosted features — team sync, org memory, cloud backups, and an enterprise dashboard — come later.
+          </p>
+          <div className="claim__ctas reveal">
+            <a href="/signup"                       className="btn btn--em btn--lg">Join waitlist</a>
+            <a href="https://github.com/glassmem"  className="btn btn--ghost btn--lg">Star on GitHub</a>
           </div>
         </div>
-      </section>
+      </div>
 
-      {/* ═══ ANALYTICS ══════════════════════════════ */}
-      <section className="sec">
-        <div className="w">
-          <div className="analytics__grid">
-            {/* Left — prose */}
-            <div className="analytics__prose reveal">
-              <span className="label">Observability</span>
-              <h2 className="h2">See exactly what<br />your agents remember</h2>
-              <p className="body-lg" style={{ marginTop: 14, maxWidth: '44ch' }}>
-                Every memory operation is logged, traced, and visible. Know which memories fire most, when context degrades, and where latency hides.
-              </p>
-              <div className="analytics__points">
-                {[
-                  { title: 'Per-agent memory graphs',    desc: 'Inspect what each agent has learned, broken down by memory layer and entity type.'    },
-                  { title: 'Cache hit analytics',         desc: 'Track hit rates over time. Identify cold-start patterns before they become problems.' },
-                  { title: 'OpenTelemetry traces',        desc: 'Every read and write carries full trace context. Plug into your existing stack.'      },
-                ].map(pt => (
-                  <div key={pt.title} className="analytics__point">
-                    <span className="analytics__point-dot" />
-                    <div>
-                      <p className="analytics__point-title">{pt.title}</p>
-                      <p className="analytics__point-desc">{pt.desc}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* Right — dashboard */}
-            <div className="analytics__dashboard reveal">
-              <div className="analytics__dash-bar">
-                <span className="analytics__dash-title">Memory Analytics</span>
-                <span className="analytics__dash-period">last 30 days</span>
-              </div>
-              <div className="analytics__stats">
-                <div className="analytics__stat">
-                  <div className="analytics__stat-val">12,847</div>
-                  <div className="analytics__stat-lbl">memories stored</div>
-                </div>
-                <div className="analytics__stat">
-                  <div className="analytics__stat-val analytics__stat-em">94.2%</div>
-                  <div className="analytics__stat-lbl">cache hit rate</div>
-                </div>
-                <div className="analytics__stat">
-                  <div className="analytics__stat-val">4ms</div>
-                  <div className="analytics__stat-lbl">avg recall</div>
-                </div>
-              </div>
-              <div className="analytics__chart-area">
-                <div className="analytics__chart-label">
-                  <span>memory recalls / day</span>
-                  <span style={{ color: '#6ee7b7' }}>+38% this month</span>
-                </div>
-                <div className="analytics__chart-wrap">
-                  <AnalyticsChart />
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ FEATURES SPLIT ═════════════════════════ */}
-      <section className="sec sec--alt">
-        <div className="w">
-          <div className="split">
-            <div className="split__sticky reveal">
-              <span className="label">Under the hood</span>
-              <h2 className="h2" style={{ marginBottom: 16 }}>Built for<br />production</h2>
-              <p className="body-lg" style={{ maxWidth: '40ch' }}>
-                GlassMem is not a key-value wrapper. It is a purpose-built memory layer with conflict resolution, streaming, and full observability.
-              </p>
-              <div className="term" style={{ marginTop: 32 }}>
-                <div className="term__bar">
-                  <div className="term__dots">
-                    <span className="term__dot term__dot--r" />
-                    <span className="term__dot term__dot--y" />
-                    <span className="term__dot term__dot--g" />
-                  </div>
-                  <span className="term__file">agent.ts</span>
-                  <span style={{ width: 48 }} />
-                </div>
-                <div className="term__body">
-                  {CODE_LINES.map(line => (
-                    <div key={line.n} className="term__row">
-                      <span className="term__ln">{line.n}</span>
-                      <span>{line.t.map((tok, j) => <span key={j} style={{ color: tok.c }}>{tok.t}</span>)}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            <div className="split__features">
-              {FEATURES.map((f, i) => (
-                <div key={i} className="split__feat reveal" style={{ transitionDelay: `${i * 0.05}s` }}>
-                  <p className="split__feat-name">{f.name}</p>
-                  <p className="body split__feat-desc">{f.desc}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ PRICING ════════════════════════════════ */}
-      <section id="Pricing" className="sec">
-        <div className="w">
-          <div style={{ textAlign: 'center', marginBottom: 48 }} className="reveal">
-            <span className="label">Pricing</span>
-            <h2 className="h2" style={{ marginBottom: 10 }}>Simple, transparent pricing</h2>
-            <p className="body-lg" style={{ maxWidth: '42ch', margin: '0 auto' }}>
-              Start free. Scale when your agents do. No hidden costs.
-            </p>
-          </div>
-          <div className="pricing__grid reveal">
-            {PLANS.map((p, i) => (
-              <div key={i} className={`plan${p.featured ? ' plan--feat' : ''}`}>
-                <div className="plan__tier">
-                  {p.tier}
-                  {p.featured && <span className="plan__badge">Most popular</span>}
-                </div>
-                <div className="plan__price">
-                  {p.price}
-                  <span className="plan__period">{p.period}</span>
-                </div>
-                <div className="plan__desc">{p.desc}</div>
-                <div className="plan__rule" />
-                <ul className="plan__feats">
-                  {p.feats.map(f => (
-                    <li key={f} className="plan__feat">
-                      <span className="plan__check">✓</span>{f}
-                    </li>
-                  ))}
-                </ul>
-                <a href="#" className={`btn btn--lg${p.featured ? ' btn--em' : ' btn--ghost'}`} style={{ justifyContent: 'center' }}>
-                  {p.price === 'Custom' ? 'Talk to us' : 'Get started'}
-                </a>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* ═══ CTA ════════════════════════════════════ */}
+      {/* ═══ FINAL CTA ══════════════════════════════ */}
       <section className="sec cta">
         <div className="w">
           <div className="cta__inner">
             <div className="reveal">
-              <span className="label">Get started</span>
-              <h2 className="cta__h2">Give your agents memory<br />that does not go stale.</h2>
+              <span className="label">Get early access</span>
+              <h2 className="cta__h2">Give your coding agent<br />a memory it can trust.</h2>
               <p className="body-lg cta__sub">
-                Start with one SDK call. Add shared, expiring context to every agent you build.
+                Join the waitlist for local-first shared memory across Claude Code, Cursor, Cline, Windsurf, Codex, and MCP agents.
               </p>
-              <div className="cta__btns">
-                <a href="/signup" className="btn btn--em btn--lg">Start free</a>
-                <a href="https://docs.glassmem.ai" className="btn btn--ghost btn--lg">Read the docs</a>
-              </div>
+
+              {ctaSent ? (
+                <div style={{
+                  display: 'inline-flex', alignItems: 'center', gap: 10,
+                  padding: '12px 20px', borderRadius: 'var(--r)',
+                  background: 'rgba(110,231,183,0.08)', border: '1px solid rgba(110,231,183,0.2)',
+                  color: 'var(--em)', fontFamily: 'var(--f-code)', fontSize: 13,
+                  marginBottom: 20,
+                }}>
+                  <span style={{ width: 7, height: 7, borderRadius: '50%', background: 'var(--em)', display: 'inline-block' }} />
+                  You're on the list — we'll be in touch.
+                </div>
+              ) : (
+                <form className="cta__email-form" onSubmit={handleCtaSubmit}>
+                  <input
+                    className="cta__email-input"
+                    type="email"
+                    placeholder="you@company.com"
+                    value={ctaEmail}
+                    onChange={e => setCtaEmail(e.target.value)}
+                    required
+                  />
+                  <button type="submit" className="btn btn--em btn--lg">Request access</button>
+                </form>
+              )}
+
               <button className="cta__install" onClick={copy}>
                 <span className="cta__install-p">$</span>
-                <span style={{ color: 'rgba(255,255,255,0.65)' }}>npm install glassmem</span>
+                <span style={{ color: 'rgba(255,255,255,0.65)' }}>glassmem init</span>
                 <span className="hero__install-hint">{copied ? '✓ copied' : 'copy'}</span>
               </button>
             </div>
+
             <div className="cta__checklist reveal">
               {[
-                'Works with OpenAI, Claude, MCP, LangChain',
-                'Free tier — no credit card required',
-                'remember() and recall() — that is the API',
+                'Works with Claude Code, Cursor, Cline, Windsurf, Codex',
+                'Local-first — no cloud required to start',
+                'MCP-native — agents pick it up automatically',
+                'memory.remember() and memory.recall() — that\'s the API',
                 'Temporary context expires automatically',
-                'All agents share the same memory',
-                'Deploy to your own infrastructure',
+                'Open core — core engine will be open source',
               ].map(item => (
                 <div key={item} className="cta__check-item">
                   <span className="cta__check-dot" />{item}
@@ -801,11 +914,16 @@ export function GlassMemPage() {
             <span className="footer__word">GlassMem</span>
           </div>
           <div className="footer__links">
-            {['Docs', 'GitHub', 'Twitter', 'Discord', 'Blog'].map(l => (
-              <a key={l} href="#" className="footer__link">{l}</a>
+            {[
+              { l: 'Docs',    h: 'https://docs.glassmem.ai'     },
+              { l: 'GitHub',  h: 'https://github.com/glassmem' },
+              { l: 'Twitter', h: '#'                             },
+              { l: 'Discord', h: '#'                             },
+            ].map(({ l, h }) => (
+              <a key={l} href={h} className="footer__link">{l}</a>
             ))}
           </div>
-          <span className="footer__copy">© 2025 GlassMem · MIT License</span>
+          <span className="footer__copy">© 2025 GlassMem · Open core</span>
         </div>
       </footer>
 
