@@ -1490,3 +1490,281 @@ img { display: block; max-width: 100%; }
 }
 .cta__email-input:focus        { border-color: var(--em); }
 .cta__email-input::placeholder { color: var(--tx-3); }
+
+/* ══════════════════════════════════════════════════
+   FEATURE CARD VARIANTS & MOCK UI
+══════════════════════════════════════════════════ */
+
+/* Wide card — spans 2 columns */
+.feat__card--wide {
+  grid-column: span 2;
+}
+@media (max-width: 900px) {
+  .feat__card--wide { grid-column: span 2; }
+}
+@media (max-width: 600px) {
+  .feat__card--wide { grid-column: span 1; }
+}
+
+/* Taller art area */
+.feat__card-art--tall {
+  height: auto;
+  min-height: 110px;
+  align-items: flex-start;
+  padding: 6px 0 4px;
+}
+
+/* ── Mock memory store ── */
+.feat__mock-store {
+  display: flex; flex-direction: column; gap: 7px;
+  width: 100%;
+}
+.feat__mock-row {
+  display: flex; align-items: center; gap: 9px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--bd);
+  border-radius: 6px;
+  padding: 7px 10px;
+}
+.feat__mock-pip {
+  width: 7px; height: 7px; border-radius: 50%; flex-shrink: 0;
+}
+.feat__mock-text {
+  font-family: var(--f-code); font-size: 12px;
+  color: rgba(255,255,255,0.65); flex: 1;
+  white-space: nowrap; overflow: hidden; text-overflow: ellipsis;
+}
+.feat__mock-tag {
+  font-family: var(--f-code); font-size: 10px;
+  color: var(--tx-3); border: 1px solid var(--bd);
+  padding: 2px 7px; border-radius: 4px; flex-shrink: 0;
+  background: rgba(255,255,255,0.02);
+}
+
+/* ── Mock code lines ── */
+.feat__mock-code {
+  display: flex; flex-direction: column; gap: 5px;
+  width: 100%;
+  background: rgba(12,13,17,0.85);
+  border: 1px solid var(--bd);
+  border-radius: 6px;
+  padding: 12px 14px;
+}
+.feat__mock-code-line {
+  font-family: var(--f-code); font-size: 12px;
+  color: var(--em); line-height: 1.5;
+  white-space: nowrap;
+}
+
+/* ── Mock temporary constraint ── */
+.feat__mock-temp {
+  width: 100%;
+  background: rgba(251,146,60,0.06);
+  border: 1px solid rgba(251,146,60,0.2);
+  border-radius: 8px;
+  padding: 14px 16px;
+  display: flex; flex-direction: column; gap: 6px;
+}
+.feat__mock-temp-badge {
+  font-family: var(--f-code); font-size: 9px;
+  letter-spacing: 0.12em; color: #fb923c;
+  background: rgba(251,146,60,0.12);
+  border: 1px solid rgba(251,146,60,0.25);
+  border-radius: 4px; padding: 2px 8px;
+  display: inline-block; align-self: flex-start;
+}
+.feat__mock-temp-text {
+  font-family: var(--f-disp); font-size: 14px; font-weight: 600;
+  color: var(--tx); line-height: 1.2;
+}
+.feat__mock-temp-meta {
+  font-family: var(--f-code); font-size: 11px;
+  color: var(--tx-3);
+}
+.feat__mock-temp-bar {
+  height: 3px; background: var(--bd-2);
+  border-radius: 9999px; overflow: hidden; margin-top: 2px;
+}
+.feat__mock-temp-fill {
+  height: 100%; width: 55%;
+  background: #fb923c;
+  border-radius: 9999px;
+}
+
+/* ── Mock bug history ── */
+.feat__mock-bug {
+  width: 100%;
+  background: rgba(239,68,68,0.04);
+  border: 1px solid rgba(239,68,68,0.15);
+  border-radius: 8px;
+  padding: 14px 16px;
+  display: flex; flex-direction: column; gap: 8px;
+}
+.feat__mock-bug-row {
+  display: flex; align-items: flex-start; gap: 12px;
+}
+.feat__mock-bug-x {
+  color: rgba(239,68,68,0.7); font-size: 14px; flex-shrink: 0; margin-top: 1px;
+}
+.feat__mock-bug-title {
+  font-family: var(--f-disp); font-size: 13px; font-weight: 600;
+  color: var(--tx); margin-bottom: 3px;
+}
+.feat__mock-bug-note {
+  font-family: var(--f-code); font-size: 11px;
+  color: rgba(239,68,68,0.6); font-style: italic;
+}
+.feat__mock-bug-meta {
+  font-family: var(--f-code); font-size: 10px;
+  color: var(--tx-3); letter-spacing: 0.04em;
+}
+
+/* ── Mock terminal ── */
+.feat__mock-term {
+  width: 100%;
+  background: #0c0d11;
+  border: 1px solid var(--bd-2);
+  border-radius: 6px;
+  padding: 12px 14px;
+  display: flex; flex-direction: column; gap: 5px;
+}
+.feat__mock-term-line {
+  font-family: var(--f-code); font-size: 12px;
+  color: rgba(255,255,255,0.55); line-height: 1.5;
+}
+.feat__mock-term-ok {
+  color: var(--em);
+}
+
+/* ══════════════════════════════════════════════════
+   HOW IT WORKS — tabbed (mem0 style)
+══════════════════════════════════════════════════ */
+.hiw__header {
+  margin-bottom: 52px;
+}
+.hiw__grid {
+  display: grid;
+  grid-template-columns: 380px 1fr;
+  gap: 48px;
+  align-items: start;
+}
+@media (max-width: 900px) {
+  .hiw__grid { grid-template-columns: 1fr; gap: 32px; }
+}
+
+/* Step list */
+.hiw__steps {
+  display: flex; flex-direction: column; gap: 2px;
+}
+.hiw__step {
+  display: flex; align-items: flex-start; gap: 18px;
+  padding: 20px 22px;
+  border: 1px solid transparent;
+  border-radius: var(--r-lg);
+  text-align: left;
+  transition: background 0.18s, border-color 0.18s;
+  cursor: pointer;
+  background: transparent;
+}
+.hiw__step:hover {
+  background: rgba(255,255,255,0.025);
+}
+.hiw__step--active {
+  background: var(--bg-2);
+  border-color: var(--bd-2);
+}
+.hiw__step-num {
+  font-family: var(--f-code); font-size: 11px;
+  color: var(--em); letter-spacing: 0.08em;
+  flex-shrink: 0; margin-top: 2px;
+  opacity: 0.7;
+}
+.hiw__step--active .hiw__step-num { opacity: 1; }
+
+.hiw__step-body { display: flex; flex-direction: column; gap: 3px; }
+
+.hiw__step-label {
+  font-family: var(--f-code); font-size: 10px;
+  letter-spacing: 0.1em; text-transform: uppercase;
+  color: var(--tx-3); margin-bottom: 2px;
+}
+.hiw__step--active .hiw__step-label { color: var(--em); }
+
+.hiw__step-title {
+  font-family: var(--f-disp); font-size: 17px; font-weight: 700;
+  letter-spacing: -0.03em; color: var(--tx-2); line-height: 1.2;
+}
+.hiw__step--active .hiw__step-title { color: var(--tx); }
+
+.hiw__step-desc {
+  font-size: 13px; line-height: 1.6; color: var(--tx-3);
+  max-height: 0; overflow: hidden;
+  transition: max-height 0.35s cubic-bezier(0.16,1,0.3,1), opacity 0.25s;
+  opacity: 0; margin-top: 0;
+}
+.hiw__step-desc--visible {
+  max-height: 120px;
+  opacity: 1;
+  margin-top: 8px;
+}
+
+/* Code panel */
+.hiw__panel {
+  border: 1px solid var(--bd-2);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+  background: #0c0d11;
+  position: sticky;
+  top: 80px;
+}
+
+/* ══════════════════════════════════════════════════
+   COMPARISON — tabbed header
+══════════════════════════════════════════════════ */
+.comp__header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 32px;
+  margin-bottom: 32px;
+  flex-wrap: wrap;
+}
+.comp__tabs {
+  display: flex; gap: 6px;
+  background: var(--bg-2);
+  border: 1px solid var(--bd-2);
+  border-radius: 999px;
+  padding: 4px;
+  flex-shrink: 0;
+}
+.comp__tab {
+  font-family: var(--f-code); font-size: 12px;
+  padding: 8px 18px;
+  border-radius: 999px;
+  color: var(--tx-3);
+  transition: background 0.18s, color 0.18s;
+  white-space: nowrap;
+}
+.comp__tab:hover { color: var(--tx-2); }
+.comp__tab--active {
+  background: var(--bg-3);
+  color: var(--tx);
+  border: 1px solid var(--bd-2);
+}
+
+/* ══════════════════════════════════════════════════
+   PRICING — 5 column variant
+══════════════════════════════════════════════════ */
+.pricing__grid--5 {
+  grid-template-columns: repeat(5, 1fr);
+  max-width: 100%;
+}
+@media (max-width: 1100px) {
+  .pricing__grid--5 { grid-template-columns: repeat(3, 1fr); }
+}
+@media (max-width: 740px) {
+  .pricing__grid--5 { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 480px) {
+  .pricing__grid--5 { grid-template-columns: 1fr; max-width: 360px; }
+}
