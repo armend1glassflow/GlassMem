@@ -50,16 +50,16 @@ const LOGOS = [
    ANIMATED HERO VISUALIZATION
 ───────────────────────────────────────────────── */
 const STORE_MEMORIES = [
-  { pip: '#6ee7b7', text: 'Use FastAPI for backend',   tag: 'decision',   temporal: false },
-  { pip: '#fb923c', text: 'No billing until Friday',   tag: 'temp',       temporal: true  },
-  { pip: '#a78bfa', text: 'PostgreSQL for auth state', tag: 'decision',   temporal: false },
-  { pip: '#94a3b8', text: 'Prefer small PRs + tests',  tag: 'preference', temporal: false },
+  { pip: '#6ee7b7', text: 'Use repository pattern for DB access',    tag: 'decision',   temporal: false },
+  { pip: '#fb923c', text: 'No billing until Stripe migration done',  tag: 'temp ↺',     temporal: true  },
+  { pip: '#ef4444', text: 'Redis cache caused stale billing reads',  tag: 'failed',     temporal: false },
+  { pip: '#94a3b8', text: 'Frontend uses server actions, not REST',  tag: 'decision',   temporal: false },
 ];
 
 const MF_AGENTS = [
-  { name: 'Cursor',      pip: '#a78bfa', items: ['FastAPI backend', 'no Prisma in prod', 'PostgreSQL auth'] },
-  { name: 'Claude Code', pip: '#6ee7b7', items: ['Small PRs + tests', 'REST over GraphQL', 'FastAPI backend'] },
-  { name: 'Codex',       pip: '#fb923c', items: ['No billing Fri',   'FastAPI backend',   'PostgreSQL auth'] },
+  { name: 'Cursor',      pip: '#a78bfa', items: ['repo pattern · DB', 'no Prisma in prod', 'no billing touch'] },
+  { name: 'Claude Code', pip: '#6ee7b7', items: ['server actions', 'Jest for all tests', 'repo pattern · DB'] },
+  { name: 'Codex',       pip: '#fb923c', items: ['no billing touch', 'repo pattern · DB', 'PostgreSQL auth'] },
 ];
 
 const MemoryFlowViz = () => {
@@ -106,19 +106,19 @@ const MemoryFlowViz = () => {
         {loaded     && <span className="mfviz__sync-done">✓ context loaded in 3 agents</span>}
       </div>
       <div className="mfviz__agents">
-        {MF_AGENTS.map((ag, i) => (
+        {MF_AGENTS.map((ag) => (
           <div key={ag.name} className="mfviz__agent">
             <div className="mfviz__agent-header">
               <span className="mfviz__agent-pip" style={{ background: ag.pip }} />
               <span className="mfviz__agent-name">{ag.name}</span>
-              {phase === 0 && <span className="mfviz__agent-badge mfviz__agent-badge--cold">new session</span>}
+              {phase === 0 && <span className="mfviz__agent-badge mfviz__agent-badge--cold">cold start</span>}
               {syncing     && <span className="mfviz__agent-badge mfviz__agent-badge--sync">loading…</span>}
               {loaded      && <span className="mfviz__agent-badge mfviz__agent-badge--ok">✓ ready</span>}
             </div>
             {!loaded && (
               <div className="mfviz__agent-empty">
                 {phase === 0
-                  ? <><span className="mfviz__agent-empty-dot"/>Cold start — no context</>
+                  ? <><span className="mfviz__agent-empty-dot"/>No context — rebuilding from scratch</>
                   : <div className="mfviz__agent-progress"><div className="mfviz__agent-bar"/></div>
                 }
               </div>
@@ -136,79 +136,60 @@ const MemoryFlowViz = () => {
   );
 };
 
-/* ── Analytics chart ── */
-const AnalyticsChart = () => {
-  const pts = [12,28,22,45,38,62,55,80,72,94,88,100];
-  const w=320,h=100,padX=8,padY=8;
-  const xs = pts.map((_,i) => padX+(i/(pts.length-1))*(w-padX*2));
-  const ys = pts.map(v => h-padY-(v/100)*(h-padY*2));
-  const path = xs.map((x,i) => `${i===0?'M':'L'}${x},${ys[i]}`).join(' ');
-  const area = `${path} L${xs[xs.length-1]},${h} L${xs[0]},${h} Z`;
-  return (
-    <svg width="100%" viewBox={`0 0 ${w} ${h}`} fill="none" style={{ display:'block' }}>
-      <defs><linearGradient id="cg" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stopColor="#6ee7b7" stopOpacity="0.18"/><stop offset="100%" stopColor="#6ee7b7" stopOpacity="0"/></linearGradient></defs>
-      {[0,25,50,75,100].map(v => { const y=h-padY-(v/100)*(h-padY*2); return <line key={v} x1={padX} y1={y} x2={w-padX} y2={y} stroke="rgba(255,255,255,0.05)" strokeWidth="1"/>; })}
-      <path d={area} fill="url(#cg)"/>
-      <path d={path} stroke="#6ee7b7" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round"/>
-      <circle cx={xs[xs.length-1]} cy={ys[ys.length-1]} r="3.5" fill="#6ee7b7"/>
-      <circle cx={xs[xs.length-1]} cy={ys[ys.length-1]} r="6"   fill="rgba(110,231,183,0.15)"/>
-    </svg>
-  );
-};
-
-/* ── How it works tabs ── */
+/* ── How it works steps ── */
 const HIW_STEPS = [
   {
     num: '01', label: 'Initialize',
-    title: 'Connect in seconds.',
-    desc: 'Run three commands. GlassMem creates a local memory store and exposes it over MCP. No config. No boilerplate. Every compatible agent picks it up automatically.',
+    title: 'Start the MCP server in one command.',
+    desc: 'Run three commands. GlassMem creates a local SQLite-backed memory store and exposes it over MCP. No cloud signup. No config files. Claude Code and Cursor discover it automatically.',
     lines: [
-      { c:'#94a3b8', t:'# Install and initialize' },
+      { c:'#94a3b8', t:'# Install and start the MCP server' },
       { c:'#e2e8f0', t:'' },
-      { c:'#e2e8f0', t:'$ npm install glassmem' },
-      { c:'#e2e8f0', t:'$ glassmem init' },
+      { c:'#e2e8f0', t:'$ npm install -g glassmem' },
+      { c:'#e2e8f0', t:'$ glassmem init my-project' },
       { c:'#e2e8f0', t:'$ glassmem mcp start' },
       { c:'#e2e8f0', t:'' },
-      { c:'#6ee7b7', t:'● MCP server running on :8765' },
-      { c:'#6ee7b7', t:'● 3 agents connected' },
+      { c:'#6ee7b7', t:'● Memory server on :8765 (local-only)' },
+      { c:'#6ee7b7', t:'● Claude Code connected automatically' },
+      { c:'#6ee7b7', t:'● Cursor connected automatically' },
     ],
   },
   {
     num: '02', label: 'Remember',
-    title: 'Write structured memories.',
-    desc: 'Save project decisions, coding conventions, and temporary constraints from any agent. Attach a type, source, and optional expiry. GlassMem handles the rest.',
+    title: 'Write decisions with rationale attached.',
+    desc: 'From any agent, save architecture decisions, failed approaches, and active constraints. The reason behind each decision is stored — not just what changed, but why.',
     lines: [
-      { c:'#94a3b8', t:'// Write a memory from your agent' },
+      { c:'#94a3b8', t:'// Write a failed approach + rationale' },
       { c:'#e2e8f0', t:'' },
-      { c:'#7dd3fc', t:'await ', extra: [{ c:'#e2e8f0', t:'memory.' },{ c:'#93c5fd', t:'remember' },{ c:'#e2e8f0', t:'(' }] },
-      { c:'#86efac', t:'  "Use PostgreSQL for auth state",' },
-      { c:'#e2e8f0', t:'  {' },
-      { c:'#e2e8f0', t:'    type:    ', extra: [{ c:'#86efac', t:'"architecture_decision",' }] },
-      { c:'#e2e8f0', t:'    source:  ', extra: [{ c:'#86efac', t:'"Claude Code",' }] },
-      { c:'#e2e8f0', t:'    expires: ', extra: [{ c:'#fcd34d', t:'null' }] },
-      { c:'#e2e8f0', t:'  }' },
-      { c:'#e2e8f0', t:')' },
+      { c:'#7dd3fc', t:'await ', extra: [{ c:'#e2e8f0', t:'memory.' },{ c:'#93c5fd', t:'remember' },{ c:'#e2e8f0', t:'({' }] },
+      { c:'#86efac', t:'  content: "Do not use Redis for billing sync",' },
+      { c:'#e2e8f0', t:'  type:    ', extra: [{ c:'#86efac', t:'"failed_approach",' }] },
+      { c:'#e2e8f0', t:'  rationale:', extra: [{ c:'#86efac', t:'"stale reads in parallel sync jobs",' }] },
+      { c:'#e2e8f0', t:'  source:  ', extra: [{ c:'#86efac', t:'"Cursor · session #14",' }] },
+      { c:'#fcd34d', t:'  expires: null,' },
+      { c:'#e2e8f0', t:'})' },
     ],
   },
   {
     num: '03', label: 'Recall',
-    title: 'Retrieve before every inference.',
-    desc: 'Before the agent edits code, call recall(). Get back the most relevant project context — ranked by recency and validity, returned in milliseconds.',
+    title: 'Inject context before every session.',
+    desc: 'GlassMem injects the most relevant memories before each inference — ranked by recency, validity, and semantic match. Superseded and invalidated memories are excluded automatically.',
     lines: [
-      { c:'#94a3b8', t:'// Recall before inference' },
+      { c:'#94a3b8', t:'// Auto-injected before each session' },
       { c:'#e2e8f0', t:'' },
-      { c:'#7dd3fc', t:'const ', extra: [{ c:'#e2e8f0', t:'ctx = ' },{ c:'#7dd3fc', t:'await ' },{ c:'#e2e8f0', t:'memory.' },{ c:'#93c5fd', t:'recall' },{ c:'#86efac', t:'("auth")' }] },
+      { c:'#7dd3fc', t:'const ', extra: [{ c:'#e2e8f0', t:'ctx = ' },{ c:'#7dd3fc', t:'await ' },{ c:'#e2e8f0', t:'memory.' },{ c:'#93c5fd', t:'recall' },{ c:'#86efac', t:'("billing cache")' }] },
       { c:'#e2e8f0', t:'' },
-      { c:'#94a3b8', t:'// Returns ranked memories:' },
-      { c:'#6ee7b7', t:'// → "Use PostgreSQL for auth"' },
-      { c:'#6ee7b7', t:'//   architecture_decision · 2d ago' },
-      { c:'#fb923c', t:'// → "No billing until Friday"' },
-      { c:'#fb923c', t:'//   temp · expires Fri 18:00' },
+      { c:'#94a3b8', t:'// Returns:' },
+      { c:'#ef4444', t:'// ⚠ "Do not use Redis for billing sync"' },
+      { c:'#94a3b8', t:'//   failed_approach · Cursor · 3d ago' },
+      { c:'#94a3b8', t:'//   rationale: "stale reads in parallel jobs"' },
+      { c:'#6ee7b7', t:'// ✓ "Use Postgres row-level locking instead"' },
+      { c:'#6ee7b7', t:'//   architecture_decision · active · no expiry' },
     ],
   },
 ];
 
-/* ── Pricing plans (mem0.ai prices) ── */
+/* ── Pricing plans ── */
 const PLANS = [
   {
     tier: 'Free',
@@ -276,11 +257,11 @@ export function GlassMemPage() {
   useReveal();
   const [scrolled,   setScrolled]   = useState(false);
   const [mobOpen,    setMobOpen]    = useState(false);
-  const [copied,     copy]          = useCopy('glassmem init');
+  const [copied,     copy]          = useCopy('glassmem mcp start');
   const [ctaEmail,   setCtaEmail]   = useState('');
   const [ctaSent,    setCtaSent]    = useState(false);
   const [activeHiw,  setActiveHiw]  = useState(0);
-  const [activeComp, setActiveComp] = useState(0); // 0 = CLAUDE.md, 1 = Vector DB
+  const [activeComp, setActiveComp] = useState(0);
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 8);
@@ -293,32 +274,44 @@ export function GlassMemPage() {
     if (ctaEmail) setCtaSent(true);
   };
 
-  /* comparison data */
   const COMP_TABLES = [
     {
-      label: 'vs CLAUDE.md / AGENTS.md',
-      note: 'Keep your CLAUDE.md. GlassMem keeps it from becoming a 400-line dumping ground.',
+      label: 'vs CLAUDE.md',
+      note: 'Keep your CLAUDE.md. GlassMem keeps it from becoming a 400-line dumping ground that nobody trusts.',
       rows: [
-        ['Format',      'Static markdown file',                 'Structured, queryable memories'         ],
-        ['Maintenance', 'Manually updated by you',              'Written by agents, updated automatically'],
-        ['Freshness',   'Grows messy over time',                'Stale context can be invalidated'        ],
-        ['Expiration',  'No expiration',                        'Temporary memories expire on schedule'   ],
-        ['Source',      'No history of who wrote what or when', 'Timestamp + source on every memory'      ],
-        ['Cross-tool',  'Copy-paste across tools',              'Shared through MCP — one source of truth'],
-        ['Inspectable', 'Hard to know what is current',         'Local UI — see exactly what agents know' ],
+        ['Format',      'Static markdown file',                    'Structured, queryable memories'          ],
+        ['Writes',      'You maintain it manually',                'Agents write and update automatically'   ],
+        ['Freshness',   'Grows messy — stale context stays forever','Outdated memories are invalidated'      ],
+        ['Rationale',   'Instructions with no reasoning history',  'Every memory stores why it was written'  ],
+        ['Expiry',      'No concept of temporary constraints',     'Temp memories expire on schedule'        ],
+        ['Source',      'No record of who wrote what or when',     'Timestamp + agent source on every entry' ],
+        ['Cross-tool',  'Copy-paste it across tools manually',     'Shared via MCP — one source of truth'    ],
       ],
     },
     {
-      label: 'vs Vector databases',
+      label: 'vs Vector DB',
       note: 'Your problem is not storing more text. Your problem is knowing what your agent should believe right now.',
       rows: [
-        ['Stores',       'Text chunks',                           'Structured project memory'              ],
-        ['Retrieves by', 'Semantic similarity',                   'Relevance, recency, and validity'        ],
-        ['Expiration',   'No built-in expiration',                'Temporary memories expire automatically' ],
-        ['Decisions',    'Treats all chunks equally',             'Tracks decisions and their rationale'    ],
-        ['Temp context', 'Cannot distinguish stale from current', 'Marks and reverts temporary constraints' ],
-        ['Conflict',     'Weak at handling contradictions',       'Understands what supersedes what'        ],
-        ['Designed for', 'Document retrieval',                    'Coding-agent workflows'                  ],
+        ['Stores',       'Text chunks',                             'Structured project memory'                ],
+        ['Retrieves by', 'Semantic similarity',                     'Relevance, recency, and validity'         ],
+        ['Rationale',    'No concept of why',                       'Reason attached to every decision'        ],
+        ['Expiration',   'No built-in expiration',                  'Temporary memories expire automatically'  ],
+        ['Conflicts',    'Cannot resolve contradictions',           'Understands what supersedes what'         ],
+        ['Failed work',  'Treats all chunks equally',               'Tracks failed attempts and why they failed'],
+        ['Designed for', 'Document retrieval',                      'Coding-agent workflows'                   ],
+      ],
+    },
+    {
+      label: 'vs DIY memory',
+      note: 'Building a memory system takes a weekend. Making it reliable — with conflict resolution, expiry, and inspectable retrieval — takes months.',
+      rows: [
+        ['Validity',     'No validity model',                        'Source, type, and expiry per memory'      ],
+        ['Conflicts',    'No conflict resolution',                   'Invalidates superseded memories'          ],
+        ['Rationale',    'Stores what, not why',                     'Reason attached to every memory'          ],
+        ['Lifecycle',    'Memories accumulate forever',              'Temporal lifecycle with auto-expiry'      ],
+        ['Retrieval',    'Embedding similarity only',                'Recency + validity + semantic match'      ],
+        ['Inspectable',  'No visibility into what was recalled',     'See exactly what agents retrieved and why'],
+        ['Integration',  'Manual wiring per agent',                  'MCP-native — drop-in for all agents'      ],
       ],
     },
   ];
@@ -359,31 +352,71 @@ export function GlassMemPage() {
             <div>
               <div className="hero__badge enter">
                 <span className="hero__badge-dot"/>
-                Local-first · MCP-native · Built for coding agents
+                Persistent project memory for coding agents
               </div>
               <h1 className="h1 hero__h1 enter-2">
                 Stop explaining<br/>your project to<br/>every new agent<br/>session.
               </h1>
               <p className="body-lg hero__sub enter-3">
-                The next gen context layer that manages temporal updates (e.g. no billing until Friday) and shares context across agents.
+                GlassMem gives Claude Code, Cursor, and MCP agents persistent project memory — so they remember architecture decisions, failed approaches, coding conventions, and temporary constraints across sessions.
               </p>
               <div className="hero__ctas enter-4">
                 <a href="/signup" className="btn btn--em btn--lg">Join waitlist</a>
                 <a href="https://github.com/glassmem" className="btn btn--ghost btn--lg">View GitHub</a>
               </div>
               <p className="body-sm enter-5" style={{ color:'var(--tx-3)', marginTop:8 }}>
-                Local-first. MCP-native. Built for coding agents.
+                Local-first. MCP-native. Inspectable. Open core.
               </p>
             </div>
             <div className="hero__viz-col">
-              <p className="hero__viz-label">Live: agent loads context on session start, syncs across tools, updates temporal memory.</p>
+              <p className="hero__viz-label">Live: session starts, memories sync across agents, temporal constraint updates.</p>
               <MemoryFlowViz/>
             </div>
           </div>
         </div>
       </section>
 
-      {/* ═══ LOGOS STRIP — no names ═════════════════ */}
+      {/* ═══ WHAT IS GLASSMEM ═══════════════════════ */}
+      <section className="sec sec--alt">
+        <div className="w">
+          <div className="what-is reveal">
+            <div className="what-is__left">
+              <span className="label">What is GlassMem?</span>
+              <h2 className="h2 what-is__h2">A local memory server<br/>for coding agents.</h2>
+              <p className="body-lg what-is__desc">
+                GlassMem is a local memory server + SDK you run alongside your coding agent. It stores project decisions, reasoning history, temporary constraints, and developer preferences so agents stop rebuilding context from scratch every session.
+              </p>
+              <p className="body-lg what-is__desc" style={{ marginTop:12 }}>
+                It exposes memory over MCP. Claude Code, Cursor, Cline, Windsurf, and Codex pick it up automatically — no per-tool config needed.
+              </p>
+            </div>
+            <div className="what-is__right">
+              {[
+                { icon:'◈', head:'Memory Server', lines:['Local SQLite store', 'MCP endpoint on :8765', 'Auto-discovered by agents', 'Runs offline, no cloud'] },
+                { icon:'⌘', head:'SDK',           lines:['memory.remember()', 'memory.recall()', 'memory.invalidate()', 'Works from any agent'] },
+                { icon:'◎', head:'Memory types',  lines:['architecture_decision', 'failed_approach', 'temporary_constraint', 'coding_convention'] },
+              ].map(({ icon, head, lines }) => (
+                <div key={head} className="what-is__card">
+                  <div className="what-is__card-head">
+                    <span className="what-is__icon">{icon}</span>
+                    <span className="what-is__card-title">{head}</span>
+                  </div>
+                  <ul className="what-is__lines">
+                    {lines.map(l => (
+                      <li key={l} className="what-is__line">
+                        <span className="what-is__line-dot"/>
+                        <span>{l}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ LOGOS STRIP ════════════════════════════ */}
       <div className="logos">
         <div className="logos__inner">
           <span className="logos__label">Works with your tools</span>
@@ -405,17 +438,32 @@ export function GlassMemPage() {
           <div className="fail__intro reveal">
             <div>
               <span className="label">The problem</span>
-              <h2 className="h2">Your agent is rebuilding<br/>the same context over and over.</h2>
+              <h2 className="h2">Your agent rebuilds context<br/>from scratch. Every single session.</h2>
             </div>
             <p className="body-lg" style={{ maxWidth:'44ch' }}>
-              Every new session starts cold. Your agent has no memory of what you built, what you decided, or what constraints are still active.
+              It is not a model problem. It is a memory problem. And every session you pay for it in wasted tokens, repeated questions, and mistakes you have already fixed.
             </p>
           </div>
           <div className="fail__table reveal">
             {[
-              { tag:'01', title:'Project amnesia',  desc:'Every new session starts cold. Your agent has to rediscover architecture, conventions, file structure, and open decisions.', issues:['Re-reads the entire repo','Asks questions you already answered','Misses context buried in old chats'] },
-              { tag:'02', title:'Stale context',    desc:'Old instructions and outdated assumptions stick around forever. Your agent may follow decisions that are no longer true.',    issues:['No concept of expiration','Follows revoked constraints','Treats old and new context equally'] },
-              { tag:'03', title:'Tool silos',       desc:'Claude Code, Cursor, Codex, and other agents each maintain fragmented memory. Nothing stays in sync across sessions or tools.',issues:['Each tool starts fresh','No shared project state','Repeated decisions per agent'] },
+              {
+                tag:'01',
+                title:'Project amnesia',
+                desc:'Every new session starts cold. Your agent re-reads the repo, asks architecture questions you answered last week, and proposes solutions you already rejected.',
+                issues:['Re-discovers the same file structure', 'Asks: "should I use REST or GraphQL?"', 'Proposes the Kafka approach that failed', 'Forgets you switched to server actions'],
+              },
+              {
+                tag:'02',
+                title:'No reasoning history',
+                desc:'Your agent knows what the code does. It does not know why. It cannot see that the current workaround exists because of a Stripe deadline, or that Prisma was deliberately excluded.',
+                issues:['Introduces Prisma in auth service', 'Removes the workaround that is still needed', 'Repeats the Redis approach that caused outages', '"Why is this service isolated?" — no answer'],
+              },
+              {
+                tag:'03',
+                title:'Tool silos',
+                desc:'Claude Code, Cursor, Codex — each agent starts fresh. A decision made in one session is invisible to the next. There is no shared project truth.',
+                issues:['Cursor forgets what Claude Code decided', 'Codex re-proposes the rejected approach', 'Constraints disappear between tools', 'No shared project state across sessions'],
+              },
             ].map(col => (
               <div key={col.tag} className="fail__col">
                 <div className="fail__col-tag">{col.tag}</div>
@@ -429,32 +477,123 @@ export function GlassMemPage() {
               </div>
             ))}
           </div>
-          <p className="body-lg reveal" style={{ marginTop:40, textAlign:'center', color:'var(--tx-3)' }}>
-            This is not a model problem. It is a memory problem.
-          </p>
+        </div>
+      </section>
+
+      {/* ═══ WORKFLOW DEMO — "What actually changes?" ══ */}
+      <section className="sec sec--alt">
+        <div className="w">
+          <div className="fail__intro reveal">
+            <div>
+              <span className="label">What actually changes</span>
+              <h2 className="h2">The same task.<br/>A completely different agent.</h2>
+            </div>
+            <p className="body-lg" style={{ maxWidth:'44ch' }}>
+              This is what a Claude Code session looks like before and after GlassMem. Same model. Same codebase. Completely different starting point.
+            </p>
+          </div>
+
+          <div className="workflow__grid reveal">
+            <div className="workflow__col workflow__col--bad">
+              <div className="workflow__col-head">
+                <span className="workflow__col-dot workflow__col-dot--bad"/>
+                <span className="workflow__col-title">Without GlassMem</span>
+              </div>
+              <div className="workflow__col-label">Session starts cold.</div>
+              {[
+                'Scans the entire repo to rebuild context',
+                '"Should I use Redis or Postgres for session cache?"',
+                'Proposes the Kafka consumer approach (which failed)',
+                'Starts touching billing code — freeze is active',
+                'Reintroduces Prisma in the auth service',
+                '"Why is this service isolated?" — no idea',
+                'Forgets the refactor is still in progress',
+              ].map((item, i) => (
+                <div key={i} className="workflow__item workflow__item--bad">
+                  <span className="workflow__item-icon">✕</span>
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
+
+            <div className="workflow__col workflow__col--good">
+              <div className="workflow__col-head">
+                <span className="workflow__col-dot workflow__col-dot--good"/>
+                <span className="workflow__col-title">With GlassMem</span>
+              </div>
+              <div className="workflow__col-label">Session starts with context.</div>
+              {[
+                'Active architecture decisions loaded',
+                'Failed approaches flagged before being re-proposed',
+                'Billing freeze injected — agent skips billing code',
+                'Current refactor plan loaded',
+                'Coding conventions pre-loaded',
+                'Rationale behind decisions available',
+                'All 3 agents share the same project memory',
+              ].map((item, i) => (
+                <div key={i} className="workflow__item workflow__item--good">
+                  <span className="workflow__item-icon">✓</span>
+                  <span>{item}</span>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Memory injection moment */}
+          <div className="inject reveal">
+            <div className="inject__label">The moment that changes everything</div>
+            <div className="inject__scene">
+              <div className="inject__bubble inject__bubble--agent">
+                <span className="inject__bubble-from">Claude Code</span>
+                <span className="inject__bubble-text">"I'll implement Redis caching for the billing sync to improve read performance..."</span>
+              </div>
+              <div className="inject__arrow">
+                <div className="inject__arrow-line"/>
+                <div className="inject__arrow-head">
+                  <span className="inject__mem-badge">GlassMem injects memory</span>
+                </div>
+              </div>
+              <div className="inject__memory">
+                <div className="inject__memory-header">
+                  <span className="inject__memory-icon">⚠</span>
+                  <span className="inject__memory-tag">failed_approach</span>
+                  <span className="inject__memory-source">Cursor · 3 days ago</span>
+                </div>
+                <div className="inject__memory-text">"Redis cache caused stale reads in billing sync"</div>
+                <div className="inject__memory-why">rationale: "parallel sync jobs read before invalidation completes"</div>
+              </div>
+              <div className="inject__arrow">
+                <div className="inject__arrow-line"/>
+              </div>
+              <div className="inject__bubble inject__bubble--result">
+                <span className="inject__bubble-from">Claude Code — updated</span>
+                <span className="inject__bubble-text">"Based on prior experience with this codebase, I'll use Postgres with row-level locking instead. Redis caused stale reads in the billing sync."</span>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
       {/* ═══ WHAT GLASSMEM DOES — bento grid ════════ */}
-      <section className="sec sec--alt">
+      <section className="sec">
         <div className="w">
           <div className="feat__intro reveal">
-            <span className="label">What it does</span>
-            <h2 className="h2">Shared memory<br/>for coding agents</h2>
+            <span className="label">What it stores</span>
+            <h2 className="h2">Everything your agent<br/>should not have to rediscover.</h2>
             <p className="body-lg" style={{ maxWidth:'48ch', marginTop:14 }}>
-              GlassMem stores the context your agent should not have to rediscover.
+              GlassMem stores the context that defines your project — not just facts, but reasoning.
             </p>
           </div>
           <div className="feat__grid reveal">
 
-            {/* Card 1 — large, spans 2 cols, shows memory UI */}
+            {/* Card 1 — architecture decisions */}
             <div className="feat__card feat__card--wide">
               <div className="feat__card-art feat__card-art--tall">
                 <div className="feat__mock-store">
                   {[
-                    { pip:'#6ee7b7', text:'Use FastAPI for backend', tag:'decision' },
-                    { pip:'#fb923c', text:'No billing until Friday', tag:'temp ↺' },
-                    { pip:'#a78bfa', text:'PostgreSQL for auth',     tag:'decision' },
+                    { pip:'#6ee7b7', text:'Use repository pattern for DB access', tag:'decision' },
+                    { pip:'#a78bfa', text:'Frontend uses server actions, not REST', tag:'decision' },
+                    { pip:'#94a3b8', text:'Do not introduce Prisma in auth service', tag:'constraint' },
                   ].map((m,i) => (
                     <div key={i} className="feat__mock-row">
                       <span className="feat__mock-pip" style={{ background:m.pip }}/>
@@ -464,21 +603,26 @@ export function GlassMemPage() {
                   ))}
                 </div>
               </div>
-              <p className="feat__card-title">Project decisions</p>
-              <p className="feat__card-desc">Remember why you chose Postgres over Mongo, REST over GraphQL, or one package over another. Decisions stay attached to their rationale.</p>
+              <p className="feat__card-title">Architecture decisions</p>
+              <p className="feat__card-desc">Remember why you chose Postgres over Mongo, server actions over REST, or one pattern over another. Decisions stay attached to their rationale — not just the outcome.</p>
             </div>
 
-            {/* Card 2 — coding conventions */}
+            {/* Card 2 — failed approaches */}
             <div className="feat__card">
               <div className="feat__card-art feat__card-art--tall">
-                <div className="feat__mock-code">
-                  {['// ✓ src/handlers/{name}.handler.ts','// ✓ camelCase variables','// ✓ Jest for all tests','// ✓ no direct DB calls in routes'].map((l,i) => (
-                    <div key={i} className="feat__mock-code-line">{l}</div>
-                  ))}
+                <div className="feat__mock-bug">
+                  <div className="feat__mock-bug-row">
+                    <span className="feat__mock-bug-x">✕</span>
+                    <div>
+                      <div className="feat__mock-bug-title">Redis cache for billing sync</div>
+                      <div className="feat__mock-bug-note">"stale reads in parallel sync jobs"</div>
+                    </div>
+                  </div>
+                  <div className="feat__mock-bug-meta">failed_approach · Cursor · 3 days ago</div>
                 </div>
               </div>
-              <p className="feat__card-title">Coding conventions</p>
-              <p className="feat__card-desc">Store naming patterns, folder structure, testing rules, and style preferences. Every agent follows the same conventions.</p>
+              <p className="feat__card-title">Failed approaches</p>
+              <p className="feat__card-desc">The most valuable memories are the mistakes. GlassMem stores what was tried, why it failed, and what replaced it — so agents never repeat the same mistake.</p>
             </div>
 
             {/* Card 3 — temporary constraints */}
@@ -486,31 +630,31 @@ export function GlassMemPage() {
               <div className="feat__card-art feat__card-art--tall">
                 <div className="feat__mock-temp">
                   <div className="feat__mock-temp-badge">TEMPORARY</div>
-                  <div className="feat__mock-temp-text">No billing until Friday</div>
-                  <div className="feat__mock-temp-meta">Expires Fri 18:00 · 3 days remaining</div>
+                  <div className="feat__mock-temp-text">No billing until Stripe migration done</div>
+                  <div className="feat__mock-temp-meta">Expires: Fri 18:00 · 2 days remaining</div>
                   <div className="feat__mock-temp-bar"><div className="feat__mock-temp-fill"/></div>
                 </div>
               </div>
               <p className="feat__card-title">Temporary constraints</p>
-              <p className="feat__card-desc">Short-lived context like "do not touch billing this week." Set an expiry and GlassMem removes it automatically.</p>
+              <p className="feat__card-desc">Short-lived project states like "do not touch billing this week" or "auth service is being migrated." Set an expiry and GlassMem removes the constraint automatically.</p>
             </div>
 
-            {/* Card 4 — bug history */}
+            {/* Card 4 — coding conventions */}
             <div className="feat__card">
               <div className="feat__card-art feat__card-art--tall">
-                <div className="feat__mock-bug">
-                  <div className="feat__mock-bug-row">
-                    <span className="feat__mock-bug-x">✕</span>
-                    <div>
-                      <div className="feat__mock-bug-title">Redis cache approach</div>
-                      <div className="feat__mock-bug-note">"stale reads in parallel sessions"</div>
-                    </div>
-                  </div>
-                  <div className="feat__mock-bug-meta">Failed attempt · Logged by Cursor</div>
+                <div className="feat__mock-code">
+                  {[
+                    '// ✓ src/handlers/{name}.handler.ts',
+                    '// ✓ repository pattern for all DB access',
+                    '// ✓ Jest — no Vitest in this repo',
+                    '// ✕ no direct DB calls in route handlers',
+                  ].map((l,i) => (
+                    <div key={i} className="feat__mock-code-line">{l}</div>
+                  ))}
                 </div>
               </div>
-              <p className="feat__card-title">Bug history</p>
-              <p className="feat__card-desc">Remember failed approaches so the agent does not repeat them. Keeps a record of what did not work and why.</p>
+              <p className="feat__card-title">Coding conventions</p>
+              <p className="feat__card-desc">File naming patterns, testing rules, linting conventions, and architectural constraints. Every agent follows the same project-specific rules — not just generic best practices.</p>
             </div>
 
             {/* Card 5 — cross-agent */}
@@ -528,36 +672,36 @@ export function GlassMemPage() {
                   ))}
                 </svg>
               </div>
-              <p className="feat__card-title">Cross-agent context</p>
-              <p className="feat__card-desc">Share memory across Claude Code, Cursor, Codex, Windsurf, and any MCP-compatible agent. One store — all agents in sync.</p>
+              <p className="feat__card-title">Shared across agents</p>
+              <p className="feat__card-desc">One memory store. Claude Code, Cursor, Codex, Windsurf, and Cline all read from the same source of truth. A decision made in Cursor is available to Claude Code instantly.</p>
             </div>
 
-            {/* Card 6 — MCP-native */}
+            {/* Card 6 — inspectable */}
             <div className="feat__card">
               <div className="feat__card-art feat__card-art--tall">
                 <div className="feat__mock-term">
-                  <div className="feat__mock-term-line"><span style={{ color:'var(--em)' }}>$</span> glassmem mcp start</div>
-                  <div className="feat__mock-term-line feat__mock-term-ok">● MCP server on :8765</div>
-                  <div className="feat__mock-term-line feat__mock-term-ok">● 3 agents connected</div>
+                  <div className="feat__mock-term-line"><span style={{ color:'#a78bfa' }}>active</span>    repo pattern · DB access</div>
+                  <div className="feat__mock-term-line"><span style={{ color:'#ef4444' }}>failed</span>    Redis billing cache</div>
+                  <div className="feat__mock-term-line"><span style={{ color:'#fb923c' }}>temp ↺</span>   no billing · expires Fri</div>
+                  <div className="feat__mock-term-line"><span style={{ color:'var(--tx-3)' }}>superseded</span> ActiveRecord queries</div>
                 </div>
               </div>
-              <p className="feat__card-title">MCP-native</p>
-              <p className="feat__card-desc">One command exposes memory over MCP. Claude Code, Cursor, Codex — all pick it up automatically. No per-tool config needed.</p>
+              <p className="feat__card-title">Fully inspectable</p>
+              <p className="feat__card-desc">See every memory your agents hold, when it was written, which agent wrote it, and what it replaced. Memory is not a black box. You can edit, invalidate, or export any entry.</p>
             </div>
 
           </div>
         </div>
       </section>
 
-      {/* ═══ HOW IT WORKS (mem0 style) ══════════════ */}
-      <section id="how-it-works" className="sec">
+      {/* ═══ HOW IT WORKS ═══════════════════════════ */}
+      <section id="how-it-works" className="sec sec--alt">
         <div className="w">
           <div className="hiw__header reveal">
             <span className="label">How it works</span>
-            <h2 className="h2">Three steps.<br/>Persistent context.</h2>
+            <h2 className="h2">Three commands.<br/>Permanent context.</h2>
           </div>
           <div className="hiw__grid">
-            {/* Left: step list */}
             <div className="hiw__steps">
               {HIW_STEPS.map((step, i) => (
                 <button
@@ -574,8 +718,6 @@ export function GlassMemPage() {
                 </button>
               ))}
             </div>
-
-            {/* Right: code panel */}
             <div className="hiw__panel reveal">
               <div className="alr__mockup-bar">
                 <span className="alr__mockup-dot alr__mockup-dot--r"/>
@@ -583,7 +725,7 @@ export function GlassMemPage() {
                 <span className="alr__mockup-dot alr__mockup-dot--g"/>
                 <span className="alr__mockup-title">glassmem · {HIW_STEPS[activeHiw].label.toLowerCase()}</span>
               </div>
-              <div className="term__body" style={{ background:'#0c0d11', minHeight:260, transition:'opacity 0.2s' }}>
+              <div className="term__body" style={{ background:'#0c0d11', minHeight:280, transition:'opacity 0.2s' }}>
                 {HIW_STEPS[activeHiw].lines.map((line, i) => (
                   <div key={i} className="term__row">
                     <span className="term__ln">{i + 1}</span>
@@ -595,7 +737,7 @@ export function GlassMemPage() {
                 ))}
               </div>
               <div className="eco__badges">
-                <p className="eco__label">Works with</p>
+                <p className="eco__label">Compatible with</p>
                 <div className="eco__row">
                   {['Claude Code','Cursor','Codex','Cline','Windsurf','MCP','TypeScript','Python'].map(b => (
                     <span key={b} className="eco__badge">{b}</span>
@@ -607,8 +749,183 @@ export function GlassMemPage() {
         </div>
       </section>
 
+      {/* ═══ WHY NOT DIY ════════════════════════════ */}
+      <section className="sec">
+        <div className="w">
+          <div className="fail__intro reveal">
+            <div>
+              <span className="label">Why this is hard</span>
+              <h2 className="h2">Why not just use<br/>SQLite + embeddings?</h2>
+            </div>
+            <p className="body-lg" style={{ maxWidth:'46ch' }}>
+              Most engineers think they can build this in a weekend. The storage is easy. What breaks you is everything around it.
+            </p>
+          </div>
+
+          <div className="diy__grid reveal">
+            <div className="diy__col diy__col--bad">
+              <div className="diy__col-head">
+                <span className="diy__dot diy__dot--bad"/>
+                DIY memory stack
+              </div>
+              {[
+                { item:'No validity model', sub:'You store it. It stays. Forever. Even when it is wrong.' },
+                { item:'No conflict resolution', sub:'Two contradicting memories. Agent picks randomly.' },
+                { item:'Stores what, not why', sub:'No rationale. Agent cannot understand trade-offs.' },
+                { item:'No lifecycle', sub:'Memory grows forever. Retrieval degrades.' },
+                { item:'Embedding similarity only', sub:'Recent valid decisions can be outranked by old chunks.' },
+                { item:'No inspectability', sub:'Zero visibility into what was recalled or why.' },
+                { item:'Manual wiring', sub:'Separate integration needed per agent.' },
+              ].map(({ item, sub }) => (
+                <div key={item} className="diy__item diy__item--bad">
+                  <span className="diy__item-icon">✕</span>
+                  <div>
+                    <div className="diy__item-title">{item}</div>
+                    <div className="diy__item-sub">{sub}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <div className="diy__col diy__col--good">
+              <div className="diy__col-head">
+                <span className="diy__dot diy__dot--good"/>
+                GlassMem
+              </div>
+              {[
+                { item:'Source + type + expiry per memory', sub:'Every entry knows where it came from and when it expires.' },
+                { item:'Supersession model', sub:'New decisions can explicitly replace old ones.' },
+                { item:'Rationale tracking', sub:'Store why alongside what. Agents understand trade-offs.' },
+                { item:'Temporal lifecycle', sub:'Memories expire, are invalidated, or get superseded.' },
+                { item:'Recency + validity + semantic rank', sub:'Valid recent decisions surface above old stale chunks.' },
+                { item:'Full retrieval audit trail', sub:'"Why was this recalled?" is answerable.' },
+                { item:'MCP-native drop-in', sub:'One server. Every compatible agent connects automatically.' },
+              ].map(({ item, sub }) => (
+                <div key={item} className="diy__item diy__item--good">
+                  <span className="diy__item-icon">✓</span>
+                  <div>
+                    <div className="diy__item-title">{item}</div>
+                    <div className="diy__item-sub">{sub}</div>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="diy__quote reveal">
+            <div className="diy__quote-line"/>
+            <p className="diy__quote-text">
+              "Your problem is not storing more context.<br/>Your problem is knowing what your agent should believe right now."
+            </p>
+          </div>
+        </div>
+      </section>
+
+      {/* ═══ INSPECTABILITY — Memory not a black box ══ */}
+      <section className="sec sec--alt">
+        <div className="w">
+          <div className="fail__intro reveal">
+            <div>
+              <span className="label">Inspectability</span>
+              <h2 className="h2">Memory should not<br/>be a black box.</h2>
+            </div>
+            <p className="body-lg" style={{ maxWidth:'44ch' }}>
+              Most memory systems hide what agents know and why. GlassMem is transparent. Every memory has a source, a status, and a reason for being recalled.
+            </p>
+          </div>
+
+          <div className="inspect reveal">
+            <div className="inspect__bar">
+              <span className="inspect__bar-title"><Logo size={11}/>GlassMem · project timeline</span>
+              <span className="inspect__bar-sub">4 memories · 1 temporary · 1 superseded</span>
+            </div>
+            {[
+              {
+                status: 'active',
+                statusLabel: 'active',
+                content: 'Use repository pattern for all database access',
+                type: 'architecture_decision',
+                source: 'Claude Code',
+                age: '4 days ago',
+                rationale: '"Keeps domain logic out of route handlers and makes DB layer testable"',
+                recalled: 'Recalled 8× this week',
+              },
+              {
+                status: 'superseded',
+                statusLabel: 'superseded',
+                content: 'Use ActiveRecord for all database queries',
+                type: 'architecture_decision',
+                source: 'Cursor',
+                age: '5 days ago',
+                rationale: 'Replaced by repository pattern decision',
+                recalled: null,
+              },
+              {
+                status: 'temp',
+                statusLabel: 'temp ↺',
+                content: 'Do not touch billing until Stripe migration is complete',
+                type: 'temporary_constraint',
+                source: 'Cursor',
+                age: '1 day ago',
+                rationale: 'Expires: Fri 18:00 · 2 days remaining',
+                recalled: 'Active — injected every billing-related session',
+              },
+              {
+                status: 'invalid',
+                statusLabel: 'invalidated',
+                content: 'Redis cache for billing sync reads',
+                type: 'failed_approach',
+                source: 'Cursor',
+                age: '3 days ago',
+                rationale: '"stale reads in parallel sync jobs — use Postgres row-level locking instead"',
+                recalled: 'Recalled when query matches "cache" or "billing"',
+              },
+            ].map((mem, i) => (
+              <div key={i} className={`inspect__row inspect__row--${mem.status}`}>
+                <div className="inspect__row-left">
+                  <span className={`inspect__badge inspect__badge--${mem.status}`}>{mem.statusLabel}</span>
+                </div>
+                <div className="inspect__row-main">
+                  <div className="inspect__row-content">{mem.content}</div>
+                  <div className="inspect__row-meta">
+                    <span className="inspect__meta-type">{mem.type}</span>
+                    <span className="inspect__meta-sep">·</span>
+                    <span>{mem.source}</span>
+                    <span className="inspect__meta-sep">·</span>
+                    <span>{mem.age}</span>
+                  </div>
+                  <div className="inspect__row-rationale">{mem.rationale}</div>
+                </div>
+                {mem.recalled && (
+                  <div className="inspect__row-right">
+                    <span className="inspect__row-recall">{mem.recalled}</span>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
+
+          <div className="inspect__props reveal" style={{ marginTop: 32 }}>
+            {[
+              { icon:'◉', head:'Source attribution', desc:'Every memory records which agent wrote it and when.' },
+              { icon:'◷', head:'Temporal lifecycle', desc:'Active, superseded, temporary, or invalidated — every memory has a state.' },
+              { icon:'◎', head:'Retrieval audit', desc:'"Why was this recalled?" is always answerable. See which query triggered which memory.' },
+              { icon:'✎', head:'Fully editable', desc:'Export to Markdown. Edit in any editor. Import back. Your memory is yours.' },
+            ].map(({ icon, head, desc }) => (
+              <div key={head} className="inspect__prop">
+                <span className="inspect__prop-icon">{icon}</span>
+                <div>
+                  <div className="inspect__prop-head">{head}</div>
+                  <div className="inspect__prop-desc">{desc}</div>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
       {/* ═══ COMPARE — tabbed ═══════════════════════ */}
-      <section id="compare" className="sec sec--alt">
+      <section id="compare" className="sec">
         <div className="w">
           <div className="comp__header reveal">
             <div>
@@ -636,7 +953,7 @@ export function GlassMemPage() {
             <div className="compare__head">
               <div className="compare__head-blank"/>
               <div className="compare__head-col">
-                {activeComp === 0 ? 'CLAUDE.md / AGENTS.md' : 'Vector DB'}
+                {activeComp === 0 ? 'CLAUDE.md / AGENTS.md' : activeComp === 1 ? 'Vector Database' : 'DIY (SQLite + embeddings)'}
               </div>
               <div className="compare__head-col compare__head-col--em">GlassMem</div>
             </div>
@@ -651,29 +968,47 @@ export function GlassMemPage() {
         </div>
       </section>
 
-      {/* ═══ USE CASES ══════════════════════════════ */}
-      <section className="sec">
+      {/* ═══ MCP — drop-in memory for Claude Code ═══ */}
+      <section className="sec sec--alt">
         <div className="w">
           <div className="fail__intro reveal">
             <div>
-              <span className="label">Use cases</span>
-              <h2 className="h2">Built for the work<br/>agents actually do.</h2>
+              <span className="label">MCP integration</span>
+              <h2 className="h2">Drop-in memory for<br/>Claude Code and Cursor.</h2>
             </div>
-            <p className="body-lg" style={{ maxWidth:'44ch' }}>From solo vibecoders to small AI-native teams.</p>
+            <p className="body-lg" style={{ maxWidth:'44ch' }}>
+              GlassMem is a persistent memory MCP server. One command starts it. Claude Code, Cursor, and every other MCP-compatible agent connects automatically — no per-tool config.
+            </p>
           </div>
+
           <div className="fail__table reveal">
             {[
-              { tag:'Refactors',  title:'Long-running refactors', desc:'Multi-day refactors need persistent context. GlassMem keeps architecture decisions and open TODOs alive across every session.', issues:['Multi-session continuity','Decision trail preserved','No re-explaining on day 3'] },
-              { tag:'Vibecoding', title:'Vibecoded apps',         desc:'When building fast with agents, GlassMem keeps stack decisions, naming conventions, and rough edges in memory — not in your head.', issues:['Fast iteration with context','No repeated conventions','Constraints survive reloads'] },
-              { tag:'Teams',      title:'AI-native teams',        desc:'When multiple developers use different coding agents on the same project, shared memory means everyone works from the same project truth.', issues:['Shared project memory','Consistent conventions','One source of agent context'] },
+              {
+                tag:'Start',
+                title:'$ glassmem mcp start',
+                desc:'Starts the local MCP server. SQLite-backed. Runs at :8765. Offline. Your project memory never leaves your machine unless you choose to sync.',
+                issues:['● Memory server on :8765', '● Claude Code connected', '● Cursor connected', '● Codex connected'],
+              },
+              {
+                tag:'Read',
+                title:'Automatic context injection',
+                desc:'Before each agent session, GlassMem injects the most relevant memories. Ranked by recency, validity, and semantic match. No manual prompt engineering required.',
+                issues:['✓ Architecture decisions loaded', '✓ Failed approaches flagged', '✓ Active constraints injected', '✓ Stale memories excluded'],
+              },
+              {
+                tag:'Write',
+                title:'Agents write memories back',
+                desc:'When an agent makes a decision, discovers a constraint, or hits a failed approach, it writes a structured memory. Every agent in the project benefits immediately.',
+                issues:['✓ Source tagged per memory', '✓ Rationale stored with decision', '✓ Expiry set for temp constraints', '✓ Available to all connected agents'],
+              },
             ].map(col => (
               <div key={col.tag} className="fail__col">
                 <div className="fail__col-tag">{col.tag}</div>
-                <div className="fail__col-title">{col.title}</div>
+                <div className="fail__col-title" style={{ fontFamily:'var(--f-code)', fontSize:13 }}>{col.title}</div>
                 <p className="fail__col-desc">{col.desc}</p>
                 <div className="fail__issues">
                   {col.issues.map(iss => (
-                    <div key={iss} className="fail__issue"><span style={{ color:'var(--em)', flexShrink:0, marginTop:1 }}>✓</span><span>{iss}</span></div>
+                    <div key={iss} className="fail__issue"><span style={{ color:'var(--em)', flexShrink:0, marginTop:1 }}>›</span><span style={{ fontFamily:'var(--f-code)', fontSize:12 }}>{iss}</span></div>
                   ))}
                 </div>
               </div>
@@ -683,7 +1018,7 @@ export function GlassMemPage() {
       </section>
 
       {/* ═══ PRICING ════════════════════════════════ */}
-      <section id="pricing" className="sec sec--alt">
+      <section id="pricing" className="sec">
         <div className="w">
           <div style={{ textAlign:'center', marginBottom:48 }} className="reveal">
             <span className="label">Pricing</span>
@@ -721,9 +1056,9 @@ export function GlassMemPage() {
           <div className="cta__inner">
             <div className="reveal">
               <span className="label">Get started</span>
-              <h2 className="cta__h2">Give your coding agent<br/>a memory it can trust.</h2>
+              <h2 className="cta__h2">Your coding agent should remember why your codebase works the way it does.</h2>
               <p className="body-lg cta__sub">
-                Join the waitlist for shared project memory across Claude Code, Cursor, Codex, Windsurf, and every MCP agent.
+                GlassMem gives Claude Code, Cursor, and MCP agents persistent project memory that survives across sessions, tools, and team members.
               </p>
               {ctaSent ? (
                 <div style={{ display:'inline-flex', alignItems:'center', gap:10, padding:'12px 20px', borderRadius:'var(--r)', background:'rgba(110,231,183,0.08)', border:'1px solid rgba(110,231,183,0.2)', color:'var(--em)', fontFamily:'var(--f-code)', fontSize:13, marginBottom:20 }}>
@@ -733,23 +1068,25 @@ export function GlassMemPage() {
               ) : (
                 <form className="cta__email-form" onSubmit={handleCtaSubmit}>
                   <input className="cta__email-input" type="email" placeholder="you@company.com" value={ctaEmail} onChange={e => setCtaEmail(e.target.value)} required/>
-                  <button type="submit" className="btn btn--em btn--lg">Request access</button>
+                  <button type="submit" className="btn btn--em btn--lg">Join waitlist</button>
                 </form>
               )}
               <button className="cta__install" onClick={copy}>
                 <span className="cta__install-p">$</span>
-                <span style={{ color:'rgba(255,255,255,0.65)' }}>glassmem init</span>
+                <span style={{ color:'rgba(255,255,255,0.65)' }}>glassmem mcp start</span>
                 <span className="hero__install-hint">{copied ? '✓ copied' : 'copy'}</span>
               </button>
             </div>
             <div className="cta__checklist reveal">
               {[
                 'Works with Claude Code, Cursor, Codex, Windsurf, Cline',
-                'Local-first — no cloud required to start',
-                'MCP-native — agents pick it up automatically',
-                "memory.remember() and memory.recall() — that's the API",
-                'Temporary context expires automatically',
-                'Context shared across all your agents instantly',
+                'Local-first — project memory stays on your machine',
+                'MCP-native — agents connect automatically',
+                'memory.remember() and memory.recall() — that\'s the API',
+                'Rationale tracked alongside every decision',
+                'Temporary constraints expire automatically',
+                'Fully inspectable — no black box memory',
+                'Open core — export to Markdown anytime',
               ].map(item => (
                 <div key={item} className="cta__check-item"><span className="cta__check-dot"/>{item}</div>
               ))}
@@ -761,7 +1098,7 @@ export function GlassMemPage() {
       {/* ═══ PRE-FOOTER ═════════════════════════════ */}
       <div className="prefooter"/>
 
-      {/* ═══ FOOTER2 ════════════════════════════════ */}
+      {/* ═══ FOOTER ═════════════════════════════════ */}
       <footer className="footer2">
         <div className="footer2__inner">
           <div className="footer2__top">
@@ -769,8 +1106,8 @@ export function GlassMemPage() {
               <a href="/" className="footer2__brand"><Logo size={18}/><span className="footer2__wordmark">GlassMem</span></a>
               <div className="footer2__divider"/>
               <div className="footer2__socials">
-                <a href="https://discord.gg/glassmem"  className="footer2__social" aria-label="Discord"><DiscordIcon/></a>
-                <a href="https://github.com/glassmem" className="footer2__social" aria-label="GitHub"><GitHubIcon/></a>
+                <a href="https://discord.gg/glassmem"   className="footer2__social" aria-label="Discord"><DiscordIcon/></a>
+                <a href="https://github.com/glassmem"   className="footer2__social" aria-label="GitHub"><GitHubIcon/></a>
                 <a href="https://twitter.com/glassmem" className="footer2__social" aria-label="X"><XIcon/></a>
               </div>
             </div>
