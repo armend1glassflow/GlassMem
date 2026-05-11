@@ -2466,3 +2466,28 @@ img { display: block; max-width: 100%; }
   color: var(--em); flex-shrink: 0; font-size: 12px;
   margin-top: 1px; font-weight: 600;
 }
+
+/* ══════════════════════════════════════════════════
+   CTA TRUST BULLETS
+══════════════════════════════════════════════════ */
+.cta__trust {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 28px;
+}
+.cta__trust-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 14px;
+  color: var(--tx-2);
+  line-height: 1.5;
+}
+.cta__trust-check {
+  color: var(--em);
+  font-weight: 700;
+  font-size: 13px;
+  flex-shrink: 0;
+  margin-top: 1px;
+}
