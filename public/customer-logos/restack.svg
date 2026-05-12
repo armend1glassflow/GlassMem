@@ -1,0 +1,8 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="138" height="32" viewBox="0 0 138 32" fill="none">
+  <!-- Restack: solid blue diamond + wordmark -->
+  <g transform="translate(0, 4)">
+    <path d="M12 0 L23 12 L12 24 L1 12 Z" fill="#2563EB"/>
+    <circle cx="12" cy="12" r="3" fill="white"/>
+  </g>
+  <text x="32" y="22" font-family="-apple-system, BlinkMacSystemFont, 'Helvetica Neue', Helvetica, Arial, sans-serif" font-size="18" font-weight="700" fill="#0B1220" letter-spacing="-0.6">Restack</text>
+</svg>

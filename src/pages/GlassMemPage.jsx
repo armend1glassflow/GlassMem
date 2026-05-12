@@ -203,28 +203,22 @@ const ContextFlowViz = () => {
 /* ── Customer quotes ── */
 const CUSTOMERS = [
   {
-    company: 'GlassFlow',
     quote: "Before GlassMem, every sub-agent handoff meant manually syncing context. Now constraints propagate automatically — we don't think about it anymore.",
     name: 'Armend Avdijaj',
     role: 'CEO, GlassFlow',
-    initials: 'AA',
-    color: '#6ee7b7',
+    photo: '/customer-photos/armend.jpg',
   },
   {
-    company: 'Restack',
     quote: "GlassMem gives us the coordination layer that distributed agent systems need but no one built before. It's the missing infrastructure.",
     name: 'Andres Tapia',
     role: 'CEO, Restack',
-    initials: 'AT',
-    color: '#a78bfa',
+    photo: '/customer-photos/andres.jpg',
   },
   {
-    company: 'NuBrain',
     quote: "We integrated GlassMem in a day. Our agents now share a consistent operational picture across sessions — debugging went from painful to trivial.",
     name: 'Ingo Marquardt',
     role: 'CTO, NuBrain',
-    initials: 'IM',
-    color: '#7dd3fc',
+    photo: '/customer-photos/ingo.jpg',
   },
 ];
 
@@ -771,29 +765,23 @@ export function GlassMemPage() {
         <div className="w">
           <div className="cust-sec__intro reveal">
             <span className="label">// customers</span>
-            <h2 className="cust-sec__heading">Trusted by teams building<br/>production AI systems.</h2>
+            <h2 className="cust-sec__heading">Trusted by teams building<br/>production AI systems</h2>
           </div>
           <div className="cust-sec__logos reveal">
-            {[
-              { name: 'GlassFlow', style: { fontWeight: 700, fontSize: 18 } },
-              { name: 'restack',   style: { fontWeight: 900, fontSize: 22, textTransform: 'lowercase' } },
-              { name: 'NuBrain',   style: { fontWeight: 800, fontSize: 20 } },
-            ].map(c => (
-              <div key={c.name} className="cust-sec__logo">
-                <span style={{ fontFamily: 'var(--f-disp)', color: 'rgba(255,255,255,0.55)', letterSpacing: '-0.03em', ...c.style }}>{c.name}</span>
-              </div>
-            ))}
+            <img src="/customer-logos/glassflow.svg" alt="GlassFlow" className="cust-sec__logo-img"/>
+            <img src="/customer-logos/restack.svg"   alt="Restack"   className="cust-sec__logo-img"/>
+            <img src="/customer-logos/nubrain.svg"   alt="NuBrain"   className="cust-sec__logo-img"/>
           </div>
           <div className="cust-sec__cards reveal">
             {CUSTOMERS.map(c => (
               <div key={c.name} className="cust-sec__card">
-                <p className="cust-sec__card-quote-mark">"</p>
+                <svg className="cust-sec__qmark" width="28" height="22" viewBox="0 0 28 22" fill="none">
+                  <path d="M0 22V13.4C0 9.8 0.866667 6.86667 2.6 4.6C4.33333 2.26667 6.8 0.666667 10 0L11.4 2.6C9.4 3.13333 7.8 4.13333 6.6 5.6C5.46667 7.06667 4.86667 8.73333 4.8 10.6H9.2V22H0ZM16.6 22V13.4C16.6 9.8 17.4667 6.86667 19.2 4.6C20.9333 2.26667 23.4 0.666667 26.6 0L28 2.6C26 3.13333 24.4 4.13333 23.2 5.6C22.0667 7.06667 21.4667 8.73333 21.4 10.6H25.8V22H16.6Z" fill="currentColor"/>
+                </svg>
                 <p className="cust-sec__card-quote">{c.quote}</p>
                 <div className="cust-sec__card-sep"/>
                 <div className="cust-sec__card-footer">
-                  <div className="cust-sec__avatar" style={{ background: c.color + '1a', borderColor: c.color + '40' }}>
-                    <span style={{ color: c.color, fontSize: 11, fontWeight: 700, fontFamily: 'var(--f-disp)' }}>{c.initials}</span>
-                  </div>
+                  <img src={c.photo} alt={c.name} className="cust-sec__avatar-photo"/>
                   <div>
                     <p className="cust-sec__card-name">{c.name}</p>
                     <p className="cust-sec__card-role">{c.role}</p>

@@ -3998,6 +3998,7 @@ img { display: block; max-width: 100%; }
 }
 .cust-sec__intro {
   margin-bottom: 32px;
+  text-align: center;
 }
 .cust-sec__intro .label {
   margin-bottom: 10px;
@@ -4016,14 +4017,23 @@ img { display: block; max-width: 100%; }
 .cust-sec__logos {
   display: flex;
   align-items: center;
-  gap: 40px;
-  margin-bottom: 48px;
+  justify-content: center;
+  gap: 52px;
+  margin-bottom: 52px;
   flex-wrap: wrap;
 }
 .cust-sec__logo {
   display: flex;
   align-items: center;
 }
+.cust-sec__logo-img {
+  height: 30px;
+  width: auto;
+  filter: brightness(0) invert(1);
+  opacity: 0.55;
+  transition: opacity 0.18s;
+}
+.cust-sec__logo-img:hover { opacity: 0.85; }
 
 /* Quote cards */
 .cust-sec__cards {
@@ -4055,6 +4065,13 @@ img { display: block; max-width: 100%; }
   margin-bottom: 14px;
   display: block;
 }
+.cust-sec__qmark {
+  color: var(--em);
+  display: block;
+  margin-bottom: 16px;
+  flex-shrink: 0;
+  opacity: 0.75;
+}
 .cust-sec__card-quote {
   font-size: 14px;
   line-height: 1.72;
@@ -4081,6 +4098,14 @@ img { display: block; max-width: 100%; }
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
+}
+.cust-sec__avatar-photo {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1.5px solid var(--bd-2);
 }
 .cust-sec__card-name {
   font-family: var(--f-disp);
