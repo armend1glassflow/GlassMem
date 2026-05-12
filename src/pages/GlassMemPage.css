@@ -2910,3 +2910,356 @@ img { display: block; max-width: 100%; }
 .observe__packet-row:last-child > * { border-bottom: none; }
 .observe__packet-key { color: var(--tx-3); }
 .observe__packet-val { line-height: 1.4; }
+
+/* ── CONTEXT TOPOLOGY — BENTO GRID ─────────────────────── */
+.topo2 {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+  max-width: var(--max-w);
+  margin: 0 auto;
+  width: 100%;
+}
+
+/* Cards */
+.topo2__card {
+  background: var(--bg-2);
+  border: 1px solid var(--bd);
+  border-radius: 16px;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+.topo2__card:hover {
+  border-color: var(--bd-3);
+  box-shadow: 0 8px 40px rgba(0,0,0,0.45);
+}
+.topo2__card--wide {
+  grid-column: 1 / -1;
+}
+
+/* Art area (visual mockup at top) */
+.topo2__art {
+  flex: 1;
+  padding: 28px 28px 20px;
+  border-bottom: 1px solid var(--bd);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 220px;
+}
+
+/* Copy area (title + desc at bottom) */
+.topo2__copy {
+  padding: 20px 24px 24px;
+}
+.topo2__title {
+  font-family: var(--f-disp);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--tx);
+  margin-bottom: 6px;
+  letter-spacing: -0.01em;
+}
+.topo2__desc {
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--tx-2);
+}
+
+/* ── Card 1: Scope ladder ──────────────────────────── */
+.topo2__scopes {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  width: 100%;
+}
+.topo2__scope-row {
+  display: flex;
+}
+.topo2__scope-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 12px;
+  border-left: 2px solid;
+  background: rgba(255,255,255,0.03);
+  border-radius: 0 var(--r) var(--r) 0;
+  flex: 1;
+}
+.topo2__scope-name {
+  font-family: var(--f-code);
+  font-size: 11px;
+  font-weight: 500;
+  white-space: nowrap;
+  min-width: 90px;
+}
+.topo2__scope-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.topo2__scope-tag {
+  font-family: var(--f-code);
+  font-size: 10px;
+  color: var(--tx-3);
+  background: var(--bg-3);
+  border: 1px solid var(--bd);
+  border-radius: 4px;
+  padding: 2px 7px;
+  line-height: 1.4;
+}
+
+/* ── Card 2: Routing ───────────────────────────────── */
+.topo2__routing {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 100%;
+}
+.topo2__routing-store {
+  background: var(--bg-3);
+  border: 1px solid var(--bd-2);
+  border-radius: var(--r-lg);
+  padding: 12px 14px;
+}
+.topo2__routing-store-label {
+  font-family: var(--f-code);
+  font-size: 10px;
+  color: var(--em);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 8px;
+}
+.topo2__routing-store-items {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+.topo2__routing-arrow {
+  font-family: var(--f-code);
+  font-size: 10px;
+  color: var(--tx-3);
+  text-align: center;
+  padding: 5px 0;
+  position: relative;
+}
+.topo2__routing-arrow::before,
+.topo2__routing-arrow::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  width: calc(50% - 100px);
+  height: 1px;
+  background: var(--bd-2);
+}
+.topo2__routing-arrow::before { left: 0; }
+.topo2__routing-arrow::after  { right: 0; }
+.topo2__routing-agents {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.topo2__agent-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--bg-3);
+  border: 1px solid var(--bd);
+  border-radius: var(--r);
+  padding: 8px 12px;
+}
+.topo2__agent-id {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  min-width: 120px;
+}
+.topo2__agent-pip {
+  display: inline-block;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+.topo2__agent-name {
+  font-family: var(--f-code);
+  font-size: 11px;
+  color: var(--tx-2);
+  white-space: nowrap;
+}
+.topo2__agent-chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 4px;
+}
+
+/* Shared chip */
+.topo2__chip {
+  font-family: var(--f-code);
+  font-size: 11px;
+  color: var(--tx-2);
+  background: var(--bg-4);
+  border: 1px solid var(--bd);
+  border-radius: 5px;
+  padding: 3px 8px;
+  line-height: 1.4;
+  white-space: nowrap;
+}
+.topo2__chip--sm {
+  font-size: 10px;
+  padding: 2px 6px;
+  color: var(--tx-3);
+}
+
+/* ── Card 3: Inheritance flow (wide) ───────────────── */
+.topo2__inherit {
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
+  align-items: center;
+  gap: 16px;
+  width: 100%;
+  max-width: 780px;
+}
+.topo2__inherit-col {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.topo2__inherit-label {
+  font-family: var(--f-code);
+  font-size: 10px;
+  color: var(--tx-3);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  margin-bottom: 2px;
+}
+.topo2__inherit-bubble {
+  background: var(--bg-3);
+  border: 1px solid var(--bd-2);
+  border-radius: var(--r-lg);
+  padding: 14px 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.topo2__inherit-bubble--result {
+  border-color: rgba(110,231,183,0.2);
+  background: rgba(110,231,183,0.04);
+}
+.topo2__inherit-agent {
+  font-family: var(--f-code);
+  font-size: 12px;
+  color: var(--tx);
+  font-weight: 500;
+}
+.topo2__inherit-task {
+  font-size: 12px;
+  color: var(--tx-2);
+  line-height: 1.5;
+}
+.topo2__inherit-flow {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8px;
+}
+.topo2__inherit-flow-line {
+  width: 1px;
+  height: 28px;
+  background: linear-gradient(to bottom, var(--bd-2), var(--em));
+  opacity: 0.5;
+}
+.topo2__inherit-flow-hub {
+  background: var(--bg-4);
+  border: 1px solid rgba(110,231,183,0.35);
+  border-radius: 10px;
+  padding: 8px 12px;
+  font-family: var(--f-code);
+  font-size: 10px;
+  color: var(--em);
+  white-space: nowrap;
+  box-shadow: 0 0 16px rgba(110,231,183,0.1);
+}
+.topo2__inherit-chips {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  align-items: center;
+  margin: 2px 0;
+}
+
+/* ── Card 4: Lifecycle ─────────────────────────────── */
+.topo2__lifecycle {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  width: 100%;
+}
+.topo2__lc-row {
+  display: grid;
+  grid-template-columns: 10px 1fr auto auto;
+  align-items: center;
+  gap: 10px;
+  padding: 9px 12px;
+  background: var(--bg-3);
+  border: 1px solid var(--bd);
+  border-radius: var(--r);
+}
+.topo2__lc-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 6px currentColor;
+}
+.topo2__lc-text {
+  font-family: var(--f-code);
+  font-size: 11px;
+  color: var(--tx-2);
+  line-height: 1.3;
+}
+.topo2__lc-badge {
+  font-family: var(--f-code);
+  font-size: 10px;
+  border: 1px solid;
+  border-radius: 4px;
+  padding: 2px 7px;
+  white-space: nowrap;
+  text-transform: lowercase;
+}
+.topo2__lc-time {
+  font-family: var(--f-code);
+  font-size: 10px;
+  color: var(--tx-3);
+  white-space: nowrap;
+}
+
+/* ── Responsive ────────────────────────────────────── */
+@media (max-width: 768px) {
+  .topo2 {
+    grid-template-columns: 1fr;
+  }
+  .topo2__card--wide {
+    grid-column: 1;
+  }
+  .topo2__art {
+    min-height: 180px;
+    padding: 20px 18px 16px;
+  }
+  .topo2__inherit {
+    grid-template-columns: 1fr;
+    gap: 10px;
+  }
+  .topo2__inherit-flow {
+    flex-direction: row;
+    justify-content: center;
+  }
+  .topo2__inherit-flow-line {
+    width: 28px;
+    height: 1px;
+    background: linear-gradient(to right, var(--bd-2), var(--em));
+  }
+}
