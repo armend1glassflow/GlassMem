@@ -33,118 +33,167 @@ const DiscordIcon = () => (
   </svg>
 );
 
-/* ── Hero hub-and-spoke visualization ── */
-const CFVIZ_EVENTS = [
-  { type: 'write',     actor: 'Planner Agent',     content: 'billing freeze written to context store' },
-  { type: 'propagate', actor: 'GlassMem',           content: 'propagated to 5 agents in billing scope' },
-  { type: 'record',    actor: 'Claude Code',        content: 'billing refactor paused — constraint active' },
-  { type: 'block',     actor: 'CI Agent',           content: 'blocking billing PRs — freeze constraint' },
-  { type: 'record',    actor: 'Billing Sub-Agent',  content: 'freeze inherited on spawn · read-only path' },
-  { type: 'expire',    actor: 'GlassMem',           content: 'billing freeze auto-expired at Fri 18:00' },
+/* ── Hero 3-column flow visualization ── */
+const FLOW_SCENES = [
+  {
+    source: {
+      agent: 'Planner Agent', pip: '#fb923c', action: 'writes constraint',
+      text: '"Freeze all billing changes — Stripe migration active until Fri 18:00"',
+      scope: 'project.billing · temporary',
+    },
+    agents: [
+      { name: 'Claude Code',       pip: '#6ee7b7', state: 'billing refactor paused'   },
+      { name: 'Cursor',            pip: '#a78bfa', state: 'billing PRs suspended'      },
+      { name: 'Debug Agent',       pip: '#7dd3fc', state: 'read-only mode active'      },
+      { name: 'CI Agent',          pip: '#34d399', state: 'blocking billing merges'    },
+      { name: 'Billing Sub-Agent', pip: '#f472b6', state: 'constraint inherited'       },
+    ],
+  },
+  {
+    source: {
+      agent: 'Debug Agent', pip: '#7dd3fc', action: 'records failure',
+      text: '"Redis cache caused stale reads in billing sync — do not retry"',
+      scope: 'project.billing · permanent',
+    },
+    agents: [
+      { name: 'Claude Code',   pip: '#6ee7b7', state: 'avoiding Redis in billing' },
+      { name: 'Planner Agent', pip: '#fb923c', state: 'Redis removed from plan'   },
+      { name: 'Backend Agent', pip: '#94a3b8', state: 'switching to Postgres'     },
+      { name: 'Review Agent',  pip: '#a78bfa', state: 'flagging Redis in PRs'     },
+    ],
+  },
+  {
+    source: {
+      agent: 'Architect Agent', pip: '#a78bfa', action: 'writes decision',
+      text: '"Migrating to GraphQL — no new REST endpoints after June 15"',
+      scope: 'global · permanent',
+    },
+    agents: [
+      { name: 'Claude Code',  pip: '#6ee7b7', state: 'building GraphQL resolver'     },
+      { name: 'Cursor',       pip: '#a78bfa', state: 'REST work paused'              },
+      { name: 'API Agent',    pip: '#fb923c', state: 'schema generation mode'        },
+      { name: 'Review Agent', pip: '#7dd3fc', state: 'blocking new REST endpoints'   },
+    ],
+  },
 ];
-
-const CFVIZ_NODES = [
-  { id: 'cfn0', name: 'Planner Agent',     bx: 52,  by: 36,  bw: 128, pip: '#fb923c' },
-  { id: 'cfn1', name: 'Claude Code',       bx: 368, by: 36,  bw: 112, pip: '#6ee7b7' },
-  { id: 'cfn2', name: 'Debug Agent',       bx: 18,  by: 156, bw: 112, pip: '#7dd3fc' },
-  { id: 'cfn3', name: 'CI Agent',          bx: 420, by: 156, bw: 92,  pip: '#34d399' },
-  { id: 'cfn4', name: 'Billing Sub-Agent', bx: 185, by: 278, bw: 148, pip: '#f472b6' },
-];
-const CFV_HX = 272, CFV_HY = 160, CFV_BH = 28;
 
 const ContextFlowViz = () => {
-  const [evIdx, setEvIdx] = useState(0);
-  const [show,  setShow]  = useState(true);
+  const [scIdx,      setScIdx]      = useState(0);
+  const [phase,      setPhase]      = useState('write');
+  const [agentsDone, setAgentsDone] = useState(0);
+
+  const sc = FLOW_SCENES[scIdx];
+
+  useEffect(() => { setPhase('write'); setAgentsDone(0); }, [scIdx]);
 
   useEffect(() => {
-    const cycle = () => {
-      setShow(false);
-      setTimeout(() => { setEvIdx(i => (i + 1) % CFVIZ_EVENTS.length); setShow(true); }, 220);
-    };
-    const t = setInterval(cycle, 2600);
-    return () => clearInterval(t);
-  }, []);
+    let t;
+    if      (phase === 'write')       t = setTimeout(() => setPhase('flow-in'),    1000);
+    else if (phase === 'flow-in')     t = setTimeout(() => setPhase('distribute'),  700);
+    else if (phase === 'distribute') {
+      if (agentsDone < sc.agents.length)
+        t = setTimeout(() => setAgentsDone(n => n + 1), 380);
+      else
+        t = setTimeout(() => setPhase('done'), 80);
+    }
+    else if (phase === 'done')        t = setTimeout(() => setScIdx(i => (i + 1) % FLOW_SCENES.length), 2400);
+    return () => clearTimeout(t);
+  }, [phase, agentsDone, sc.agents.length]);
 
-  const ev = CFVIZ_EVENTS[evIdx];
+  const flowing     = phase !== 'write';
+  const distributing = phase === 'distribute' || phase === 'done';
+  const done        = phase === 'done';
 
   return (
-    <div className="cfviz">
-      <div className="cfviz__bar">
-        <span className="cfviz__bar-title">
-          <Logo size={12}/>glassmem · context-flow
-        </span>
-        <span className="cfviz__bar-live">
-          <span style={{ display:'inline-block', width:6, height:6, borderRadius:'50%', background:'var(--em)', animation:'pulse 1.8s ease-in-out infinite', flexShrink:0 }}/>
-          LIVE
+    <div className="hflow">
+      {/* Chrome bar */}
+      <div className="hflow__chrome">
+        <div className="hflow__chrome-dots">
+          <span className="hflow__macdot" style={{ background: '#ff5f57' }}/>
+          <span className="hflow__macdot" style={{ background: '#febc2e' }}/>
+          <span className="hflow__macdot" style={{ background: '#28c840' }}/>
+        </div>
+        <span className="hflow__chrome-title">glassmem · context-flow</span>
+        <span className="hflow__chrome-live">
+          <span className="hflow__live-dot"/>LIVE
         </span>
       </div>
 
-      <div className="cfviz__stage">
-        <svg viewBox="0 0 548 328" className="cfviz__svg">
-          <defs>
-            {CFVIZ_NODES.map(n => {
-              const cx = n.bx + n.bw / 2;
-              const cy = n.by + CFV_BH / 2;
-              return <path key={n.id} id={n.id} d={`M${CFV_HX},${CFV_HY} L${cx},${cy}`}/>;
-            })}
-          </defs>
+      {/* 3-column body */}
+      <div className="hflow__body">
 
-          {/* Spoke lines */}
-          {CFVIZ_NODES.map(n => {
-            const cx = n.bx + n.bw / 2;
-            const cy = n.by + CFV_BH / 2;
+        {/* ── Left: context update ── */}
+        <div className="hflow__source">
+          <p className="hflow__col-label">Context update</p>
+          <div className="hflow__source-card">
+            <div className="hflow__source-from">
+              <span className="hflow__pip" style={{ background: sc.source.pip }}/>
+              <strong className="hflow__source-agent">{sc.source.agent}</strong>
+              <span className="hflow__source-verb">{sc.source.action}</span>
+            </div>
+            <p className="hflow__source-text">{sc.source.text}</p>
+            <span className="hflow__source-scope">{sc.source.scope}</span>
+          </div>
+        </div>
+
+        {/* ── Middle: animated connectors + GlassMem hub ── */}
+        <div className="hflow__mid">
+          {/* source → GlassMem */}
+          <div className="hflow__arrow">
+            <div className="hflow__arrow-track">
+              <div className="hflow__arrow-line"/>
+              {flowing && <span className="hflow__arrow-ball hflow__arrow-ball--in"/>}
+            </div>
+            <span className="hflow__arrow-tip">›</span>
+          </div>
+
+          {/* GlassMem hub */}
+          <div className={`hflow__hub${distributing ? ' hflow__hub--active' : ''}`}>
+            <Logo size={18}/>
+            <span className="hflow__hub-name">GlassMem</span>
+            {distributing && (
+              <span className="hflow__hub-count">{agentsDone}/{sc.agents.length}</span>
+            )}
+          </div>
+
+          {/* GlassMem → agents */}
+          <div className="hflow__arrow">
+            <span className="hflow__arrow-tip">›</span>
+            <div className="hflow__arrow-track">
+              <div className="hflow__arrow-line"/>
+              {distributing && <span className="hflow__arrow-ball hflow__arrow-ball--out"/>}
+            </div>
+          </div>
+        </div>
+
+        {/* ── Right: receiving agents ── */}
+        <div className="hflow__agents">
+          <p className="hflow__col-label">Receiving agents</p>
+          {sc.agents.map((ag, i) => {
+            const on = i < agentsDone;
             return (
-              <line key={`ln-${n.id}`}
-                x1={CFV_HX} y1={CFV_HY} x2={cx} y2={cy}
-                stroke="rgba(255,255,255,0.07)" strokeWidth="1" strokeDasharray="4 5"
-              />
+              <div key={ag.name} className={`hflow__agent${on ? ' hflow__agent--on' : ''}`}>
+                <span className="hflow__pip" style={{ background: on ? ag.pip : 'rgba(255,255,255,0.08)', transition: 'background 0.28s' }}/>
+                <span className="hflow__agent-name">{ag.name}</span>
+                {on
+                  ? <span className="hflow__agent-state">↳ {ag.state}</span>
+                  : <span className="hflow__agent-waiting">—</span>
+                }
+              </div>
             );
           })}
+        </div>
 
-          {/* Animated dots */}
-          {CFVIZ_NODES.map((n, i) => (
-            <circle key={`dot-${n.id}`} r="3.5" fill={n.pip} opacity="0.9">
-              <animateMotion dur={`${1.3 + i * 0.16}s`} repeatCount="indefinite">
-                <mpath href={`#${n.id}`}/>
-              </animateMotion>
-            </circle>
-          ))}
-
-          {/* Hub glow */}
-          <circle cx={CFV_HX} cy={CFV_HY} r="38" fill="none" stroke="rgba(110,231,183,0.05)" strokeWidth="14"/>
-          <circle cx={CFV_HX} cy={CFV_HY} r="27" fill="rgba(110,231,183,0.07)" stroke="rgba(110,231,183,0.25)" strokeWidth="1"/>
-
-          {/* Agent boxes */}
-          {CFVIZ_NODES.map(n => (
-            <g key={`box-${n.id}`}>
-              <rect x={n.bx} y={n.by} width={n.bw} height={CFV_BH} rx="5"
-                fill="rgba(255,255,255,0.028)" stroke="rgba(255,255,255,0.1)" strokeWidth="0.75"
-              />
-              <circle cx={n.bx + 13} cy={n.by + CFV_BH / 2} r="3.5" fill={n.pip}/>
-              <text x={n.bx + 23} y={n.by + CFV_BH / 2 + 4}
-                fill="rgba(255,255,255,0.65)" fontSize="10"
-                fontFamily="'Fira Code', monospace"
-              >{n.name}</text>
-            </g>
-          ))}
-
-          {/* Hub label */}
-          <text x={CFV_HX} y={CFV_HY + 4} textAnchor="middle"
-            fill="rgba(110,231,183,0.9)" fontSize="10"
-            fontFamily="'Manrope', sans-serif" fontWeight="700" letterSpacing="-0.3"
-          >GM</text>
-        </svg>
       </div>
 
-      <div className={`cfviz__event${show ? '' : ' cfviz__event--hidden'}`}>
-        <span className={`cfviz__event-actor cfviz__event-actor--${ev.type}`}>{ev.actor}</span>
-        <span className="cfviz__event-sep">·</span>
-        <span className="cfviz__event-content">{ev.content}</span>
-      </div>
-      <div className="cfviz__progress">
-        {CFVIZ_EVENTS.map((_, i) => (
-          <span key={i} className={`cfviz__progress-dot${evIdx === i ? ' cfviz__progress-dot--on' : ''}`}/>
-        ))}
+      {/* Footer status */}
+      <div className={`hflow__footer${done ? ' hflow__footer--done' : ''}`}>
+        {done ? (
+          <><span className="hflow__footer-check">✓</span>{sc.agents.length} agents updated · 0 manual steps</>
+        ) : phase === 'write'       ? 'waiting for context update…'
+          : phase === 'flow-in'     ? 'routing to GlassMem…'
+          : `distributing to ${sc.agents.length} agents…`
+        }
       </div>
     </div>
   );
