@@ -5232,3 +5232,10 @@ img { display: block; max-width: 100%; }
 /* Remove horizontal-only rules that no longer apply */
 .hflow__mid  { display: none; }
 .hflow__arrow { display: none; }
+
+/* ── hflow source card: fixed height so layout never shifts ── */
+.hflow__source-card {
+  height: 100px;
+  overflow: hidden;
+  min-height: unset;
+}

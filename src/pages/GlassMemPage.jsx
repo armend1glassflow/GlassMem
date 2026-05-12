@@ -38,7 +38,7 @@ const FLOW_SCENES = [
   {
     source: {
       agent: 'Planner Agent', pip: '#fb923c', action: 'writes constraint',
-      text: '"Freeze all billing changes — Stripe migration active until Fri 18:00"',
+      text: '"Freeze billing changes — Stripe migration active"',
       scope: 'project.billing · temporary',
     },
     agents: [
@@ -52,7 +52,7 @@ const FLOW_SCENES = [
   {
     source: {
       agent: 'Debug Agent', pip: '#7dd3fc', action: 'records failure',
-      text: '"Redis cache caused stale reads in billing sync — do not retry"',
+      text: '"Redis cache caused stale reads — do not retry"',
       scope: 'project.billing · permanent',
     },
     agents: [
@@ -66,7 +66,7 @@ const FLOW_SCENES = [
   {
     source: {
       agent: 'Architect Agent', pip: '#a78bfa', action: 'writes decision',
-      text: '"Migrating to GraphQL — no new REST endpoints after June 15"',
+      text: '"Migrate to GraphQL — no new REST endpoints"',
       scope: 'global · permanent',
     },
     agents: [
