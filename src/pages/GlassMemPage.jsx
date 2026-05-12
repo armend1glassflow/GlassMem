@@ -33,119 +33,118 @@ const DiscordIcon = () => (
   </svg>
 );
 
-/* ── Hero broadcast visualization ── */
-const BROADCAST_SCENES = [
-  {
-    from: 'Planner Agent', pip: '#fb923c',
-    msg: '"No billing changes until Stripe migration completes"',
-    agents: [
-      { name: 'Claude Code',       pip: '#6ee7b7', state: 'billing refactor paused' },
-      { name: 'Cursor',            pip: '#a78bfa', state: 'billing PRs suspended' },
-      { name: 'Debug Agent',       pip: '#7dd3fc', state: 'read-only mode active' },
-      { name: 'CI Agent',          pip: '#34d399', state: 'blocking billing merges' },
-      { name: 'Billing Sub-Agent', pip: '#f472b6', state: 'constraint inherited on spawn' },
-    ],
-  },
-  {
-    from: 'Debug Agent', pip: '#7dd3fc',
-    msg: '"Redis cache caused stale reads — do not retry this approach"',
-    agents: [
-      { name: 'Claude Code',   pip: '#6ee7b7', state: 'avoiding Redis in billing' },
-      { name: 'Planner Agent', pip: '#fb923c', state: 'Redis removed from plan' },
-      { name: 'Backend Agent', pip: '#94a3b8', state: 'switching to Postgres' },
-      { name: 'Review Agent',  pip: '#a78bfa', state: 'flagging Redis in all PRs' },
-    ],
-  },
-  {
-    from: 'Architect Agent', pip: '#a78bfa',
-    msg: '"Migrating to GraphQL — no new REST endpoints after June 15"',
-    agents: [
-      { name: 'Claude Code',  pip: '#6ee7b7', state: 'building GraphQL resolver' },
-      { name: 'Cursor',       pip: '#a78bfa', state: 'REST work paused' },
-      { name: 'API Agent',    pip: '#fb923c', state: 'schema generation mode' },
-      { name: 'Review Agent', pip: '#7dd3fc', state: 'blocking new REST endpoints' },
-    ],
-  },
+/* ── Hero hub-and-spoke visualization ── */
+const CFVIZ_EVENTS = [
+  { type: 'write',     actor: 'Planner Agent',     content: 'billing freeze written to context store' },
+  { type: 'propagate', actor: 'GlassMem',           content: 'propagated to 5 agents in billing scope' },
+  { type: 'record',    actor: 'Claude Code',        content: 'billing refactor paused — constraint active' },
+  { type: 'block',     actor: 'CI Agent',           content: 'blocking billing PRs — freeze constraint' },
+  { type: 'record',    actor: 'Billing Sub-Agent',  content: 'freeze inherited on spawn · read-only path' },
+  { type: 'expire',    actor: 'GlassMem',           content: 'billing freeze auto-expired at Fri 18:00' },
 ];
 
-const ContextBroadcast = () => {
-  const [idx,    setIdx]    = useState(0);
-  const [count,  setCount]  = useState(0);
-  const [phase,  setPhase]  = useState('waiting');
+const CFVIZ_NODES = [
+  { id: 'cfn0', name: 'Planner Agent',     bx: 52,  by: 36,  bw: 128, pip: '#fb923c' },
+  { id: 'cfn1', name: 'Claude Code',       bx: 368, by: 36,  bw: 112, pip: '#6ee7b7' },
+  { id: 'cfn2', name: 'Debug Agent',       bx: 18,  by: 156, bw: 112, pip: '#7dd3fc' },
+  { id: 'cfn3', name: 'CI Agent',          bx: 420, by: 156, bw: 92,  pip: '#34d399' },
+  { id: 'cfn4', name: 'Billing Sub-Agent', bx: 185, by: 278, bw: 148, pip: '#f472b6' },
+];
+const CFV_HX = 272, CFV_HY = 160, CFV_BH = 28;
 
-  const scene = BROADCAST_SCENES[idx];
+const ContextFlowViz = () => {
+  const [evIdx, setEvIdx] = useState(0);
+  const [show,  setShow]  = useState(true);
 
   useEffect(() => {
-    setCount(0);
-    setPhase('waiting');
-    const t = setTimeout(() => setPhase('running'), 900);
-    return () => clearTimeout(t);
-  }, [idx]);
+    const cycle = () => {
+      setShow(false);
+      setTimeout(() => { setEvIdx(i => (i + 1) % CFVIZ_EVENTS.length); setShow(true); }, 220);
+    };
+    const t = setInterval(cycle, 2600);
+    return () => clearInterval(t);
+  }, []);
 
-  useEffect(() => {
-    if (phase !== 'running') return;
-    if (count < scene.agents.length) {
-      const t = setTimeout(() => setCount(c => c + 1), 520);
-      return () => clearTimeout(t);
-    }
-    const t = setTimeout(() => setIdx(i => (i + 1) % BROADCAST_SCENES.length), 3400);
-    return () => clearTimeout(t);
-  }, [phase, count, scene.agents.length]);
+  const ev = CFVIZ_EVENTS[evIdx];
 
   return (
-    <div className="bcast">
-      <div className="bcast__chrome">
-        <div className="bcast__chrome-dots">
-          <span className="bcast__dot" style={{ background:'#ff5f57' }}/>
-          <span className="bcast__dot" style={{ background:'#febc2e' }}/>
-          <span className="bcast__dot" style={{ background:'#28c840' }}/>
-        </div>
-        <span className="bcast__chrome-title">glassmem · context-broadcast</span>
-        <span className="bcast__chrome-live">
-          <span className="bcast__live-pip"/>LIVE
+    <div className="cfviz">
+      <div className="cfviz__bar">
+        <span className="cfviz__bar-title">
+          <Logo size={12}/>glassmem · context-flow
+        </span>
+        <span className="cfviz__bar-live">
+          <span style={{ display:'inline-block', width:6, height:6, borderRadius:'50%', background:'var(--em)', animation:'pulse 1.8s ease-in-out infinite', flexShrink:0 }}/>
+          LIVE
         </span>
       </div>
 
-      <div className="bcast__body">
-        <div className="bcast__event">
-          <div className="bcast__event-from">
-            <span className="bcast__pip" style={{ background: scene.pip }}/>
-            <strong className="bcast__event-agent">{scene.from}</strong>
-            <span className="bcast__event-verb">writes</span>
-          </div>
-          <p className="bcast__event-msg">{scene.msg}</p>
-        </div>
+      <div className="cfviz__stage">
+        <svg viewBox="0 0 548 328" className="cfviz__svg">
+          <defs>
+            {CFVIZ_NODES.map(n => {
+              const cx = n.bx + n.bw / 2;
+              const cy = n.by + CFV_BH / 2;
+              return <path key={n.id} id={n.id} d={`M${CFV_HX},${CFV_HY} L${cx},${cy}`}/>;
+            })}
+          </defs>
 
-        <div className="bcast__sep">
-          <div className="bcast__sep-line"/>
-          <span className="bcast__sep-label">
-            {count > 0
-              ? `${count} of ${scene.agents.length} agents updated`
-              : 'broadcasting…'
-            }
-          </span>
-          <div className="bcast__sep-line"/>
-        </div>
+          {/* Spoke lines */}
+          {CFVIZ_NODES.map(n => {
+            const cx = n.bx + n.bw / 2;
+            const cy = n.by + CFV_BH / 2;
+            return (
+              <line key={`ln-${n.id}`}
+                x1={CFV_HX} y1={CFV_HY} x2={cx} y2={cy}
+                stroke="rgba(255,255,255,0.07)" strokeWidth="1" strokeDasharray="4 5"
+              />
+            );
+          })}
 
-        <div className="bcast__agents">
-          {scene.agents.map((ag, i) => (
-            <div key={ag.name} className={`bcast__agent${i < count ? ' bcast__agent--on' : ''}`}>
-              <span className="bcast__pip" style={{ background: i < count ? ag.pip : 'rgba(255,255,255,0.08)' }}/>
-              <span className="bcast__agent-name">{ag.name}</span>
-              {i < count
-                ? <span className="bcast__agent-state">↳ {ag.state}</span>
-                : <span className="bcast__agent-waiting">—</span>
-              }
-            </div>
+          {/* Animated dots */}
+          {CFVIZ_NODES.map((n, i) => (
+            <circle key={`dot-${n.id}`} r="3.5" fill={n.pip} opacity="0.9">
+              <animateMotion dur={`${1.3 + i * 0.16}s`} repeatCount="indefinite">
+                <mpath href={`#${n.id}`}/>
+              </animateMotion>
+            </circle>
           ))}
-        </div>
 
-        {count === scene.agents.length && (
-          <div className="bcast__done">
-            <span className="bcast__done-check">✓</span>
-            <span>{scene.agents.length} agents aligned · 0 manual steps</span>
-          </div>
-        )}
+          {/* Hub glow */}
+          <circle cx={CFV_HX} cy={CFV_HY} r="38" fill="none" stroke="rgba(110,231,183,0.05)" strokeWidth="14"/>
+          <circle cx={CFV_HX} cy={CFV_HY} r="27" fill="rgba(110,231,183,0.07)" stroke="rgba(110,231,183,0.25)" strokeWidth="1"/>
+
+          {/* Agent boxes */}
+          {CFVIZ_NODES.map(n => (
+            <g key={`box-${n.id}`}>
+              <rect x={n.bx} y={n.by} width={n.bw} height={CFV_BH} rx="5"
+                fill="rgba(255,255,255,0.028)" stroke="rgba(255,255,255,0.1)" strokeWidth="0.75"
+              />
+              <circle cx={n.bx + 13} cy={n.by + CFV_BH / 2} r="3.5" fill={n.pip}/>
+              <text x={n.bx + 23} y={n.by + CFV_BH / 2 + 4}
+                fill="rgba(255,255,255,0.65)" fontSize="10"
+                fontFamily="'Fira Code', monospace"
+              >{n.name}</text>
+            </g>
+          ))}
+
+          {/* Hub label */}
+          <text x={CFV_HX} y={CFV_HY + 4} textAnchor="middle"
+            fill="rgba(110,231,183,0.9)" fontSize="10"
+            fontFamily="'Manrope', sans-serif" fontWeight="700" letterSpacing="-0.3"
+          >GM</text>
+        </svg>
+      </div>
+
+      <div className={`cfviz__event${show ? '' : ' cfviz__event--hidden'}`}>
+        <span className={`cfviz__event-actor cfviz__event-actor--${ev.type}`}>{ev.actor}</span>
+        <span className="cfviz__event-sep">·</span>
+        <span className="cfviz__event-content">{ev.content}</span>
+      </div>
+      <div className="cfviz__progress">
+        {CFVIZ_EVENTS.map((_, i) => (
+          <span key={i} className={`cfviz__progress-dot${evIdx === i ? ' cfviz__progress-dot--on' : ''}`}/>
+        ))}
       </div>
     </div>
   );
@@ -711,7 +710,7 @@ export function GlassMemPage() {
               </div>
             </div>
             <div className="hero__viz-col enter-4">
-              <ContextBroadcast/>
+              <ContextFlowViz/>
             </div>
           </div>
         </div>
