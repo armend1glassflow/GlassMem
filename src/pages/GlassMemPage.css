@@ -5069,3 +5069,166 @@ img { display: block; max-width: 100%; }
     padding: 4px 0;
   }
 }
+
+/* ══════════════════════════════════════════════════
+   HFLOW — vertical override (source → hub → agents)
+   Overrides the horizontal layout from above.
+══════════════════════════════════════════════════ */
+
+/* Vertical body — single column */
+.hflow__body {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  padding: 16px 18px 18px;
+}
+
+/* Source stays the same, just ensure fixed minimum */
+.hflow__source-card {
+  min-height: 88px;
+}
+
+/* Vertical connector between sections */
+.hflow__vconn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 36px;
+  flex-shrink: 0;
+}
+.hflow__vconn-track {
+  flex: 1;
+  width: 16px;
+  position: relative;
+  display: flex;
+  justify-content: center;
+}
+.hflow__vconn-line {
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(110,231,183,0.18), rgba(110,231,183,0.45));
+}
+.hflow__vconn-tip {
+  font-size: 11px;
+  color: rgba(110,231,183,0.45);
+  line-height: 1;
+  flex-shrink: 0;
+}
+
+/* Traveling ball (vertical) */
+.hflow__vconn-ball {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: var(--em);
+  opacity: 0;
+  top: 0;
+}
+.hflow__vconn-ball--in {
+  animation: hflow-vball 0.58s cubic-bezier(0.4, 0, 0.6, 1) forwards;
+}
+.hflow__vconn-ball--out {
+  animation: hflow-vball 0.52s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+}
+@keyframes hflow-vball {
+  0%   { top: 0;    opacity: 0; }
+  10%  { opacity: 1; }
+  82%  { top: 80%;  opacity: 0.9; }
+  100% { top: 100%; opacity: 0; }
+}
+
+/* Hub — pill centered horizontally */
+.hflow__hub-row {
+  display: flex;
+  justify-content: center;
+}
+.hflow__hub {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 8px;
+  padding: 9px 20px;
+  background: rgba(110,231,183,0.06);
+  border: 1px solid rgba(110,231,183,0.2);
+  border-radius: 9999px;
+  flex-shrink: 0;
+  transition: background 0.3s, border-color 0.3s, box-shadow 0.3s;
+  min-width: 0;
+}
+.hflow__hub--active {
+  background: rgba(110,231,183,0.1);
+  border-color: rgba(110,231,183,0.38);
+  box-shadow: 0 0 20px rgba(110,231,183,0.09);
+}
+.hflow__hub-name {
+  font-family: var(--f-disp);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--em);
+  letter-spacing: -0.01em;
+  white-space: nowrap;
+}
+.hflow__hub-count {
+  font-family: var(--f-code);
+  font-size: 10px;
+  color: rgba(110,231,183,0.6);
+  white-space: nowrap;
+  animation: hflow-fadein 0.2s ease both;
+}
+
+/* Agent rows — fixed height so layout never shifts */
+.hflow__agents {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+.hflow__agent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  height: 34px;
+  padding: 0 10px;
+  background: rgba(255,255,255,0.02);
+  border: 1px solid var(--bd);
+  border-radius: 6px;
+  opacity: 0.28;
+  overflow: hidden;
+  flex-shrink: 0;
+  transition: opacity 0.38s cubic-bezier(0.16, 1, 0.3, 1),
+              background 0.38s, border-color 0.38s;
+}
+.hflow__agent--on {
+  opacity: 1;
+  background: rgba(255,255,255,0.04);
+  border-color: var(--bd-2);
+}
+.hflow__agent-name {
+  font-family: var(--f-code);
+  font-size: 11px;
+  color: var(--tx);
+  font-weight: 500;
+  flex-shrink: 0;
+  min-width: 108px;
+}
+.hflow__agent-state {
+  font-family: var(--f-code);
+  font-size: 10px;
+  color: var(--em);
+  flex: 1;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  animation: hflow-fadein 0.32s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+.hflow__agent-waiting {
+  font-family: var(--f-code);
+  font-size: 11px;
+  color: var(--tx-3);
+}
+
+/* Remove horizontal-only rules that no longer apply */
+.hflow__mid  { display: none; }
+.hflow__arrow { display: none; }

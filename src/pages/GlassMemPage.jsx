@@ -33,7 +33,7 @@ const DiscordIcon = () => (
   </svg>
 );
 
-/* ── Hero 3-column flow visualization ── */
+/* ── Hero vertical flow visualization (source → GlassMem → agents) ── */
 const FLOW_SCENES = [
   {
     source: {
@@ -56,10 +56,11 @@ const FLOW_SCENES = [
       scope: 'project.billing · permanent',
     },
     agents: [
-      { name: 'Claude Code',   pip: '#6ee7b7', state: 'avoiding Redis in billing' },
-      { name: 'Planner Agent', pip: '#fb923c', state: 'Redis removed from plan'   },
-      { name: 'Backend Agent', pip: '#94a3b8', state: 'switching to Postgres'     },
-      { name: 'Review Agent',  pip: '#a78bfa', state: 'flagging Redis in PRs'     },
+      { name: 'Claude Code',   pip: '#6ee7b7', state: 'avoiding Redis in billing'  },
+      { name: 'Planner Agent', pip: '#fb923c', state: 'Redis removed from plan'    },
+      { name: 'Backend Agent', pip: '#94a3b8', state: 'switching to Postgres'      },
+      { name: 'Review Agent',  pip: '#a78bfa', state: 'flagging Redis in PRs'      },
+      { name: 'CI Agent',      pip: '#34d399', state: 'blocking Redis cache usage' },
     ],
   },
   {
@@ -69,10 +70,11 @@ const FLOW_SCENES = [
       scope: 'global · permanent',
     },
     agents: [
-      { name: 'Claude Code',  pip: '#6ee7b7', state: 'building GraphQL resolver'     },
-      { name: 'Cursor',       pip: '#a78bfa', state: 'REST work paused'              },
-      { name: 'API Agent',    pip: '#fb923c', state: 'schema generation mode'        },
-      { name: 'Review Agent', pip: '#7dd3fc', state: 'blocking new REST endpoints'   },
+      { name: 'Claude Code',  pip: '#6ee7b7', state: 'building GraphQL resolver'   },
+      { name: 'Cursor',       pip: '#a78bfa', state: 'REST work paused'            },
+      { name: 'API Agent',    pip: '#fb923c', state: 'schema generation mode'      },
+      { name: 'Review Agent', pip: '#7dd3fc', state: 'blocking new REST endpoints' },
+      { name: 'Docs Agent',   pip: '#94a3b8', state: 'updating API docs'           },
     ],
   },
 ];
@@ -88,25 +90,25 @@ const ContextFlowViz = () => {
 
   useEffect(() => {
     let t;
-    if      (phase === 'write')       t = setTimeout(() => setPhase('flow-in'),    1000);
-    else if (phase === 'flow-in')     t = setTimeout(() => setPhase('distribute'),  700);
+    if      (phase === 'write')      t = setTimeout(() => setPhase('flow-in'),    1000);
+    else if (phase === 'flow-in')    t = setTimeout(() => setPhase('distribute'),  650);
     else if (phase === 'distribute') {
       if (agentsDone < sc.agents.length)
-        t = setTimeout(() => setAgentsDone(n => n + 1), 380);
+        t = setTimeout(() => setAgentsDone(n => n + 1), 360);
       else
         t = setTimeout(() => setPhase('done'), 80);
     }
-    else if (phase === 'done')        t = setTimeout(() => setScIdx(i => (i + 1) % FLOW_SCENES.length), 2400);
+    else if (phase === 'done')       t = setTimeout(() => setScIdx(i => (i + 1) % FLOW_SCENES.length), 2400);
     return () => clearTimeout(t);
   }, [phase, agentsDone, sc.agents.length]);
 
-  const flowing     = phase !== 'write';
+  const flowing      = phase !== 'write';
   const distributing = phase === 'distribute' || phase === 'done';
-  const done        = phase === 'done';
+  const done         = phase === 'done';
 
   return (
     <div className="hflow">
-      {/* Chrome bar */}
+      {/* Chrome */}
       <div className="hflow__chrome">
         <div className="hflow__chrome-dots">
           <span className="hflow__macdot" style={{ background: '#ff5f57' }}/>
@@ -119,10 +121,10 @@ const ContextFlowViz = () => {
         </span>
       </div>
 
-      {/* 3-column body */}
+      {/* Vertical body */}
       <div className="hflow__body">
 
-        {/* ── Left: context update ── */}
+        {/* ── Source card (top) ── */}
         <div className="hflow__source">
           <p className="hflow__col-label">Context update</p>
           <div className="hflow__source-card">
@@ -136,37 +138,36 @@ const ContextFlowViz = () => {
           </div>
         </div>
 
-        {/* ── Middle: animated connectors + GlassMem hub ── */}
-        <div className="hflow__mid">
-          {/* source → GlassMem */}
-          <div className="hflow__arrow">
-            <div className="hflow__arrow-track">
-              <div className="hflow__arrow-line"/>
-              {flowing && <span className="hflow__arrow-ball hflow__arrow-ball--in"/>}
-            </div>
-            <span className="hflow__arrow-tip">›</span>
+        {/* ── Connector: source → GlassMem ── */}
+        <div className="hflow__vconn">
+          <div className="hflow__vconn-track">
+            <div className="hflow__vconn-line"/>
+            {flowing && <span className="hflow__vconn-ball hflow__vconn-ball--in"/>}
           </div>
+          <span className="hflow__vconn-tip">↓</span>
+        </div>
 
-          {/* GlassMem hub */}
+        {/* ── GlassMem hub (middle) ── */}
+        <div className="hflow__hub-row">
           <div className={`hflow__hub${distributing ? ' hflow__hub--active' : ''}`}>
-            <Logo size={18}/>
+            <Logo size={16}/>
             <span className="hflow__hub-name">GlassMem</span>
             {distributing && (
-              <span className="hflow__hub-count">{agentsDone}/{sc.agents.length}</span>
+              <span className="hflow__hub-count">{agentsDone} / {sc.agents.length} agents</span>
             )}
-          </div>
-
-          {/* GlassMem → agents */}
-          <div className="hflow__arrow">
-            <span className="hflow__arrow-tip">›</span>
-            <div className="hflow__arrow-track">
-              <div className="hflow__arrow-line"/>
-              {distributing && <span className="hflow__arrow-ball hflow__arrow-ball--out"/>}
-            </div>
           </div>
         </div>
 
-        {/* ── Right: receiving agents ── */}
+        {/* ── Connector: GlassMem → agents ── */}
+        <div className="hflow__vconn">
+          <div className="hflow__vconn-track">
+            <div className="hflow__vconn-line"/>
+            {distributing && <span className="hflow__vconn-ball hflow__vconn-ball--out"/>}
+          </div>
+          <span className="hflow__vconn-tip">↓</span>
+        </div>
+
+        {/* ── Agent rows (bottom) ── */}
         <div className="hflow__agents">
           <p className="hflow__col-label">Receiving agents</p>
           {sc.agents.map((ag, i) => {
@@ -186,12 +187,12 @@ const ContextFlowViz = () => {
 
       </div>
 
-      {/* Footer status */}
+      {/* Footer */}
       <div className={`hflow__footer${done ? ' hflow__footer--done' : ''}`}>
-        {done ? (
-          <><span className="hflow__footer-check">✓</span>{sc.agents.length} agents updated · 0 manual steps</>
-        ) : phase === 'write'       ? 'waiting for context update…'
-          : phase === 'flow-in'     ? 'routing to GlassMem…'
+        {done
+          ? <><span className="hflow__footer-check">✓</span>{sc.agents.length} agents updated · 0 manual steps</>
+          : phase === 'write'    ? 'waiting for context update…'
+          : phase === 'flow-in' ? 'routing to GlassMem…'
           : `distributing to ${sc.agents.length} agents…`
         }
       </div>
