@@ -47,40 +47,28 @@ const LOGOS = [
 ];
 
 /* ── Context Flow Viz data ── */
-const CTX_LEFT_AGENTS = [
-  { name: 'Claude Code',   pip: '#6ee7b7' },
-  { name: 'Cursor',        pip: '#a78bfa' },
-  { name: 'Planner Agent', pip: '#fb923c' },
-];
-const CTX_RIGHT_AGENTS = [
-  { name: 'Debug Agent',       pip: '#7dd3fc' },
-  { name: 'External Agent',    pip: '#94a3b8' },
-  { name: 'Billing Sub-Agent', pip: '#f472b6' },
-];
-const CTX_STORE = [
-  { dot: '#6ee7b7', label: 'architecture decisions' },
-  { dot: '#fb923c', label: 'active constraints'     },
-  { dot: '#ef4444', label: 'failed approaches'      },
-  { dot: '#a78bfa', label: 'user preferences'       },
-  { dot: '#7dd3fc', label: 'task state'             },
-  { dot: '#94a3b8', label: 'rationale history'      },
-];
 const CTX_EVENTS = [
   { actor: 'Planner Agent', action: 'writes', type: 'write',
-    content: '"Do not touch billing until Stripe migration completes"',
-    targets: ['Claude Code', 'Cursor', 'Debug Agent', 'Billing Sub-Agent'] },
+    content: '"Do not touch billing until Stripe migration completes"' },
   { actor: 'GlassMem', action: 'propagates to 4 agents', type: 'propagate',
-    content: 'Constraint synchronized across all connected agents',
-    targets: ['Claude Code', 'Cursor', 'Debug Agent', 'Billing Sub-Agent'] },
+    content: 'Constraint synchronized across all connected agents' },
   { actor: 'Debug Agent', action: 'records failure', type: 'record',
-    content: '"Redis cache caused stale reads in billing sync"',
-    targets: [] },
+    content: '"Redis cache caused stale reads in billing sync"' },
   { actor: 'GlassMem', action: 'blocks repeat', type: 'block',
-    content: 'Redis approach flagged — preventing External Agent from reproducing failure',
-    targets: ['External Agent'] },
+    content: 'Redis approach flagged — preventing External Agent from repeating failure' },
   { actor: 'GlassMem', action: 'auto-expires', type: 'expire',
-    content: 'Billing freeze removed after migration window closed',
-    targets: [] },
+    content: 'Billing freeze removed after migration window closed' },
+];
+
+const LAGENTS = [
+  { name: 'Claude Code',   pip: '#6ee7b7', cy: 58  },
+  { name: 'Cursor',        pip: '#a78bfa', cy: 120 },
+  { name: 'Planner Agent', pip: '#fb923c', cy: 182 },
+];
+const RAGENTS = [
+  { name: 'Debug Agent',       pip: '#7dd3fc', cy: 58  },
+  { name: 'External Agent',    pip: '#94a3b8', cy: 120 },
+  { name: 'Billing Sub-Agent', pip: '#f472b6', cy: 182 },
 ];
 
 const ContextFlowViz = () => {
@@ -90,56 +78,174 @@ const ContextFlowViz = () => {
   useEffect(() => {
     const id = setInterval(() => {
       setVisible(false);
-      setTimeout(() => {
-        setEvIdx(i => (i + 1) % CTX_EVENTS.length);
-        setVisible(true);
-      }, 280);
+      setTimeout(() => { setEvIdx(i => (i + 1) % CTX_EVENTS.length); setVisible(true); }, 280);
     }, 3200);
     return () => clearInterval(id);
   }, []);
 
-  const ev = CTX_EVENTS[evIdx];
+  const ev  = CTX_EVENTS[evIdx];
+  const CX  = 280, CY = 120;
+  const RO  = 46,  RM = 36, RI = 28; // ring radii: outer / mid / inner
+  const LS  = 0.026;                  // logo scale
+  const LW  = 1023 * LS, LH = 977 * LS;
 
   return (
     <div className="cfviz">
+      {/* ── Title bar ── */}
       <div className="cfviz__bar">
         <span className="cfviz__bar-title"><Logo size={11}/>GlassMem · context layer</span>
         <span className="cfviz__bar-live"><span className="mfviz__live-dot"/>LIVE</span>
       </div>
-      <div className="cfviz__body">
-        {/* Left agents */}
-        <div className="cfviz__agents">
-          {CTX_LEFT_AGENTS.map(ag => (
-            <div key={ag.name} className={`cfviz__node${ev.targets.includes(ag.name) ? ' cfviz__node--lit' : ''}`}>
-              <span className="cfviz__node-pip" style={{ background: ag.pip }}/>
-              <span className="cfviz__node-name">{ag.name}</span>
-            </div>
-          ))}
-        </div>
-        {/* Center hub */}
-        <div className="cfviz__hub">
-          <div className="cfviz__hub-name">GlassMem<br/>Context Layer</div>
-          <div className="cfviz__hub-store">
-            <div className="cfviz__hub-store-label">Shared operational context</div>
-            {CTX_STORE.map(item => (
-              <div key={item.label} className="cfviz__hub-row">
-                <span className="cfviz__hub-dot" style={{ background: item.dot }}/>
-                <span className="cfviz__hub-label">{item.label}</span>
-              </div>
+
+      {/* ── SVG stage ── */}
+      <div className="cfviz__stage">
+        <svg viewBox="0 0 560 242" className="cfviz__svg" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            {/* Hub glow */}
+            <radialGradient id="cfHG" cx="50%" cy="50%" r="50%">
+              <stop offset="0%"   stopColor="#6ee7b7" stopOpacity="0.22"/>
+              <stop offset="55%"  stopColor="#6ee7b7" stopOpacity="0.07"/>
+              <stop offset="100%" stopColor="#6ee7b7" stopOpacity="0"/>
+            </radialGradient>
+            {/* Dot soft glow */}
+            <filter id="cfDF" x="-80%" y="-80%" width="260%" height="260%">
+              <feGaussianBlur stdDeviation="1.2" result="b"/>
+              <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+            </filter>
+            {/* Motion paths — Left → Center */}
+            {LAGENTS.map((ag, i) => (
+              <path key={`pl${i}`} id={`cfpl${i}`}
+                d={`M 128,${ag.cy} L ${CX - RI - 2},${CY}`} stroke="none" fill="none"/>
             ))}
-          </div>
-        </div>
-        {/* Right agents */}
-        <div className="cfviz__agents cfviz__agents--r">
-          {CTX_RIGHT_AGENTS.map(ag => (
-            <div key={ag.name} className={`cfviz__node cfviz__node--r${ev.targets.includes(ag.name) ? ' cfviz__node--lit' : ''}`}>
-              <span className="cfviz__node-pip" style={{ background: ag.pip }}/>
-              <span className="cfviz__node-name">{ag.name}</span>
-            </div>
+            {/* Motion paths — Center → Right */}
+            {RAGENTS.map((ag, i) => (
+              <path key={`pr${i}`} id={`cfpr${i}`}
+                d={`M ${CX + RI + 2},${CY} L 432,${ag.cy}`} stroke="none" fill="none"/>
+            ))}
+            {/* Motion path — Center → Down */}
+            <path id="cfpd" d={`M ${CX},${CY + RI + 2} L ${CX},248`} stroke="none" fill="none"/>
+          </defs>
+
+          {/* Hub radial glow */}
+          <ellipse cx={CX} cy={CY} rx="90" ry="90" fill="url(#cfHG)"/>
+
+          {/* Connection lines — Left */}
+          {LAGENTS.map((ag, i) => (
+            <line key={`ll${i}`} x1="128" y1={ag.cy} x2={CX - RI - 2} y2={CY}
+              stroke="rgba(110,231,183,0.22)" strokeWidth="1" strokeDasharray="3,5"/>
           ))}
-        </div>
+          {/* Connection lines — Right */}
+          {RAGENTS.map((ag, i) => (
+            <line key={`lr${i}`} x1={CX + RI + 2} y1={CY} x2="432" y2={ag.cy}
+              stroke="rgba(110,231,183,0.22)" strokeWidth="1" strokeDasharray="3,5"/>
+          ))}
+          {/* Vertical line — Down */}
+          <line x1={CX} y1={CY + RI + 2} x2={CX} y2="248"
+            stroke="rgba(110,231,183,0.22)" strokeWidth="1" strokeDasharray="3,5"/>
+
+          {/* ── Dots — Left → Center ── */}
+          {LAGENTS.map((_, i) =>
+            [{r:3, op:0.9, b:i*0.52}, {r:2.3, op:0.58, b:i*0.52+1.0}, {r:1.7, op:0.32, b:i*0.52+1.82}]
+            .map(({r, op, b}, j) => (
+              <circle key={`dl${i}${j}`} r={r} fill="#6ee7b7" opacity={op} filter="url(#cfDF)">
+                <animateMotion dur={`${2.1 + i*0.26}s`} repeatCount="indefinite" begin={`${b}s`}>
+                  <mpath href={`#cfpl${i}`}/>
+                </animateMotion>
+              </circle>
+            ))
+          )}
+
+          {/* ── Dots — Center → Right ── */}
+          {RAGENTS.map((_, i) =>
+            [{r:3, op:0.9, b:i*0.58+0.28}, {r:2.3, op:0.58, b:i*0.58+1.18}, {r:1.7, op:0.32, b:i*0.58+2.02}]
+            .map(({r, op, b}, j) => (
+              <circle key={`dr${i}${j}`} r={r} fill="#6ee7b7" opacity={op} filter="url(#cfDF)">
+                <animateMotion dur={`${1.95 + i*0.29}s`} repeatCount="indefinite" begin={`${b}s`}>
+                  <mpath href={`#cfpr${i}`}/>
+                </animateMotion>
+              </circle>
+            ))
+          )}
+
+          {/* ── Dots — Down ── */}
+          {[0, 0.68, 1.36, 2.04, 2.72].map((b, j) => (
+            <circle key={`dd${j}`} r={j%2===0 ? 2.8 : 2.2} fill="#6ee7b7"
+              opacity={j%2===0 ? 0.78 : 0.48} filter="url(#cfDF)">
+              <animateMotion dur="2.1s" repeatCount="indefinite" begin={`${b}s`}>
+                <mpath href="#cfpd"/>
+              </animateMotion>
+            </circle>
+          ))}
+
+          {/* ── Hub — outer rotating dashed ring ── */}
+          <circle cx={CX} cy={CY} r={RO}
+            fill="none" stroke="rgba(110,231,183,0.14)" strokeWidth="1" strokeDasharray="5,7">
+            <animateTransform attributeName="transform" type="rotate"
+              from={`0 ${CX} ${CY}`} to={`360 ${CX} ${CY}`} dur="24s" repeatCount="indefinite"/>
+          </circle>
+          {/* Hub — middle ring */}
+          <circle cx={CX} cy={CY} r={RM}
+            fill="rgba(110,231,183,0.04)" stroke="rgba(110,231,183,0.32)" strokeWidth="1.2"/>
+          {/* Hub — inner solid */}
+          <circle cx={CX} cy={CY} r={RI}
+            fill="#0b0b0e" stroke="rgba(110,231,183,0.78)" strokeWidth="1.5"/>
+
+          {/* ── Logo in center ── */}
+          <g transform={`translate(${CX - LW/2},${CY - LH/2}) scale(${LS})`}>
+            <path d="M1022.52 373.339C1021.96 372.826 1021.43 372.662 1020.91 372.849C952.332 397.256 883.755 421.662 815.182 446.069L813.942 446.119L355.892 113.329C355.715 112.988 355.715 112.988 355.892 112.639L510.772 0.108917C511.247 0.0018574 511.37 0.0434618 511.472 0.118911C529.505 13.2856 698.222 135.869 1017.62 367.869C1020.3 369.816 1021.92 371.036 1022.47 371.529C1022.89 371.896 1022.91 372.499 1022.52 373.339Z" fill="rgba(255,255,255,0.82)"/>
+            <path d="M612.422 504.079L415.752 576.149C372.365 546.522 329.145 517.002 286.092 487.589C259.552 469.462 232.819 451.019 205.892 432.259C179.252 413.692 152.602 395.125 125.942 376.559L54.1621 326.559L209.062 215.459C210.556 215.275 210.812 215.459L612.422 504.079Z" fill="rgba(255,255,255,0.82)"/>
+            <path d="M54.1621 326.559L125.942 376.559L294.232 916.569L273.442 976.189L189.202 976.149C188.722 975.809L0.0420414 366.449C0.111531 365.671 0.392048 365.389L54.1621 326.559Z" fill="#6ee7b7"/>
+            <path d="M612.421 504.079L459.441 975.729C459.078 976.163 458.791 976.209L273.441 976.189L294.231 916.569C335.255 802.876 375.511 690.306 415.771 577.739C416.151 576.136 415.751 576.149L612.421 504.079Z" fill="#6ee7b7"/>
+            <path d="M960.793 563.233L827.393 973.609C826.938 974.142 826.583 974.199H642.673L813.942 446.119H815.183C869.944 426.578 924.709 407.088 979.475 387.597L1023 372L960.793 563.233Z" fill="#6ee7b7"/>
+          </g>
+
+          {/* ── Hub label ── */}
+          <text x={CX} y={CY - RO - 9} textAnchor="middle"
+            fontFamily="Manrope,-apple-system,sans-serif"
+            fontSize="10.5" fontWeight="600"
+            fill="rgba(255,255,255,0.72)" letterSpacing="0.06em">
+            GlassMem
+          </text>
+
+          {/* ── Left agent cards ── */}
+          {LAGENTS.map(ag => (
+            <g key={ag.name}>
+              <rect x="0" y={ag.cy - 18} width="128" height="36" rx="6"
+                fill="rgba(15,15,18,0.97)" stroke="rgba(255,255,255,0.14)"
+                strokeWidth="1" strokeDasharray="4,3"/>
+              <circle cx="14" cy={ag.cy} r="3.5" fill={ag.pip}/>
+              <text x="24" y={ag.cy + 4}
+                fontFamily="'Fira Code','SF Mono',monospace"
+                fontSize="10" fill="rgba(195,195,195,0.9)">{ag.name}</text>
+            </g>
+          ))}
+
+          {/* ── Right agent cards ── */}
+          {RAGENTS.map(ag => (
+            <g key={ag.name}>
+              <rect x="432" y={ag.cy - 18} width="128" height="36" rx="6"
+                fill="rgba(15,15,18,0.97)" stroke="rgba(255,255,255,0.14)"
+                strokeWidth="1" strokeDasharray="4,3"/>
+              <circle cx="446" cy={ag.cy} r="3.5" fill={ag.pip}/>
+              <text x="456" y={ag.cy + 4}
+                fontFamily="'Fira Code','SF Mono',monospace"
+                fontSize="10" fill="rgba(195,195,195,0.9)">{ag.name}</text>
+            </g>
+          ))}
+        </svg>
       </div>
-      {/* Event log */}
+
+      {/* ── Capability badges (like VoltAgent bottom row) ── */}
+      <div className="cfviz__caps">
+        {[['⇝','propagation'],['↳','inheritance'],['◈','scoped'],['⊘','invalidation'],['◉','lineage']].map(([icon, label]) => (
+          <div key={label} className="cfviz__cap">
+            <span className="cfviz__cap-icon">{icon}</span>
+            <span className="cfviz__cap-label">{label}</span>
+          </div>
+        ))}
+      </div>
+
+      {/* ── Event log ── */}
       <div className={`cfviz__event${visible ? '' : ' cfviz__event--hidden'}`}>
         <span className={`cfviz__event-actor cfviz__event-actor--${ev.type}`}>{ev.actor}</span>
         <span className="cfviz__event-sep">{ev.action}:</span>
