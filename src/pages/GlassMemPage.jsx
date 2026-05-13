@@ -34,20 +34,28 @@ const DiscordIcon = () => (
 );
 
 /* ── Problem section SVG icons ── */
-const IconContextPollution = () => (
+const IconStatePollution = () => (
   <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
     <rect width="36" height="36" rx="8" fill="rgba(239,68,68,0.08)"/>
     <rect x="13" y="16" width="10" height="9" rx="1.5" stroke="#6ee7b7" strokeWidth="1.4" fill="none"/>
     <line x1="18" y1="22" x2="18" y2="24" stroke="#6ee7b7" strokeWidth="1.4" strokeLinecap="round"/>
-    <path d="M6 10 L13 17" stroke="#ef4444" strokeWidth="1.3" strokeLinecap="round" markerEnd="url(#arr1)"/>
+    <path d="M6 10 L13 17" stroke="#ef4444" strokeWidth="1.3" strokeLinecap="round"/>
     <path d="M18 6 L18 16" stroke="#ef4444" strokeWidth="1.3" strokeLinecap="round"/>
     <path d="M30 10 L23 17" stroke="#ef4444" strokeWidth="1.3" strokeLinecap="round"/>
     <circle cx="18" cy="20" r="2.5" fill="#6ee7b7" opacity="0.7"/>
-    <defs>
-      <marker id="arr1" markerWidth="6" markerHeight="6" refX="3" refY="3" orient="auto">
-        <path d="M0 0 L6 3 L0 6 Z" fill="#ef4444"/>
-      </marker>
-    </defs>
+  </svg>
+);
+
+const IconBrokenHandoff = () => (
+  <svg width="36" height="36" viewBox="0 0 36 36" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <rect width="36" height="36" rx="8" fill="rgba(239,68,68,0.08)"/>
+    <circle cx="10" cy="18" r="4" stroke="#6ee7b7" strokeWidth="1.4" fill="none"/>
+    <circle cx="26" cy="18" r="4" stroke="#6ee7b7" strokeWidth="1.4" fill="none"/>
+    <line x1="14" y1="16" x2="18" y2="18" stroke="#ef4444" strokeWidth="1.3" strokeLinecap="round"/>
+    <line x1="18" y1="18" x2="22" y2="20" stroke="#ef4444" strokeWidth="1.3" strokeLinecap="round" strokeDasharray="1.5 1.5"/>
+    <circle cx="18" cy="18" r="2" fill="rgba(239,68,68,0.4)"/>
+    <line x1="16" y1="16" x2="20" y2="20" stroke="#ef4444" strokeWidth="1" strokeLinecap="round"/>
+    <line x1="20" y1="16" x2="16" y2="20" stroke="#ef4444" strokeWidth="1" strokeLinecap="round"/>
   </svg>
 );
 
@@ -76,44 +84,18 @@ const IconDebuggingBlackBox = () => (
 );
 
 /* ══════════════════════════════════════════════════
-   HERO CONTEXT ROUTING VISUALIZATION
+   HERO VISUALIZATION — billing migration freeze scenario
 ════════════════════════════════════════════════════ */
 
-const ROUTING_SCENES = [
-  {
-    label: 'Billing freeze',
-    source: {
-      agent: 'Planner Agent',
-      pip: '#fb923c',
-      action: 'writes constraint',
-      text: '"Billing freeze until Friday. Stripe migration active"',
-      scope: 'project.billing · temporary',
-    },
-    routes: [
-      { name: 'Claude Code',            pip: '#6ee7b7', status: 'allowed',   reason: 'task touches billing',          stateLine: 'Preparing read-only billing analysis' },
-      { name: 'Billing Sub-Agent',       pip: '#a78bfa', status: 'inherited', reason: 'spawned under billing task',     stateLine: 'Constraint inherited at spawn' },
-      { name: 'Debug Agent',             pip: '#7dd3fc', status: 'allowed',   reason: 'investigating billing incident', stateLine: 'Restricted to read-only analysis' },
-      { name: 'Customer Support Agent',  pip: '#94a3b8', status: 'blocked',   reason: 'out of scope',                  stateLine: 'Context not received' },
-      { name: 'External Tool Agent',     pip: '#ef4444', status: 'blocked',   reason: 'sensitive',                     stateLine: 'Context not received' },
-    ],
-  },
-  {
-    label: 'Redis cache failure',
-    source: {
-      agent: 'Debug Agent',
-      pip: '#7dd3fc',
-      action: 'records failure',
-      text: '"Redis cache caused stale billing reads. Do not retry"',
-      scope: 'project.billing · permanent',
-    },
-    routes: [
-      { name: 'Claude Code',       pip: '#6ee7b7', status: 'allowed',   reason: 'billing task relevance',    stateLine: 'Avoiding Redis in billing flows' },
-      { name: 'Billing Sub-Agent', pip: '#a78bfa', status: 'inherited', reason: 'spawned under billing',     stateLine: 'Failed approach inherited' },
-      { name: 'Planner Agent',     pip: '#fb923c', status: 'allowed',   reason: 'architectural impact',      stateLine: 'Redis removed from plan' },
-      { name: 'Customer Support Agent', pip: '#94a3b8', status: 'blocked', reason: 'out of scope',           stateLine: 'Context not received' },
-      { name: 'Marketing Agent',   pip: '#ef4444', status: 'blocked',   reason: 'out of scope',              stateLine: 'Context not received' },
-    ],
-  },
+const HERO_PHASES = ['write', 'route', 'distribute', 'behavior', 'pause'];
+
+const HERO_AGENTS = [
+  { name: 'LangGraph Planner',         pip: '#fb923c', status: 'source',   reason: '',                          framework: 'LangGraph' },
+  { name: 'Claude Code',               pip: '#6ee7b7', status: 'allowed',  reason: 'task touches billing',      framework: 'Claude Code' },
+  { name: 'Cursor',                    pip: '#6ee7b7', status: 'allowed',  reason: 'editing billing module',    framework: 'Cursor' },
+  { name: 'CrewAI Billing Sub-Agent',  pip: '#a78bfa', status: 'inherited',reason: 'spawned under billing task',framework: 'CrewAI' },
+  { name: 'OpenAI Debug Agent',        pip: '#6ee7b7', status: 'allowed',  reason: 'debugging billing incident',framework: 'OpenAI SDK' },
+  { name: 'Customer Support Agent',    pip: '#94a3b8', status: 'blocked',  reason: 'out of scope',             framework: '' },
 ];
 
 const STATUS_COLORS = {
@@ -125,70 +107,54 @@ const STATUS_COLORS = {
 const STATUS_ICONS = { allowed: '✓', inherited: '↓', blocked: '✗' };
 
 const ContextFlowViz = () => {
-  const [scIdx,      setScIdx]      = useState(0);
   const [phase,      setPhase]      = useState('write');
   const [agentsDone, setAgentsDone] = useState(0);
 
-  const sc = ROUTING_SCENES[scIdx];
-
-  useEffect(() => { setPhase('write'); setAgentsDone(0); }, [scIdx]);
+  const ROUTE_AGENTS = HERO_AGENTS.filter(a => a.status !== 'source');
 
   useEffect(() => {
     let t;
-    if      (phase === 'write')      t = setTimeout(() => setPhase('flow-in'),    1000);
-    else if (phase === 'flow-in')    t = setTimeout(() => setPhase('distribute'),  700);
+    if      (phase === 'write')      t = setTimeout(() => setPhase('route'),    1200);
+    else if (phase === 'route')      t = setTimeout(() => { setPhase('distribute'); setAgentsDone(0); }, 700);
     else if (phase === 'distribute') {
-      if (agentsDone < sc.routes.length)
+      if (agentsDone < ROUTE_AGENTS.length)
         t = setTimeout(() => setAgentsDone(n => n + 1), 380);
       else
-        t = setTimeout(() => setPhase('done'), 100);
+        t = setTimeout(() => setPhase('behavior'), 200);
     }
-    else if (phase === 'done')       t = setTimeout(() => setScIdx(i => (i + 1) % ROUTING_SCENES.length), 2800);
+    else if (phase === 'behavior')   t = setTimeout(() => setPhase('pause'), 2800);
+    else if (phase === 'pause')      t = setTimeout(() => { setPhase('write'); setAgentsDone(0); }, 1200);
     return () => clearTimeout(t);
-  }, [phase, agentsDone, sc.routes.length]);
+  }, [phase, agentsDone, ROUTE_AGENTS.length]);
 
   const flowing      = phase !== 'write';
-  const distributing = phase === 'distribute' || phase === 'done';
-  const done         = phase === 'done';
+  const distributing = phase === 'distribute' || phase === 'behavior' || phase === 'pause';
+  const showBehavior = phase === 'behavior' || phase === 'pause';
 
   return (
     <div className="cfroute">
-      {/* Chrome bar */}
       <div className="cfroute__chrome">
         <div className="cfroute__chrome-dots">
           <span className="cfroute__macdot" style={{ background: '#ff5f57' }}/>
           <span className="cfroute__macdot" style={{ background: '#febc2e' }}/>
           <span className="cfroute__macdot" style={{ background: '#28c840' }}/>
         </div>
-        <span className="cfroute__chrome-title">glassmem · context-routing</span>
+        <span className="cfroute__chrome-title">glassmem · context-routing · billing-migration-freeze</span>
         <span className="cfroute__chrome-live">
           <span className="cfroute__live-dot"/>LIVE
         </span>
-      </div>
-
-      {/* Scenario tabs */}
-      <div className="cfroute__tabs">
-        {ROUTING_SCENES.map((s, i) => (
-          <button
-            key={s.label}
-            className={`cfroute__tab${i === scIdx ? ' cfroute__tab--on' : ''}`}
-            onClick={() => { setScIdx(i); }}
-          >
-            {s.label}
-          </button>
-        ))}
       </div>
 
       <div className="cfroute__body">
         {/* Source card */}
         <div className="cfroute__source-card">
           <div className="cfroute__source-header">
-            <span className="cfroute__pip" style={{ background: sc.source.pip }}/>
-            <strong className="cfroute__source-agent">{sc.source.agent}</strong>
-            <span className="cfroute__source-verb">{sc.source.action}</span>
+            <span className="cfroute__pip" style={{ background: '#fb923c' }}/>
+            <strong className="cfroute__source-agent">LangGraph Planner</strong>
+            <span className="cfroute__source-verb">writes constraint</span>
           </div>
-          <p className="cfroute__source-text">{sc.source.text}</p>
-          <span className="cfroute__source-scope">{sc.source.scope}</span>
+          <p className="cfroute__source-text">"Billing freeze until Friday. Stripe migration active."</p>
+          <span className="cfroute__source-scope">scope: project.billing · temporary constraint</span>
         </div>
 
         {/* Connector arrow */}
@@ -197,14 +163,14 @@ const ContextFlowViz = () => {
           <div className={`cfroute__conn-hub${distributing ? ' cfroute__conn-hub--active' : ''}`}>
             <Logo size={14}/>
             <span className="cfroute__hub-name">GlassMem</span>
-            <span className="cfroute__hub-sub">routing engine</span>
+            <span className="cfroute__hub-sub">Context Orchestrator</span>
           </div>
           <div className={`cfroute__conn-line${distributing ? ' cfroute__conn-line--active' : ''}`}/>
         </div>
 
         {/* Agent routing rows */}
         <div className="cfroute__agents">
-          {sc.routes.map((r, i) => {
+          {ROUTE_AGENTS.map((r, i) => {
             const revealed = i < agentsDone;
             const col = STATUS_COLORS[r.status];
             return (
@@ -215,7 +181,10 @@ const ContextFlowViz = () => {
               >
                 <div className="cfroute__agent-left">
                   <span className="cfroute__pip" style={{ background: revealed ? r.pip : 'rgba(255,255,255,0.12)' }}/>
-                  <span className="cfroute__agent-name">{r.name}</span>
+                  <div>
+                    <span className="cfroute__agent-name">{r.name}</span>
+                    {r.framework && <span className="cfroute__agent-fw">{r.framework}</span>}
+                  </div>
                 </div>
                 {revealed ? (
                   <div className="cfroute__agent-right">
@@ -232,13 +201,26 @@ const ContextFlowViz = () => {
           })}
         </div>
 
-        {/* Footer status */}
-        <div className={`cfroute__footer${done ? ' cfroute__footer--done' : ''}`}>
-          {done
-            ? <><span className="cfroute__footer-check">✓</span>{sc.routes.filter(r => r.status !== 'blocked').length} routed · {sc.routes.filter(r => r.status === 'blocked').length} blocked · 0 manual steps</>
-            : phase === 'write'    ? 'waiting for context update...'
-            : phase === 'flow-in' ? 'routing to GlassMem engine...'
-            : `evaluating ${sc.routes.length} agents...`
+        {/* Behavior change */}
+        <div className={`cfroute__behavior${showBehavior ? ' cfroute__behavior--on' : ''}`}>
+          <div className="cfroute__behavior-row cfroute__behavior-row--before">
+            <span className="cfroute__behavior-label cfroute__behavior-label--before">Before</span>
+            <span className="cfroute__behavior-text">"I'll refactor billing writes now."</span>
+          </div>
+          <div className="cfroute__behavior-arrow">→</div>
+          <div className="cfroute__behavior-row cfroute__behavior-row--after">
+            <span className="cfroute__behavior-label cfroute__behavior-label--after">After</span>
+            <span className="cfroute__behavior-text cfroute__behavior-text--after">"I'll prepare a read-only analysis and defer writes until the freeze ends."</span>
+          </div>
+        </div>
+
+        {/* Footer */}
+        <div className={`cfroute__footer${showBehavior ? ' cfroute__footer--done' : ''}`}>
+          {showBehavior
+            ? <><span className="cfroute__footer-check">✓</span>3 routed · 2 inherited · 1 blocked · 0 manual steps</>
+            : phase === 'write'    ? 'waiting for state update...'
+            : phase === 'route'   ? 'routing to GlassMem engine...'
+            : `evaluating ${ROUTE_AGENTS.length} agents...`
           }
         </div>
       </div>
@@ -254,85 +236,121 @@ const DEMO_SCENARIOS = [
   {
     id: 'billing', label: 'Billing migration freeze', color: '#fb923c',
     trigger: {
-      agent: 'Planner Agent', pip: '#fb923c', action: 'writes constraint',
+      agent: 'LangGraph Planner', pip: '#fb923c', framework: 'LangGraph', action: 'writes constraint',
       content: '"Do not modify billing until Stripe migration completes Friday 18:00."',
     },
     agents: [
-      { name: 'Claude Code',             pip: '#6ee7b7', before: 'Implementing billing module refactor',   after: 'Preparing read-only analysis. Defer writes until freeze ends', status: 'allowed'   },
-      { name: 'Billing Sub-Agent',        pip: '#a78bfa', before: 'Spawning: billing task',               after: 'Inherited freeze. Executing read-only path only',             status: 'inherited' },
-      { name: 'Debug Agent',              pip: '#7dd3fc', before: 'Debugging billing sync',               after: 'Restricted to read-only billing analysis',                     status: 'allowed'   },
-      { name: 'Customer Support Agent',   pip: '#94a3b8', before: 'Handling customer queries',           after: 'Context not received. Irrelevant scope',                      status: 'blocked'   },
-      { name: 'External Vendor Agent',    pip: '#ef4444', before: 'Fetching vendor data',                after: 'Context not received. Sensitive constraint',                  status: 'blocked'   },
-      { name: 'Marketing Agent',          pip: '#f59e0b', before: 'Writing release copy',               after: 'Context not received. Out of scope',                          status: 'blocked'   },
+      { name: 'Claude Code',             pip: '#6ee7b7', framework: 'Claude Code', before: 'Proposing billing writes',                after: 'Preparing read-only analysis. Deferring writes until freeze ends', status: 'allowed'   },
+      { name: 'Cursor',                  pip: '#6ee7b7', framework: 'Cursor',      before: 'Editing billing module',                  after: 'Pausing write edits. Read-only mode until Friday',              status: 'allowed'   },
+      { name: 'CrewAI Billing Sub-Agent',pip: '#a78bfa', framework: 'CrewAI',      before: 'Spawning: billing task',                  after: 'Inherited freeze at spawn. Executing read-only path only',      status: 'inherited' },
+      { name: 'OpenAI Debug Agent',      pip: '#7dd3fc', framework: 'OpenAI SDK',  before: 'Debugging billing sync',                  after: 'Restricted to read-only billing analysis',                     status: 'allowed'   },
+      { name: 'Customer Support Agent',  pip: '#94a3b8', framework: '',            before: 'Handling customer queries',               after: 'Operational state not received. Irrelevant scope',             status: 'blocked'   },
+      { name: 'External MCP Tool',       pip: '#ef4444', framework: 'MCP',         before: 'Fetching vendor data',                    after: 'Blocked. Sensitive constraint',                                status: 'blocked'   },
     ],
     steps: [
-      'Planner Agent writes billing freeze to context store',
-      'GlassMem evaluates scope for all 6 agents',
-      'Claude Code and Debug Agent receive constraint',
-      'Billing Sub-Agent inherits freeze at spawn',
-      'Customer Support, Vendor, Marketing agents blocked',
+      'LangGraph Planner writes billing freeze to state store',
+      'GlassMem evaluates routing for all 6 agents',
+      'Claude Code, Cursor, and Debug Agent receive constraint',
+      'CrewAI Billing Sub-Agent inherits freeze at spawn',
+      'Customer Support and External MCP Tool blocked',
     ],
+    behaviorBefore: 'Claude Code proposes billing writes.',
+    behaviorAfter:  'Claude Code prepares read-only analysis and defers writes until freeze ends.',
   },
   {
     id: 'redis', label: 'Redis cache failure', color: '#ef4444',
     trigger: {
-      agent: 'Debug Agent', pip: '#7dd3fc', action: 'records failure',
-      content: '"Redis cache caused stale billing reads. Do not retry this approach."',
+      agent: 'OpenAI Debug Agent', pip: '#7dd3fc', framework: 'OpenAI SDK', action: 'records failure',
+      content: '"Redis cache caused stale billing reads. Do not retry."',
     },
     agents: [
-      { name: 'Claude Code',      pip: '#6ee7b7', before: 'Considering Redis for billing caching', after: 'Avoiding Redis. Failure propagated from Debug Agent', status: 'allowed' },
-      { name: 'Billing Sub-Agent',pip: '#a78bfa', before: 'Planning cache layer for billing',     after: 'Failed approach inherited. Switching to Postgres',    status: 'inherited' },
-      { name: 'Planner Agent',    pip: '#fb923c', before: 'Designing distributed cache strategy', after: 'Redis removed from plan. Postgres row-level locking', status: 'allowed' },
-      { name: 'Customer Support Agent', pip: '#94a3b8', before: 'Handling customer queries', after: 'Context not received. Out of scope',                      status: 'blocked' },
-      { name: 'Marketing Agent',  pip: '#f59e0b', before: 'Writing release copy',             after: 'Context not received. Out of scope',                    status: 'blocked' },
+      { name: 'Claude Code',             pip: '#6ee7b7', framework: 'Claude Code', before: 'Considering Redis for billing caching', after: 'Avoiding Redis. Failure propagated. Switching to Postgres',      status: 'allowed'   },
+      { name: 'CrewAI Billing Sub-Agent',pip: '#a78bfa', framework: 'CrewAI',      before: 'Planning cache layer for billing',     after: 'Failed approach inherited. Switching to Postgres',              status: 'inherited' },
+      { name: 'LangGraph Planner',       pip: '#fb923c', framework: 'LangGraph',   before: 'Designing distributed cache strategy', after: 'Redis removed from plan. Row-level locking instead',            status: 'allowed'   },
+      { name: 'Cursor',                  pip: '#6ee7b7', framework: 'Cursor',      before: 'Editing billing module cache layer',   after: 'Removed Redis import. Using Postgres cache fallback',           status: 'allowed'   },
+      { name: 'Customer Support Agent',  pip: '#94a3b8', framework: '',            before: 'Handling customer queries',            after: 'Operational state not received. Out of scope',                  status: 'blocked'   },
+      { name: 'Marketing Agent',         pip: '#f59e0b', framework: '',            before: 'Writing release copy',                 after: 'Operational state not received. Out of scope',                  status: 'blocked'   },
     ],
     steps: [
-      'Debug Agent records Redis failure to context store',
+      'OpenAI Debug Agent records Redis failure to state store',
       'GlassMem marks Redis as failed approach in billing scope',
-      'Claude Code and Planner Agent receive failure context',
-      'Billing Sub-Agent inherits failed approach at spawn',
+      'Claude Code, Cursor, and Planner receive failure state',
+      'CrewAI Billing Sub-Agent inherits failed approach at spawn',
       'Customer Support and Marketing agents not routed',
     ],
+    behaviorBefore: 'Agents plan Redis-based billing cache.',
+    behaviorAfter:  'All billing agents avoid Redis. Postgres row-level locking adopted.',
   },
   {
     id: 'security', label: 'Security incident', color: '#ef4444',
     trigger: {
-      agent: 'Security Agent', pip: '#ef4444', action: 'raises alert',
-      content: '"SQL injection vulnerability in user input handling. Patch before next deploy."',
+      agent: 'Security Agent', pip: '#ef4444', framework: 'Custom', action: 'raises alert',
+      content: '"PII data exposure detected in export service."',
     },
     agents: [
-      { name: 'Claude Code',   pip: '#6ee7b7', before: 'Writing new user input handler',  after: 'Switching to parameterized queries immediately',  status: 'allowed' },
-      { name: 'Review Agent',  pip: '#a78bfa', before: 'Reviewing backend PRs normally',  after: 'Flagging raw SQL in all open reviews',            status: 'allowed' },
-      { name: 'Testing Agent', pip: '#7dd3fc', before: 'Running standard test suite',     after: 'Adding SQL injection tests to all suites',        status: 'allowed' },
-      { name: 'Deploy Agent',  pip: '#fb923c', before: 'Preparing next deployment',       after: 'Blocking deploy. Security constraint active',    status: 'blocked' },
+      { name: 'Security Team Agent', pip: '#6ee7b7', framework: 'Custom',      before: 'Monitoring alerts',                  after: 'Incident response mode activated',                   status: 'allowed'   },
+      { name: 'Data Agent',          pip: '#6ee7b7', framework: 'LangGraph',   before: 'Processing export requests',         after: 'Export service suspended. Remediation in progress',   status: 'allowed'   },
+      { name: 'Audit Logger',        pip: '#a78bfa', framework: 'MCP',         before: 'Standard logging',                   after: 'Inherited incident state. Full audit trail active',   status: 'inherited' },
+      { name: 'Claude Code',         pip: '#94a3b8', framework: 'Claude Code', before: 'Working on feature tasks',           after: 'Blocked. No security clearance for incident scope',  status: 'blocked'   },
+      { name: 'External MCP Tool',   pip: '#ef4444', framework: 'MCP',         before: 'Fetching external data',             after: 'Blocked. Sensitive incident state',                  status: 'blocked'   },
+      { name: 'Customer Support',    pip: '#94a3b8', framework: '',            before: 'Handling customer queries',          after: 'Blocked. Need-to-know basis only',                   status: 'blocked'   },
     ],
     steps: [
-      'Security Agent writes vulnerability alert to context store',
-      'GlassMem propagates to all agents in affected scope',
-      'Claude Code switches to parameterized queries',
-      'Review Agent flags raw SQL in all pending PRs',
-      'Deploy Agent blocked. Constraint prevents deployment',
+      'Security Agent writes PII exposure alert to state store',
+      'GlassMem propagates to security-cleared agents only',
+      'Security Team and Data Agent receive incident state',
+      'Audit Logger inherits incident state as sub-process',
+      'Claude Code, External Tool, Customer Support blocked',
     ],
+    behaviorBefore: 'Export service continues processing.',
+    behaviorAfter:  'Export suspended. Security and Data agents coordinate remediation.',
+  },
+  {
+    id: 'escalation', label: 'Customer escalation', color: '#fb923c',
+    trigger: {
+      agent: 'Support Agent', pip: '#94a3b8', framework: 'Custom', action: 'writes escalation',
+      content: '"Enterprise customer Acme Corp escalated P1 incident. Block non-essential changes."',
+    },
+    agents: [
+      { name: 'Incident Manager Agent', pip: '#6ee7b7', framework: 'LangGraph', before: 'Managing normal workload',           after: 'P1 incident response activated for Acme Corp',       status: 'allowed'   },
+      { name: 'On-call Debug Agent',    pip: '#6ee7b7', framework: 'OpenAI SDK',before: 'Monitoring system health',           after: 'Escalated to Acme Corp incident investigation',      status: 'allowed'   },
+      { name: 'Deployment Agent',       pip: '#ef4444', framework: 'Custom',    before: 'Preparing deployment pipeline',     after: 'Blocked. All changes frozen during P1 incident',     status: 'blocked'   },
+      { name: 'Feature Agent',          pip: '#ef4444', framework: 'CrewAI',    before: 'Building new features',             after: 'Blocked. Not relevant to P1 incident',               status: 'blocked'   },
+      { name: 'Billing Agent',          pip: '#a78bfa', framework: 'Custom',    before: 'Processing billing tasks',          after: 'Partial: read-only mode during escalation window',   status: 'inherited' },
+    ],
+    steps: [
+      'Support Agent writes P1 escalation to state store',
+      'GlassMem evaluates all agents for Acme Corp scope',
+      'Incident Manager and On-call Debug Agent receive state',
+      'Deployment and Feature agents blocked immediately',
+      'Billing Agent enters read-only mode for escalation window',
+    ],
+    behaviorBefore: 'All agents operate normally.',
+    behaviorAfter:  'Non-essential work paused. Incident response agents coordinated.',
   },
   {
     id: 'architecture', label: 'Architecture migration', color: '#a78bfa',
     trigger: {
-      agent: 'Architect Agent', pip: '#a78bfa', action: 'writes decision',
-      content: '"Migrating from REST to GraphQL. No new REST endpoints after 2026-06-15."',
+      agent: 'Architect Agent', pip: '#a78bfa', framework: 'LangGraph', action: 'writes decision',
+      content: '"Migrate from REST to GraphQL. No new REST endpoints after 2026-06-15."',
     },
     agents: [
-      { name: 'Claude Code',  pip: '#6ee7b7', before: 'Building a new REST endpoint',    after: 'Switching to GraphQL resolver instead',            status: 'allowed' },
-      { name: 'API Agent',    pip: '#fb923c', before: 'Generating REST API docs',        after: 'GraphQL schema generation. Migration active',     status: 'allowed' },
-      { name: 'Review Agent', pip: '#7dd3fc', before: 'Reviewing API change PRs',       after: 'Rejecting new REST endpoints in open reviews',     status: 'allowed' },
-      { name: 'Docs Agent',   pip: '#94a3b8', before: 'Writing REST API documentation', after: 'Updating docs for GraphQL migration',              status: 'allowed' },
+      { name: 'Claude Code',         pip: '#6ee7b7', framework: 'Claude Code', before: 'Building a new REST endpoint',     after: 'Switching to GraphQL resolver instead',               status: 'allowed'   },
+      { name: 'Cursor',              pip: '#6ee7b7', framework: 'Cursor',      before: 'Editing REST API layer',           after: 'Updating API layer for GraphQL migration',            status: 'allowed'   },
+      { name: 'API Agent',           pip: '#fb923c', framework: 'OpenAI SDK',  before: 'Generating REST API docs',         after: 'GraphQL schema generation. Migration active',         status: 'allowed'   },
+      { name: 'Review Agent',        pip: '#a78bfa', framework: 'CrewAI',      before: 'Reviewing API change PRs',         after: 'Inherited: flagging new REST endpoints in reviews',   status: 'inherited' },
+      { name: 'Docs Agent',          pip: '#6ee7b7', framework: 'Custom',      before: 'Writing REST API documentation',   after: 'Updating docs for GraphQL migration',                status: 'allowed'   },
+      { name: 'Legacy Service Agent',pip: '#94a3b8', framework: 'Custom',      before: 'Running legacy REST service',      after: 'Blocked. REST-only agent. Irrelevant to migration',  status: 'blocked'   },
     ],
     steps: [
-      'Architect writes migration decision to context store',
+      'Architect writes REST-to-GraphQL migration decision',
       'GlassMem routes to all API-scope agents',
-      'Claude Code and API Agent receive migration constraint',
-      'Review Agent will reject new REST endpoint PRs',
-      'Docs Agent automatically updates for GraphQL migration',
+      'Claude Code, Cursor, API Agent, Docs Agent receive decision',
+      'Review Agent inherits: flags new REST endpoint PRs',
+      'Legacy Service Agent blocked. REST-only scope.',
     ],
+    behaviorBefore: 'Claude Code creates new REST endpoint.',
+    behaviorAfter:  'Claude Code builds GraphQL resolver instead. REST endpoint rejected.',
   },
 ];
 
@@ -361,11 +379,12 @@ const LiveDemo = () => {
       </div>
       <div className="demo__main">
         <div className="demo__left">
-          <p className="demo__col-label">Context update</p>
+          <p className="demo__col-label">State update</p>
           <div className="demo__trigger">
             <div className="demo__trigger-header">
               <span className="demo__pip" style={{ background: sc.trigger.pip }}/>
               <strong className="demo__trigger-agent">{sc.trigger.agent}</strong>
+              {sc.trigger.framework && <span className="demo__trigger-fw">{sc.trigger.framework}</span>}
               <span className="demo__trigger-action">{sc.trigger.action}</span>
             </div>
             <p className="demo__trigger-content">{sc.trigger.content}</p>
@@ -378,6 +397,18 @@ const LiveDemo = () => {
               </div>
             ))}
           </div>
+          {sc.behaviorBefore && (
+            <div className="demo__behavior">
+              <div className="demo__behavior-before">
+                <span className="demo__behavior-label">Before</span>
+                <span className="demo__behavior-text">{sc.behaviorBefore}</span>
+              </div>
+              <div className="demo__behavior-after">
+                <span className="demo__behavior-label demo__behavior-label--after">After</span>
+                <span className="demo__behavior-text demo__behavior-text--after">{sc.behaviorAfter}</span>
+              </div>
+            </div>
+          )}
         </div>
         <div className="demo__hub">
           <div className="demo__hub-line"/>
@@ -397,6 +428,7 @@ const LiveDemo = () => {
                   <div className="demo__agent-head">
                     <span className="demo__pip" style={{ background: ag.pip }}/>
                     <span className="demo__agent-name">{ag.name}</span>
+                    {ag.framework && <span className="demo__agent-fw-badge">{ag.framework}</span>}
                     {updated && <span className={`demo__badge demo__badge--${ag.status}`}>{ag.status}</span>}
                   </div>
                   <p className="demo__agent-state">{updated ? ag.after : ag.before}</p>
@@ -417,41 +449,36 @@ const LiveDemo = () => {
 const COMPARE_ROWS = [
   {
     approach: 'context.md',
-    inspectable: '✓',
-    routing: '✗ manual',
-    handoff: '✗ copied',
-    temporal: '✗ stale instantly',
-    lineage: '✗',
+    inspectable: '✓', routing: '✗', handoff: '✗', temporal: '✗', crossfw: '✗', lineage: '✗',
     isGlass: false,
   },
   {
     approach: 'Vector DB / memory',
-    inspectable: '✓',
-    routing: '✗ passive',
-    handoff: '✗ none',
-    temporal: '✗ weak validity',
-    lineage: '✗',
+    inspectable: '✓', routing: '✗', handoff: '✗', temporal: '✗', crossfw: '✗', lineage: '✗',
+    isGlass: false,
+  },
+  {
+    approach: 'Framework-native memory',
+    inspectable: '✓', routing: '~', handoff: '~', temporal: '~', crossfw: '✗', lineage: '✗',
     isGlass: false,
   },
   {
     approach: 'Ad-hoc sub-agents',
-    inspectable: '~',
-    routing: '✗ handoff problem',
-    handoff: '✗ loses parent state',
-    temporal: '~',
-    lineage: '✗',
+    inspectable: '~', routing: '✗', handoff: '✗', temporal: '~', crossfw: '~', lineage: '✗',
     isGlass: false,
   },
   {
     approach: 'GlassMem',
-    inspectable: '✓',
-    routing: '✓ scoped routing',
-    handoff: '✓ selected inheritance',
-    temporal: '✓ temporal validity',
-    lineage: '✓',
+    inspectable: '✓', routing: '✓', handoff: '✓', temporal: '✓', crossfw: '✓', lineage: '✓',
     isGlass: true,
   },
 ];
+
+const cellClass = (v) => {
+  if (v === '✓') return 'ctable__cell ctable__cell--pos';
+  if (v === '✗') return 'ctable__cell ctable__cell--neg';
+  return 'ctable__cell ctable__cell--neu';
+};
 
 const ComparisonTable = () => (
   <div className="ctable">
@@ -461,16 +488,18 @@ const ComparisonTable = () => (
       <div className="ctable__hcell">Routing</div>
       <div className="ctable__hcell">Sub-agent handoff</div>
       <div className="ctable__hcell">Temporal</div>
+      <div className="ctable__hcell">Cross-framework</div>
       <div className="ctable__hcell">Lineage</div>
     </div>
     {COMPARE_ROWS.map((row) => (
       <div key={row.approach} className={`ctable__row${row.isGlass ? ' ctable__row--em' : ''}`}>
         <div className={`ctable__cell ctable__cell--name${row.isGlass ? ' ctable__cell--glass' : ''}`}>{row.approach}</div>
-        <div className={`ctable__cell ${row.inspectable.startsWith('✓') ? 'ctable__cell--pos' : row.inspectable === '~' ? 'ctable__cell--neu' : 'ctable__cell--neg'}`}>{row.inspectable}</div>
-        <div className={`ctable__cell ${row.routing.startsWith('✓') ? 'ctable__cell--pos' : row.routing === '~' ? 'ctable__cell--neu' : 'ctable__cell--neg'}`}>{row.routing}</div>
-        <div className={`ctable__cell ${row.handoff.startsWith('✓') ? 'ctable__cell--pos' : row.handoff === '~' ? 'ctable__cell--neu' : 'ctable__cell--neg'}`}>{row.handoff}</div>
-        <div className={`ctable__cell ${row.temporal.startsWith('✓') ? 'ctable__cell--pos' : row.temporal === '~' ? 'ctable__cell--neu' : 'ctable__cell--neg'}`}>{row.temporal}</div>
-        <div className={`ctable__cell ${row.lineage.startsWith('✓') ? 'ctable__cell--pos' : row.lineage === '~' ? 'ctable__cell--neu' : 'ctable__cell--neg'}`}>{row.lineage}</div>
+        <div className={cellClass(row.inspectable)}>{row.inspectable}</div>
+        <div className={cellClass(row.routing)}>{row.routing}</div>
+        <div className={cellClass(row.handoff)}>{row.handoff}</div>
+        <div className={cellClass(row.temporal)}>{row.temporal}</div>
+        <div className={cellClass(row.crossfw)}>{row.crossfw}</div>
+        <div className={cellClass(row.lineage)}>{row.lineage}</div>
       </div>
     ))}
   </div>
@@ -488,27 +517,28 @@ const ObsPanel = () => (
         <span className="obspanel__macdot" style={{ background: '#febc2e' }}/>
         <span className="obspanel__macdot" style={{ background: '#28c840' }}/>
       </div>
-      <span className="obspanel__chrome-title"><Logo size={11}/>glassmem · context-packet · ctx_a2f9c01b</span>
+      <span className="obspanel__chrome-title"><Logo size={11}/>glassmem · state-packet · ctx_a2f9c01b</span>
       <span className="obspanel__status">active</span>
     </div>
 
     <div className="obspanel__content-line">
-      "Redis cache caused stale billing reads. Do not retry"
+      "Redis cache caused stale billing reads. Do not retry."
     </div>
 
     <div className="obspanel__fields">
       {[
-        { k: 'source',       v: 'Debug Agent',                               color: '#7dd3fc' },
-        { k: 'scope',        v: 'project.billing',                           color: '#a78bfa' },
-        { k: 'status',       v: 'failed_approach',                           color: '#fb923c' },
-        { k: 'created',      v: '3 days ago',                                color: 'var(--tx-2)' },
-        { k: 'routed to',    v: 'Claude Code, Billing Sub-Agent',            color: '#6ee7b7' },
-        { k: 'blocked from', v: 'Customer Support Agent, External Vendor Agent', color: '#ef4444' },
-        { k: 'reason',       v: 'billing task relevance',                    color: 'var(--tx-2)' },
-        { k: 'used by',      v: 'Claude Code (before implementation plan)',  color: '#6ee7b7' },
-        { k: 'expires',      v: 'never',                                     color: 'var(--tx-2)' },
-        { k: 'supersedes',   v: 'none',                                      color: 'var(--tx-2)' },
-        { k: 'incident ref', v: 'INC-1042',                                  color: '#fb923c' },
+        { k: 'source',            v: 'OpenAI Debug Agent',                            color: '#7dd3fc' },
+        { k: 'source framework',  v: 'OpenAI Agents SDK',                             color: '#7dd3fc' },
+        { k: 'scope',             v: 'project.billing',                               color: '#a78bfa' },
+        { k: 'status',            v: 'failed_approach',                               color: '#fb923c' },
+        { k: 'created',           v: '3 days ago',                                    color: 'var(--tx-2)' },
+        { k: 'routed to',         v: 'Claude Code, CrewAI Billing Sub-Agent',         color: '#6ee7b7' },
+        { k: 'blocked from',      v: 'Customer Support Agent, External MCP Tool',     color: '#ef4444' },
+        { k: 'reason',            v: 'billing task relevance',                        color: 'var(--tx-2)' },
+        { k: 'used by',           v: 'Claude Code (before implementation plan)',      color: '#6ee7b7' },
+        { k: 'expires',           v: 'never',                                         color: 'var(--tx-2)' },
+        { k: 'supersedes',        v: 'none',                                          color: 'var(--tx-2)' },
+        { k: 'related incident',  v: 'INC-1042',                                      color: '#fb923c' },
       ].map(({ k, v, color }) => (
         <div key={k} className="obspanel__field-row">
           <span className="obspanel__field-key">{k}</span>
@@ -520,7 +550,7 @@ const ObsPanel = () => (
     <div className="obspanel__trace">
       <span className="obspanel__trace-label">Lineage trace</span>
       <div className="obspanel__trace-line">
-        {['Planner', 'GlassMem', 'Claude Code', 'Billing Sub-Agent'].map((node, i, arr) => (
+        {['OpenAI Debug Agent', 'GlassMem', 'Claude Code', 'CrewAI Billing Sub-Agent'].map((node, i, arr) => (
           <React.Fragment key={node}>
             <span className="obspanel__trace-node">{node}</span>
             {i < arr.length - 1 && <span className="obspanel__trace-arrow">→</span>}
@@ -538,15 +568,15 @@ const ObsPanel = () => (
 const MockScopedRouting = () => (
   <div className="cap-mock cap-mock--routing">
     <div className="cap-mock__header">
-      <span className="cap-mock__label-key">context:</span>
+      <span className="cap-mock__label-key">state:</span>
       <span className="cap-mock__label-val">billing freeze</span>
       <span className="cap-mock__scope-tag">scope: project.billing</span>
     </div>
     <div className="cap-mock__rows">
       {[
         { name: 'Claude Code',       status: 'allowed',   color: '#6ee7b7' },
-        { name: 'Billing Sub-Agent', status: 'inherited', color: '#a78bfa' },
-        { name: 'Debug Agent',       status: 'allowed',   color: '#6ee7b7' },
+        { name: 'CrewAI Billing Sub',status: 'inherited', color: '#a78bfa' },
+        { name: 'OpenAI Debug Agent',status: 'allowed',   color: '#6ee7b7' },
         { name: 'Customer Support',  status: 'blocked',   color: '#f87171' },
       ].map(r => (
         <div key={r.name} className="cap-mock__row">
@@ -561,16 +591,42 @@ const MockScopedRouting = () => (
   </div>
 );
 
+const MockCrossFramework = () => (
+  <div className="cap-mock cap-mock--crossfw">
+    <div className="cap-mock__header">
+      <span className="cap-mock__label-key">routing layer</span>
+    </div>
+    <div className="cap-mock__rows">
+      {[
+        { name: 'LangGraph', color: '#fb923c' },
+        { name: 'CrewAI',    color: '#a78bfa' },
+        { name: 'Claude Code', color: '#6ee7b7' },
+        { name: 'MCP tools', color: '#7dd3fc' },
+      ].map(r => (
+        <div key={r.name} className="cap-mock__row">
+          <span className="cap-mock__pip" style={{ background: r.color }}/>
+          <span className="cap-mock__agent-name">{r.name}</span>
+          <span className="cap-mock__status" style={{ color: '#6ee7b7' }}>✓ connected</span>
+        </div>
+      ))}
+    </div>
+    <div className="cap-mock__inherit-block cap-mock__inherit-block--yes">
+      <span className="cap-mock__inherit-label" style={{ color: '#6ee7b7' }}>one routing layer:</span>
+      <span className="cap-mock__inherit-items">all frameworks share operational state</span>
+    </div>
+  </div>
+);
+
 const MockSubAgentInheritance = () => (
   <div className="cap-mock cap-mock--inherit">
     <div className="cap-mock__row cap-mock__row--parent">
       <span className="cap-mock__pip" style={{ background: '#fb923c' }}/>
-      <span className="cap-mock__agent-name cap-mock__agent-name--bold">Planner Agent</span>
+      <span className="cap-mock__agent-name cap-mock__agent-name--bold">LangGraph Planner</span>
     </div>
     <div className="cap-mock__row cap-mock__row--child">
       <span className="cap-mock__tree-prefix" style={{ color: '#a78bfa' }}>└─</span>
       <span className="cap-mock__pip" style={{ background: '#a78bfa' }}/>
-      <span className="cap-mock__agent-name">Billing Debugger (sub-agent)</span>
+      <span className="cap-mock__agent-name">CrewAI Billing Sub-Agent</span>
     </div>
     <div className="cap-mock__inherit-block cap-mock__inherit-block--yes">
       <span className="cap-mock__inherit-label" style={{ color: '#6ee7b7' }}>inherits:</span>
@@ -578,7 +634,7 @@ const MockSubAgentInheritance = () => (
     </div>
     <div className="cap-mock__inherit-block cap-mock__inherit-block--no">
       <span className="cap-mock__inherit-label" style={{ color: '#f87171' }}>not inherited:</span>
-      <span className="cap-mock__inherit-items">customer data · auth context</span>
+      <span className="cap-mock__inherit-items">customer data · auth state</span>
     </div>
   </div>
 );
@@ -586,7 +642,7 @@ const MockSubAgentInheritance = () => (
 const MockTemporalUpdates = () => (
   <div className="cap-mock cap-mock--temporal">
     <div className="cap-mock__header">
-      <span className="cap-mock__label-key">context:</span>
+      <span className="cap-mock__label-key">state:</span>
       <span className="cap-mock__label-val">migration freeze</span>
     </div>
     <div className="cap-mock__rows">
@@ -605,10 +661,10 @@ const MockTemporalUpdates = () => (
   </div>
 );
 
-const MockContextFiltering = () => (
+const MockSensitiveFiltering = () => (
   <div className="cap-mock cap-mock--filter">
     <div className="cap-mock__header">
-      <span className="cap-mock__label-key">context:</span>
+      <span className="cap-mock__label-key">state:</span>
       <span className="cap-mock__label-val">customer PII data</span>
       <span className="cap-mock__scope-tag" style={{ color: '#f87171', borderColor: 'rgba(248,113,113,0.25)' }}>sensitivity: high</span>
     </div>
@@ -630,29 +686,12 @@ const MockContextFiltering = () => (
   </div>
 );
 
-const MockContextInvalidation = () => (
-  <div className="cap-mock cap-mock--invalidate">
-    <div className="cap-mock__inval-row cap-mock__inval-row--old">
-      <span className="cap-mock__inval-badge cap-mock__inval-badge--superseded">superseded</span>
-      <span className="cap-mock__inval-text cap-mock__inval-text--struck">REST endpoints allowed</span>
-    </div>
-    <div className="cap-mock__inval-arrow">
-      <span className="cap-mock__inval-arrow-line"/>
-      <span className="cap-mock__inval-arrow-label">replaced</span>
-    </div>
-    <div className="cap-mock__inval-row cap-mock__inval-row--new">
-      <span className="cap-mock__inval-badge cap-mock__inval-badge--active">active</span>
-      <span className="cap-mock__inval-text">GraphQL only · Fri 14:22</span>
-    </div>
-  </div>
-);
-
 const MockContextLineage = () => (
   <div className="cap-mock cap-mock--lineage">
     {[
-      { agent: 'Debug Agent',   action: 'wrote',  detail: '"Redis stale reads"',              color: '#7dd3fc' },
-      { agent: 'GlassMem',      action: 'routed', detail: 'Claude Code, Billing Agent',        color: '#6ee7b7' },
-      { agent: 'Claude Code',   action: 'used',   detail: 'before implementation plan',        color: '#6ee7b7' },
+      { agent: 'OpenAI Debug Agent', action: 'wrote',  detail: '"Redis stale reads"',         color: '#7dd3fc' },
+      { agent: 'GlassMem',          action: 'routed',  detail: 'Claude Code, Billing Agent',   color: '#6ee7b7' },
+      { agent: 'Claude Code',        action: 'used',   detail: 'before implementation plan',   color: '#6ee7b7' },
     ].map((item, i) => (
       <div key={i} className="cap-mock__lineage-row">
         <span className="cap-mock__lineage-agent" style={{ color: item.color }}>{item.agent}</span>
@@ -671,222 +710,134 @@ const MockContextLineage = () => (
 const CAPABILITIES = [
   {
     title: 'Scoped routing',
-    desc: 'Route context by agent, task, project, sensitivity, and validity.',
-    example: 'Billing constraints go to billing agents, not customer support agents.',
+    before: 'Every agent receives the same giant state blob.',
+    after:  'Billing state only reaches billing-related agents.',
     mockup: <MockScopedRouting />,
     color: '#6ee7b7',
   },
   {
-    title: 'Sub-agent inheritance',
-    desc: 'Spawn sub-agents with the relevant slice of parent context.',
-    example: 'A billing debugger inherits failed Redis approach, billing freeze, and locking strategy.',
-    mockup: <MockSubAgentInheritance />,
+    title: 'Cross-framework coordination',
+    before: 'LangGraph, CrewAI, Claude Code, and MCP tools maintain separate state.',
+    after:  'Operational state moves across frameworks through one routing layer.',
+    mockup: <MockCrossFramework />,
     color: '#a78bfa',
   },
   {
+    title: 'Sub-agent inheritance',
+    before: 'Sub-agents start with partial summaries or stale parent state.',
+    after:  'Sub-agents inherit the selected slice of task state automatically.',
+    mockup: <MockSubAgentInheritance />,
+    color: '#fb923c',
+  },
+  {
     title: 'Temporal updates',
-    desc: 'Temporary context expires or updates automatically.',
-    example: 'Migration freeze expires Friday at 18:00 and stops being injected.',
+    before: 'Temporary constraints become permanent prompt junk.',
+    after:  'State expires or updates automatically.',
     mockup: <MockTemporalUpdates />,
     color: '#fb923c',
   },
   {
-    title: 'Context filtering',
-    desc: 'Block sensitive or irrelevant context from agents that should not see it.',
-    example: 'Customer data never reaches external vendor agents.',
-    mockup: <MockContextFiltering />,
+    title: 'Sensitive state filtering',
+    before: 'Private customer data can leak into external tools.',
+    after:  'Policies block sensitive state from the wrong agents.',
+    mockup: <MockSensitiveFiltering />,
     color: '#ef4444',
   },
   {
-    title: 'Context invalidation',
-    desc: 'Supersede old assumptions before they spread.',
-    example: 'GraphQL decision replaced by server actions; old decision no longer routes.',
-    mockup: <MockContextInvalidation />,
-    color: '#f59e0b',
-  },
-  {
-    title: 'Context lineage',
-    desc: 'Track who wrote context, where it propagated, and which agent used it.',
-    example: 'See exactly what the agent knew before it made a decision.',
+    title: 'State lineage',
+    before: 'No one knows what an agent knew when it acted.',
+    after:  'Every state packet records source, route, recipient, and consumption.',
     mockup: <MockContextLineage />,
     color: '#7dd3fc',
   },
 ];
 
 /* ══════════════════════════════════════════════════
-   HOW IT WORKS SECTION — replaces Architecture
+   ARCHITECTURE FLOW DIAGRAM — Section 5
 ════════════════════════════════════════════════════ */
 
-const HowItWorksSection = () => (
-  <section id="architecture" className="sec sec--alt">
-    <div className="w">
-      <div className="fail__intro reveal" style={{ marginBottom: 64 }}>
-        <div>
-          <span className="label">How it works</span>
-          <h2 className="h2">How it works</h2>
-        </div>
-        <p className="body-lg" style={{ maxWidth: '44ch' }}>
-          GlassMem sits between your agents and their context. Every read and write passes through a routing layer that decides what each agent sees.
-        </p>
+const ArchitectureFlow = () => (
+  <div className="archflow">
+    {/* Row 1: Agents */}
+    <div className="archflow__layer">
+      <span className="archflow__layer-label">Agents and runtimes</span>
+      <div className="archflow__chips">
+        {['Claude Code', 'Cursor', 'LangGraph', 'CrewAI', 'OpenAI Agents SDK', 'MCP tools', 'Custom agents'].map(n => (
+          <span key={n} className="archflow__chip">{n}</span>
+        ))}
       </div>
+      <span className="archflow__connect-label">connect via MCP / SDK / API</span>
+    </div>
 
-      {/* Step 1 */}
-      <div className="hiw__step-row reveal">
-        <div className="hiw__step-visual">
-          <div className="hiw__code-block">
-            <div className="hiw__code-bar">
-              <div className="hiw__code-dots">
-                <span style={{ background: '#ff5f57' }}/>
-                <span style={{ background: '#febc2e' }}/>
-                <span style={{ background: '#28c840' }}/>
-              </div>
-              <span className="hiw__code-filename">agent.ts</span>
-            </div>
-            <pre className="hiw__code-body"><code>{`// Connect via MCP, SDK, or API
-const mem = new GlassMem({
-  project: "billing-v2"
-});
+    <div className="archflow__arrow">↓</div>
 
-// In your agent
-const context = await mem.getContext({
-  agent: "claude-code",
-  task: "billing-refactor",
-  scope: "project"
-});`}</code></pre>
-          </div>
-        </div>
-        <div className="hiw__step-prose">
-          <div className="hiw__step-num">01</div>
-          <h3 className="hiw__step-title">Connect your agents</h3>
-          <p className="hiw__step-desc">
-            Connect any agent in minutes via MCP server, TypeScript/Python SDK, or REST API. GlassMem plugs into your existing agent architecture without rewiring anything.
-          </p>
-          <div className="hiw__step-tags">
-            <span className="hiw__step-tag">MCP server</span>
-            <span className="hiw__step-tag">TypeScript SDK</span>
-            <span className="hiw__step-tag">Python SDK</span>
-            <span className="hiw__step-tag">REST API</span>
-          </div>
-        </div>
+    {/* Row 2: Routing layer */}
+    <div className="archflow__layer archflow__layer--core">
+      <div className="archflow__core-header">
+        <Logo size={16}/>
+        <span className="archflow__core-title">GlassMem Routing Layer</span>
       </div>
-
-      {/* Step 2 */}
-      <div className="hiw__step-row hiw__step-row--rev reveal">
-        <div className="hiw__step-prose">
-          <div className="hiw__step-num">02</div>
-          <h3 className="hiw__step-title">Write context with scope</h3>
-          <p className="hiw__step-desc">
-            Agents write context with explicit scope, type, and expiry. The routing layer stores each event and evaluates which downstream agents should receive it.
-          </p>
-          <div className="hiw__step-tags">
-            <span className="hiw__step-tag">scoped</span>
-            <span className="hiw__step-tag">typed</span>
-            <span className="hiw__step-tag">temporal</span>
-          </div>
-        </div>
-        <div className="hiw__step-visual">
-          <div className="hiw__ui-card">
-            <div className="hiw__ui-card-header">
-              <span className="hiw__ui-card-title">New Context Event</span>
-              <span className="hiw__ui-card-id">ctx_new</span>
-            </div>
-            <div className="hiw__ui-fields">
-              <div className="hiw__ui-field">
-                <span className="hiw__ui-field-k">source agent</span>
-                <span className="hiw__ui-field-v"><span className="hiw__ui-badge" style={{ background: 'rgba(251,146,60,0.12)', color: '#fb923c', borderColor: 'rgba(251,146,60,0.3)' }}>Planner Agent</span></span>
-              </div>
-              <div className="hiw__ui-field">
-                <span className="hiw__ui-field-k">message</span>
-                <span className="hiw__ui-field-v hiw__ui-message">"Billing freeze until Friday. Stripe migration active"</span>
-              </div>
-              <div className="hiw__ui-field">
-                <span className="hiw__ui-field-k">scope</span>
-                <span className="hiw__ui-field-v"><span className="hiw__ui-badge" style={{ background: 'rgba(110,231,183,0.08)', color: '#6ee7b7', borderColor: 'rgba(110,231,183,0.25)' }}>project.billing</span></span>
-              </div>
-              <div className="hiw__ui-field">
-                <span className="hiw__ui-field-k">type</span>
-                <span className="hiw__ui-field-v"><span className="hiw__ui-badge">temporary constraint</span></span>
-              </div>
-              <div className="hiw__ui-field">
-                <span className="hiw__ui-field-k">expires</span>
-                <span className="hiw__ui-field-v"><span className="hiw__ui-badge" style={{ background: 'rgba(251,146,60,0.08)', color: '#fb923c', borderColor: 'rgba(251,146,60,0.2)' }}>Friday 18:00</span></span>
-              </div>
-            </div>
-            <div className="hiw__ui-routing">
-              <span className="hiw__ui-routing-label">Routing preview</span>
-              <div className="hiw__ui-routing-rows">
-                <div className="hiw__ui-route-row"><span style={{ color: '#6ee7b7' }}>✓</span><span>Claude Code · allowed</span></div>
-                <div className="hiw__ui-route-row"><span style={{ color: '#a78bfa' }}>↓</span><span>Billing Sub-Agent · inherited</span></div>
-                <div className="hiw__ui-route-row"><span style={{ color: '#f87171' }}>✗</span><span>Customer Support · blocked</span></div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* Step 3 */}
-      <div className="hiw__step-row reveal">
-        <div className="hiw__step-visual">
-          <div className="hiw__routing-diagram">
-            <div className="hiw__rd-source">
-              <span className="hiw__rd-box hiw__rd-box--source">Context event</span>
-            </div>
-            <div className="hiw__rd-arrow-down"/>
-            <div className="hiw__rd-hub">
-              <Logo size={14}/>
-              <span>GlassMem</span>
-              <span className="hiw__rd-hub-sub">filter + route</span>
-            </div>
-            <div className="hiw__rd-arrow-down"/>
-            <div className="hiw__rd-agents">
-              <div className="hiw__rd-agent hiw__rd-agent--green">
-                <span className="hiw__rd-agent-pip" style={{ background: '#6ee7b7' }}/>
-                <span>Claude Code</span>
-                <span className="hiw__rd-badge hiw__rd-badge--green">received</span>
-              </div>
-              <div className="hiw__rd-agent hiw__rd-agent--green">
-                <span className="hiw__rd-agent-pip" style={{ background: '#a78bfa' }}/>
-                <span>Billing Sub-Agent</span>
-                <span className="hiw__rd-badge hiw__rd-badge--purple">inherited</span>
-              </div>
-              <div className="hiw__rd-agent hiw__rd-agent--red">
-                <span className="hiw__rd-agent-pip" style={{ background: '#f87171' }}/>
-                <span>Customer Support</span>
-                <span className="hiw__rd-badge hiw__rd-badge--red">blocked</span>
-              </div>
-            </div>
-            <div className="hiw__rd-labels">
-              <span>scoped</span>
-              <span>filtered</span>
-              <span>traceable</span>
-            </div>
-          </div>
-        </div>
-        <div className="hiw__step-prose">
-          <div className="hiw__step-num">03</div>
-          <h3 className="hiw__step-title">Agents receive only what they need</h3>
-          <p className="hiw__step-desc">
-            Before any agent acts, GlassMem injects only the context slices relevant to its task, scope, and permissions. Irrelevant, sensitive, or expired context never reaches agents that should not see it.
-          </p>
-          <div className="hiw__step-tags">
-            <span className="hiw__step-tag">zero manual steps</span>
-            <span className="hiw__step-tag">fully auditable</span>
-          </div>
-        </div>
-      </div>
-
-      {/* Trace diagram */}
-      <div className="hiw__trace reveal">
-        <span className="hiw__trace-label">Lineage trace</span>
-        <div className="hiw__trace-body">
-          <pre className="hiw__trace-pre">{`Planner Agent  →  GlassMem  →  Claude Code            ✓ received
-                           →  Billing Sub-Agent    ↓ inherited
-                           →  Customer Support     ✗ blocked
-                           →  External Vendor      ✗ sensitive`}</pre>
-        </div>
+      <div className="archflow__dims">
+        {['scope', 'task', 'agent role', 'framework', 'sensitivity', 'freshness', 'permissions', 'lineage'].map(d => (
+          <span key={d} className="archflow__dim">{d}</span>
+        ))}
       </div>
     </div>
-  </section>
+
+    <div className="archflow__arrow">↓</div>
+
+    {/* Row 3: Outputs */}
+    <div className="archflow__outputs">
+      <div className="archflow__output archflow__output--green">
+        <span className="archflow__output-label">Allowed state</span>
+        <span className="archflow__output-sub">routed to relevant agents</span>
+      </div>
+      <div className="archflow__output archflow__output--purple">
+        <span className="archflow__output-label">Inherited state</span>
+        <span className="archflow__output-sub">propagated to sub-agents</span>
+      </div>
+      <div className="archflow__output archflow__output--red">
+        <span className="archflow__output-label">Blocked state</span>
+        <span className="archflow__output-sub">filtered from wrong agents</span>
+      </div>
+    </div>
+
+    <div className="archflow__arrow">↓</div>
+
+    {/* Row 4: Store */}
+    <div className="archflow__layer archflow__layer--store">
+      <span className="archflow__layer-label">Scoped Operational State Store</span>
+      <span className="archflow__store-sub">typed events, temporal validity, immutable history</span>
+    </div>
+
+    <div className="archflow__arrow">↓</div>
+
+    {/* Row 5: Observability */}
+    <div className="archflow__layer archflow__layer--obs">
+      <span className="archflow__layer-label">Observability, Traces, Lineage events</span>
+      <div className="archflow__chips">
+        {['Langfuse', 'Arize', 'Helicone', 'OpenTelemetry'].map(n => (
+          <span key={n} className="archflow__chip archflow__chip--obs">{n}</span>
+        ))}
+      </div>
+    </div>
+
+    {/* Explanations */}
+    <div className="archflow__notes">
+      {[
+        'Agents write constraints, failures, decisions, and runtime updates as typed state events.',
+        'GlassMem evaluates each event by scope, agent role, task, sensitivity, freshness, and policy.',
+        'Agents receive selected state slices, not the full system memory.',
+        'Sub-agents inherit scoped parent-task state when spawned.',
+        'Every routing decision is recorded: what was routed, blocked, inherited, expired, and consumed.',
+      ].map((note, i) => (
+        <div key={i} className="archflow__note">
+          <span className="archflow__note-num">0{i + 1}</span>
+          <span className="archflow__note-text">{note}</span>
+        </div>
+      ))}
+    </div>
+  </div>
 );
 
 /* ══════════════════════════════════════════════════
@@ -895,7 +846,7 @@ const context = await mem.getContext({
 
 const REAL_CUSTOMERS = [
   {
-    quote: "Before GlassMem, every sub-agent handoff meant manually syncing context. Constraints now propagate automatically across the whole system.",
+    quote: "Before GlassMem, every sub-agent handoff meant manually syncing state. Constraints now propagate automatically across the whole system.",
     name: 'Armend Avdijaj',
     role: 'CEO at GlassFlow',
     photo: '/customer-photos/armend.jpg',
@@ -903,7 +854,7 @@ const REAL_CUSTOMERS = [
     color: '#6ee7b7',
   },
   {
-    quote: "GlassMem is the coordination layer distributed agent systems need but no one built before. It replaced all our manual context.md workflows.",
+    quote: "GlassMem replaced all our manual context.md workflows. It is the coordination layer distributed agent systems need but no one built before.",
     name: 'Andres Tapia',
     role: 'CEO at Restack',
     photo: '/customer-photos/andres.jpg',
@@ -951,10 +902,10 @@ function useReveal() {
 ════════════════════════════════════════════════════ */
 export function GlassMemPage() {
   useReveal();
-  const [scrolled,  setScrolled]  = useState(false);
-  const [mobOpen,   setMobOpen]   = useState(false);
-  const [ctaEmail,  setCtaEmail]  = useState('');
-  const [ctaSent,   setCtaSent]   = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+  const [mobOpen,  setMobOpen]  = useState(false);
+  const [ctaEmail, setCtaEmail] = useState('');
+  const [ctaSent,  setCtaSent]  = useState(false);
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 8);
@@ -977,7 +928,7 @@ export function GlassMemPage() {
           <div className="nav__links">
             <a href="#problem"       className="nav__link">Problem</a>
             <a href="#demo"          className="nav__link">Demo</a>
-            <a href="#architecture"  className="nav__link">How it works</a>
+            <a href="#architecture"  className="nav__link">Architecture</a>
             <a href="#observability" className="nav__link">Observability</a>
             <a href="https://docs.glassmem.ai" className="nav__link">Docs</a>
           </div>
@@ -1002,26 +953,27 @@ export function GlassMemPage() {
             <div>
               <div className="hero__badge enter">
                 <span className="hero__badge-dot"/>
-                Context orchestration infrastructure
+                Context orchestration for agent systems
               </div>
               <h1 className="h1 hero__h1 enter-2">
-                Fully controllable context sharing for your agents.
+                Context orchestration<br/>for all your agents
               </h1>
               <p className="body-lg hero__sub enter-3">
-                GlassMem keeps agents, sub-agents, tools, and sessions aligned with scoped operational context without dumping every memory into every agent.
+                GlassMem keeps agents, sub-agents, frameworks, tools, and sessions aligned with scoped operational state. No blindly shared memory.
               </p>
               <div className="hero__ctas enter-4">
                 <a href="/signup" className="btn btn--em btn--lg">Get started</a>
                 <a href="#demo"   className="btn btn--ghost btn--lg">See live demo</a>
               </div>
               <div className="hero__trust enter-4">
-                Scoped. Traceable. Temporal. Built for distributed agents.
+                Scoped. Traceable. Temporal. Cross-framework.
               </div>
               <ul className="hero__pills enter-4">
                 {[
-                  'route only relevant context',
-                  'prevent context pollution',
-                  'pass state into sub-agents',
+                  'route only relevant state',
+                  'prevent stale propagation',
+                  'inherit state into sub-agents',
+                  'coordinate across frameworks',
                   'trace what every agent knew',
                 ].map(pill => (
                   <li key={pill} className="hero__pill">
@@ -1043,29 +995,34 @@ export function GlassMemPage() {
           <div className="antimem reveal">
             <div className="antimem__left">
               <span className="label">The problem</span>
-              <h2 className="h2">Sharing all memory between agents is a trap.</h2>
+              <h2 className="h2">Sharing all memory between agents is a trap</h2>
               <p className="body-lg" style={{ marginTop: 16, maxWidth: '44ch' }}>
-                Agent engineers already know the problem is not storing more context. It is controlling where context flows.
+                Agent engineers already know the problem is not storing more state. It is controlling where operational state flows.
               </p>
               <p className="antimem__keyline">
-                GlassMem is not a bigger memory bucket.<br/>It is a context control plane.
+                GlassMem is not a shared memory bucket.<br/>It is a context control plane.
               </p>
             </div>
             <div className="antimem__cards">
               {[
                 {
-                  title: 'Context pollution',
-                  desc: 'When every agent sees everything, irrelevant context becomes instruction noise.',
-                  Icon: IconContextPollution,
+                  title: 'State pollution',
+                  desc: 'When every agent inherits everything, irrelevant state becomes instruction noise.',
+                  Icon: IconStatePollution,
+                },
+                {
+                  title: 'Broken handoffs',
+                  desc: 'Sub-agents and external tools lose critical constraints when work moves between runtimes.',
+                  Icon: IconBrokenHandoff,
                 },
                 {
                   title: 'Stale propagation',
-                  desc: 'Old decisions and expired constraints leak into new runs unless context has validity and lifecycle.',
+                  desc: 'Expired decisions and temporary constraints keep leaking into future runs.',
                   Icon: IconStalePropagation,
                 },
                 {
                   title: 'Debugging black boxes',
-                  desc: 'When an agent acts on hidden memory, you cannot explain why it made a decision.',
+                  desc: 'When an agent acts on hidden state, you cannot explain why it made a decision.',
                   Icon: IconDebuggingBlackBox,
                 },
               ].map(c => (
@@ -1087,16 +1044,17 @@ export function GlassMemPage() {
         <div className="w">
           <div className="fail__intro reveal">
             <div>
-              <span className="label">Why context breaks</span>
-              <h2 className="h2">Why context breaks<br/>in real agent systems.</h2>
+              <span className="label">Why state coordination breaks</span>
+              <h2 className="h2">Why state breaks<br/>in real agent systems</h2>
             </div>
             <p className="body-lg" style={{ maxWidth:'44ch' }}>
-              Storage is solved. Context coordination is not.
+              Your agents already span frameworks. Their operational state does not.
             </p>
           </div>
           <div className="reveal">
             <ComparisonTable/>
           </div>
+          <p className="ctable__keyline reveal">Storage is solved. Coordination is not.</p>
         </div>
       </section>
 
@@ -1109,7 +1067,7 @@ export function GlassMemPage() {
               <h2 className="h2">One update.<br/>Only the right agents adapt.</h2>
             </div>
             <p className="body-lg" style={{ maxWidth:'44ch' }}>
-              Select a scenario to see GlassMem route operational context across distributed agents in real time.
+              Select a scenario to see GlassMem route operational state across distributed agents in real time.
             </p>
           </div>
           <div className="reveal"><LiveDemo/></div>
@@ -1121,7 +1079,7 @@ export function GlassMemPage() {
         <div className="w">
           <div className="feat__intro reveal">
             <span className="label">Capabilities</span>
-            <h2 className="h2">Controlled context propagation<br/>for agent systems.</h2>
+            <h2 className="h2">Controlled state propagation<br/>for agent systems</h2>
             <p className="body-lg" style={{ maxWidth:'48ch', marginTop:14 }}>
               Six primitives that solve real coordination failures in distributed agent systems.
             </p>
@@ -1131,10 +1089,15 @@ export function GlassMemPage() {
               <div key={cap.title} className="bento__card">
                 <div className="bento__mockup">{cap.mockup}</div>
                 <p className="bento__title">{cap.title}</p>
-                <p className="bento__desc">{cap.desc}</p>
-                <div className="bento__example">
-                  <span className="bento__example-label">Example</span>
-                  <p className="bento__example-text">{cap.example}</p>
+                <div className="bento__ba">
+                  <div className="bento__ba-row bento__ba-row--before">
+                    <span className="bento__ba-label">Before</span>
+                    <span className="bento__ba-text">{cap.before}</span>
+                  </div>
+                  <div className="bento__ba-row bento__ba-row--after">
+                    <span className="bento__ba-label bento__ba-label--after">With GlassMem</span>
+                    <span className="bento__ba-text bento__ba-text--after">{cap.after}</span>
+                  </div>
                 </div>
               </div>
             ))}
@@ -1142,8 +1105,23 @@ export function GlassMemPage() {
         </div>
       </section>
 
-      {/* SECTION 5: HOW IT WORKS */}
-      <HowItWorksSection />
+      {/* SECTION 5: ARCHITECTURE */}
+      <section id="architecture" className="sec sec--alt">
+        <div className="w">
+          <div className="fail__intro reveal" style={{ marginBottom: 56 }}>
+            <div>
+              <span className="label">Architecture</span>
+              <h2 className="h2">How GlassMem coordinates<br/>state across frameworks</h2>
+            </div>
+            <p className="body-lg" style={{ maxWidth: '44ch' }}>
+              GlassMem sits between your agents and their state. Every read and write passes through a routing layer that decides what each agent sees.
+            </p>
+          </div>
+          <div className="reveal">
+            <ArchitectureFlow/>
+          </div>
+        </div>
+      </section>
 
       {/* SECTION 6: OBSERVABILITY */}
       <section id="observability" className="sec">
@@ -1151,10 +1129,10 @@ export function GlassMemPage() {
           <div className="fail__intro reveal">
             <div>
               <span className="label">Observability</span>
-              <h2 className="h2">Debug context<br/>like you debug code.</h2>
+              <h2 className="h2">Debug state<br/>like you debug code</h2>
             </div>
             <p className="body-lg" style={{ maxWidth:'44ch' }}>
-              GlassMem lets you answer the question every agent engineer eventually asks: what context did this agent have when it made that decision?
+              GlassMem shows what operational state each agent had when it acted.
             </p>
           </div>
           <div className="obssec reveal">
@@ -1163,15 +1141,15 @@ export function GlassMemPage() {
             </div>
             <div className="obssec__prose">
               <p className="body-lg" style={{ marginBottom: 20 }}>
-                Every context packet records source, propagation path, blocked agents, expiry, and the agent that consumed it.
+                Every state packet records source, propagation path, blocked agents, expiry, and the agent that consumed it.
               </p>
               <div className="obssec__items">
                 {[
-                  { label: 'Who wrote it', val: 'source agent + timestamp' },
-                  { label: 'Where it went', val: 'routed to + blocked from' },
-                  { label: 'Why it routed', val: 'scope + task relevance reason' },
+                  { label: 'Who wrote it',    val: 'source agent + framework + timestamp' },
+                  { label: 'Where it went',   val: 'routed to + blocked from' },
+                  { label: 'Why it routed',   val: 'scope + task relevance reason' },
                   { label: 'When it expires', val: 'temporal validity window' },
-                  { label: 'Who consumed it', val: 'used by agent + context in decision' },
+                  { label: 'Who consumed it', val: 'used by agent + decision context' },
                 ].map(i => (
                   <div key={i.label} className="obssec__item">
                     <span className="obssec__item-check">✓</span>
@@ -1182,6 +1160,9 @@ export function GlassMemPage() {
                   </div>
                 ))}
               </div>
+              <p className="obssec__copy">
+                Answer the question every agent engineer eventually asks: what state did this agent have when it made that decision?
+              </p>
               <p className="obssec__integrations">
                 Export traces to Langfuse, Arize, Helicone, or OpenTelemetry-compatible pipelines.
               </p>
@@ -1193,66 +1174,38 @@ export function GlassMemPage() {
       {/* SECTION 7: CUSTOMER PROOF */}
       <section className="sec sec--alt">
         <div className="w">
-          <div className="cust-sec__intro reveal" style={{ textAlign: 'center', marginBottom: 56 }}>
-            <span className="label">// trusted by teams</span>
-            <h2 className="cust-sec__heading">Trusted by teams building production agent systems</h2>
+          <div className="editorial__intro reveal">
+            <span className="label">// customers</span>
           </div>
-
-          {/* Featured large quote */}
-          <div className="proof2 reveal">
-            <div className="proof2__featured">
-              <div className="proof2__qmark">"</div>
-              <blockquote className="proof2__featured-quote">
-                {REAL_CUSTOMERS[0].quote}
-              </blockquote>
-              <div className="proof2__featured-author">
-                <img
-                  src={REAL_CUSTOMERS[0].photo}
-                  alt={REAL_CUSTOMERS[0].name}
-                  className="proof2__photo"
-                  onError={e => { e.target.style.display = 'none'; }}
-                />
-                <div className="proof2__author-info">
-                  <span className="proof2__author-name">{REAL_CUSTOMERS[0].name}</span>
-                  <span className="proof2__author-role">{REAL_CUSTOMERS[0].role}</span>
-                </div>
-                <img
-                  src={REAL_CUSTOMERS[0].logo}
-                  alt="GlassFlow"
-                  className="proof2__logo"
-                  onError={e => { e.target.style.display = 'none'; }}
-                />
-              </div>
-            </div>
-
-            <div className="proof2__divider"/>
-
-            <div className="proof2__secondary">
-              {REAL_CUSTOMERS.slice(1).map(c => (
-                <div key={c.name} className="proof2__secondary-item">
-                  <div className="proof2__secondary-qmark">"</div>
-                  <p className="proof2__secondary-quote">{c.quote}</p>
-                  <div className="proof2__secondary-author">
+          <div className="editorial reveal">
+            {REAL_CUSTOMERS.map((c, i) => (
+              <React.Fragment key={c.name}>
+                <div className="editorial__item">
+                  <blockquote className="editorial__quote">
+                    {c.quote}
+                  </blockquote>
+                  <div className="editorial__author">
                     <img
                       src={c.photo}
                       alt={c.name}
-                      className="proof2__photo proof2__photo--sm"
+                      className="editorial__photo"
                       onError={e => { e.target.style.display = 'none'; }}
                     />
-                    <div>
-                      <span className="proof2__author-name">{c.name}</span>
-                      <span className="proof2__author-role">{c.role}</span>
+                    <div className="editorial__author-info">
+                      <span className="editorial__name">{c.name}</span>
+                      <span className="editorial__role">{c.role}</span>
                     </div>
                     <img
                       src={c.logo}
                       alt={c.role}
-                      className="proof2__logo proof2__logo--sm"
+                      className="editorial__logo"
                       onError={e => { e.target.style.display = 'none'; }}
                     />
                   </div>
                 </div>
-              ))}
-            </div>
+                {i < REAL_CUSTOMERS.length - 1 && <div className="editorial__divider"/>}
+              </React.Fragment>
+            ))}
           </div>
         </div>
       </section>
@@ -1263,9 +1216,9 @@ export function GlassMemPage() {
           <div className="cta__inner" style={{ gridTemplateColumns:'1fr' }}>
             <div className="reveal" style={{ textAlign:'center', maxWidth:560, margin:'0 auto' }}>
               <span className="label">Get started</span>
-              <h2 className="cta__h2">Coordinate context before<br/>it becomes chaos.</h2>
+              <h2 className="cta__h2">Coordinate state before<br/>your agents drift apart</h2>
               <p className="body-lg cta__sub">
-                GlassMem gives distributed agents scoped, traceable, temporal context without dumping every memory into every agent.
+                GlassMem gives distributed agents scoped, traceable, temporal operational state across frameworks, tools, and sessions.
               </p>
               {ctaSent ? (
                 <div style={{ display:'inline-flex', alignItems:'center', gap:10, padding:'12px 20px', borderRadius:'var(--r)', background:'rgba(110,231,183,0.08)', border:'1px solid rgba(110,231,183,0.2)', color:'var(--em)', fontFamily:'var(--f-code)', fontSize:13, marginBottom:20 }}>
@@ -1320,10 +1273,11 @@ export function GlassMemPage() {
             </div>
             <nav className="footer2__nav">
               {[
-                {l:'Docs',         h:'https://docs.glassmem.ai'},
-                {l:'How it works', h:'#architecture'},
-                {l:'Contact',      h:'mailto:hello@glassmem.ai'},
-                {l:'Blog',         h:'#'},
+                {l:'Docs',          h:'https://docs.glassmem.ai'},
+                {l:'Architecture',  h:'#architecture'},
+                {l:'Observability', h:'#observability'},
+                {l:'Contact',       h:'mailto:hello@glassmem.ai'},
+                {l:'Blog',          h:'#'},
               ].map(({ l,h }) => (
                 <a key={l} href={h} className="footer2__nav-link">{l}</a>
               ))}
