@@ -7168,3 +7168,112 @@ img { display: block; max-width: 100%; }
   background: var(--bd);
 }
 
+/* ═══════════════════════════════════════════════════
+   HERO VIZ — Definitive stability fix
+   Root causes fixed:
+   1. hero__viz-col missing min-width:0 → grid overflow clips right edge
+   2. cfroute__body height 590px < actual content ~690px → bottom clips
+   3. cfroute__behavior used transform → visual "jump" on opacity transition
+═══════════════════════════════════════════════════ */
+
+/* Fix 1: CSS Grid overflow — right column must be allowed to shrink */
+.hero__viz-col {
+  min-width: 0;
+}
+
+/* Fix 2: Body height — tall enough for all content at all times */
+.cfroute__body {
+  padding: 14px 14px 14px !important;
+  height: 740px !important;
+  overflow: hidden !important;
+  display: flex !important;
+  flex-direction: column !important;
+  gap: 0 !important;
+}
+
+/* Fix 3: Source card — fixed, never grows */
+.cfroute__source-card {
+  height: 105px !important;
+  min-height: unset !important;
+  max-height: 105px !important;
+  overflow: hidden !important;
+  flex-shrink: 0 !important;
+}
+
+/* Fix 4: Agents container — fixed */
+.cfroute__agents {
+  height: 295px !important;
+  min-height: unset !important;
+  max-height: 295px !important;
+  overflow: hidden !important;
+  flex-shrink: 0 !important;
+}
+
+/* Fix 5: Each agent row — fixed height, never overflows vertically */
+.cfroute__agent {
+  height: 48px !important;
+  min-height: unset !important;
+  max-height: 48px !important;
+  flex-shrink: 0 !important;
+  overflow: hidden !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+/* Fix 6: Behavior section — opacity ONLY, zero transform, always occupies space */
+.cfroute__behavior {
+  margin-top: 10px !important;
+  height: 96px !important;
+  min-height: unset !important;
+  max-height: 96px !important;
+  overflow: hidden !important;
+  flex-shrink: 0 !important;
+  opacity: 0 !important;
+  transform: none !important;                          /* no transform = no layout shift */
+  transition: opacity 0.57s ease !important;
+  pointer-events: none !important;
+}
+.cfroute__behavior--on {
+  opacity: 1 !important;
+  transform: none !important;
+  pointer-events: auto !important;
+}
+
+/* Fix 7: Footer — fixed height, always present */
+.cfroute__footer {
+  margin-top: 8px !important;
+  height: 36px !important;
+  min-height: unset !important;
+  max-height: 36px !important;
+  overflow: hidden !important;
+  flex-shrink: 0 !important;
+  display: flex !important;
+  align-items: center !important;
+}
+
+/* Fix 8: Hide reason text + fw badge from agent rows
+   (logos already identify framework; reason text caused right-edge overflow) */
+.cfroute__reason   { display: none !important; }
+.cfroute__agent-fw { display: none !important; }
+
+/* Fix 9: Route badge — fully readable, never wraps */
+.cfroute__route-badge {
+  font-size: 12px !important;
+  padding: 3px 10px !important;
+  white-space: nowrap !important;
+  flex-shrink: 0 !important;
+  letter-spacing: 0.01em !important;
+}
+
+/* Fix 10: Agent name — wider now badge+reason aren't competing for space */
+.cfroute__agent-name {
+  font-size: 13px !important;
+  font-weight: 500 !important;
+  white-space: nowrap !important;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  max-width: none !important;
+  flex: 1 !important;
+}
+
