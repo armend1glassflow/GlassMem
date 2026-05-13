@@ -22,7 +22,7 @@ const NAV_SECTIONS = [
   { group: 'ACCOUNT', items: ['Settings', 'Support'] },
 ];
 
-const MEMORY_TOOLS = ['Vector DB', 'Redis / custom store', 'LangSmith', 'Langfuse', 'Just console.log', 'Nothing yet', 'Other'];
+const MEMORY_TOOLS = ['Vector DB', 'Redis / custom store', 'claude.md file', 'mem0', 'LangMem', 'Zep', 'Nothing yet', 'Other'];
 const USEFUL_OPTS  = ['Yes', 'Maybe', 'No'];
 
 export function AppPage() {

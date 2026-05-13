@@ -1,6 +1,28 @@
 import React, { useEffect, useState } from 'react';
 import './GlassMemPage.css';
 
+/* ── Agent framework logo components ── */
+const LangGraphLogo = () => (
+  <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+    <rect width="18" height="18" rx="4" fill="#1c7a3e"/>
+    <text x="2" y="13" fill="white" fontSize="8" fontFamily="monospace" fontWeight="bold">LG</text>
+  </svg>
+);
+
+const CrewAILogo = () => (
+  <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+    <rect width="18" height="18" rx="4" fill="#f97316"/>
+    <text x="1" y="13" fill="white" fontSize="8" fontFamily="monospace" fontWeight="bold">CR</text>
+  </svg>
+);
+
+const SupportLogo = () => (
+  <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+    <rect x="1" y="1" width="16" height="12" rx="3" stroke="#a3a3a3" strokeWidth="1.5"/>
+    <path d="M5 17 L5 13 L9 13" stroke="#a3a3a3" strokeWidth="1.5" strokeLinejoin="round"/>
+  </svg>
+);
+
 /* ── Pentagon logo ── */
 const Logo = ({ size = 26 }) => (
   <svg width={size} height={size} viewBox="0 0 1023 977" fill="none" xmlns="http://www.w3.org/2000/svg">
@@ -90,12 +112,12 @@ const IconDebuggingBlackBox = () => (
 const HERO_PHASES = ['write', 'route', 'distribute', 'behavior', 'pause'];
 
 const HERO_AGENTS = [
-  { name: 'LangGraph Planner',         pip: '#fb923c', status: 'source',   reason: '',                          framework: 'LangGraph' },
-  { name: 'Claude Code',               pip: '#6ee7b7', status: 'allowed',  reason: 'task touches billing',      framework: 'Claude Code' },
-  { name: 'Cursor',                    pip: '#6ee7b7', status: 'allowed',  reason: 'editing billing module',    framework: 'Cursor' },
-  { name: 'CrewAI Billing Sub-Agent',  pip: '#a78bfa', status: 'inherited',reason: 'spawned under billing task',framework: 'CrewAI' },
-  { name: 'OpenAI Debug Agent',        pip: '#6ee7b7', status: 'allowed',  reason: 'debugging billing incident',framework: 'OpenAI SDK' },
-  { name: 'Customer Support Agent',    pip: '#94a3b8', status: 'blocked',  reason: 'out of scope',             framework: '' },
+  { name: 'LangGraph Planner',         pip: '#fb923c', status: 'source',   reason: '',                          framework: 'LangGraph',  logoType: 'langgraph' },
+  { name: 'Claude Code',               pip: '#6ee7b7', status: 'allowed',  reason: 'task touches billing',      framework: 'Claude Code',logoType: 'claude' },
+  { name: 'Cursor',                    pip: '#6ee7b7', status: 'allowed',  reason: 'editing billing module',    framework: 'Cursor',     logoType: 'cursor' },
+  { name: 'CrewAI Billing Sub-Agent',  pip: '#a78bfa', status: 'inherited',reason: 'spawned under billing task',framework: 'CrewAI',     logoType: 'crewai' },
+  { name: 'OpenAI Debug Agent',        pip: '#6ee7b7', status: 'allowed',  reason: 'debugging billing incident',framework: 'OpenAI SDK', logoType: 'openai' },
+  { name: 'Customer Support Agent',    pip: '#94a3b8', status: 'blocked',  reason: 'out of scope',             framework: '',           logoType: 'support' },
 ];
 
 const STATUS_COLORS = {
@@ -106,6 +128,16 @@ const STATUS_COLORS = {
 
 const STATUS_ICONS = { allowed: '✓', inherited: '↓', blocked: '✗' };
 
+const AgentLogo = ({ logoType }) => {
+  if (logoType === 'claude')    return <img src="/logos/claude.svg"  alt="Claude"  className="cfroute__agent-logo" />;
+  if (logoType === 'openai')    return <img src="/logos/openai.svg"  alt="OpenAI"  className="cfroute__agent-logo cfroute__agent-logo--invert" />;
+  if (logoType === 'cursor')    return <img src="/logos/cursor.png"  alt="Cursor"  className="cfroute__agent-logo cfroute__agent-logo--invert" />;
+  if (logoType === 'langgraph') return <LangGraphLogo />;
+  if (logoType === 'crewai')    return <CrewAILogo />;
+  if (logoType === 'support')   return <SupportLogo />;
+  return null;
+};
+
 const ContextFlowViz = () => {
   const [phase,      setPhase]      = useState('write');
   const [agentsDone, setAgentsDone] = useState(0);
@@ -114,16 +146,16 @@ const ContextFlowViz = () => {
 
   useEffect(() => {
     let t;
-    if      (phase === 'write')      t = setTimeout(() => setPhase('route'),    1200);
-    else if (phase === 'route')      t = setTimeout(() => { setPhase('distribute'); setAgentsDone(0); }, 700);
+    if      (phase === 'write')      t = setTimeout(() => setPhase('route'),    1720);
+    else if (phase === 'route')      t = setTimeout(() => { setPhase('distribute'); setAgentsDone(0); }, 1000);
     else if (phase === 'distribute') {
       if (agentsDone < ROUTE_AGENTS.length)
-        t = setTimeout(() => setAgentsDone(n => n + 1), 380);
+        t = setTimeout(() => setAgentsDone(n => n + 1), 540);
       else
-        t = setTimeout(() => setPhase('behavior'), 200);
+        t = setTimeout(() => setPhase('behavior'), 290);
     }
-    else if (phase === 'behavior')   t = setTimeout(() => setPhase('pause'), 2800);
-    else if (phase === 'pause')      t = setTimeout(() => { setPhase('write'); setAgentsDone(0); }, 1200);
+    else if (phase === 'behavior')   t = setTimeout(() => setPhase('pause'), 4000);
+    else if (phase === 'pause')      t = setTimeout(() => { setPhase('write'); setAgentsDone(0); }, 1720);
     return () => clearTimeout(t);
   }, [phase, agentsDone, ROUTE_AGENTS.length]);
 
@@ -180,7 +212,7 @@ const ContextFlowViz = () => {
                 style={revealed ? { background: col.bg, borderColor: col.border } : {}}
               >
                 <div className="cfroute__agent-left">
-                  <span className="cfroute__pip" style={{ background: revealed ? r.pip : 'rgba(255,255,255,0.12)' }}/>
+                  <AgentLogo logoType={r.logoType} />
                   <div>
                     <span className="cfroute__agent-name">{r.name}</span>
                     {r.framework && <span className="cfroute__agent-fw">{r.framework}</span>}
@@ -361,9 +393,9 @@ const LiveDemo = () => {
   useEffect(() => { setStep(-1); }, [scIdx]);
   useEffect(() => {
     let t;
-    if (step === -1)                      t = setTimeout(() => setStep(0), 1100);
-    else if (step < sc.steps.length - 1)  t = setTimeout(() => setStep(s => s + 1), 740);
-    else                                  t = setTimeout(() => setStep(-1), 2800);
+    if (step === -1)                      t = setTimeout(() => setStep(0), 1570);
+    else if (step < sc.steps.length - 1)  t = setTimeout(() => setStep(s => s + 1), 1060);
+    else                                  t = setTimeout(() => setStep(-1), 4000);
     return () => clearTimeout(t);
   }, [step, sc.steps.length]);
 
@@ -930,7 +962,6 @@ export function GlassMemPage() {
             <a href="#demo"          className="nav__link">Demo</a>
             <a href="#architecture"  className="nav__link">Architecture</a>
             <a href="#observability" className="nav__link">Observability</a>
-            <a href="https://docs.glassmem.ai" className="nav__link">Docs</a>
           </div>
           <div className="nav__right">
             <a href="/app"    className="btn btn--ghost btn--sm">Log in</a>
@@ -939,7 +970,7 @@ export function GlassMemPage() {
           <button className="nav__mob-toggle" onClick={() => setMobOpen(o => !o)} aria-label="Menu">{mobOpen ? '✕' : '☰'}</button>
         </div>
         <div className={`nav__mob-menu${mobOpen ? ' open' : ''}`}>
-          {['Problem','Demo','Architecture','Observability','Docs'].map(l => (
+          {['Problem','Demo','Architecture','Observability'].map(l => (
             <a key={l} href={`#${l.toLowerCase()}`} className="nav__mob-link" onClick={() => setMobOpen(false)}>{l}</a>
           ))}
         </div>
