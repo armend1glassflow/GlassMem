@@ -876,30 +876,46 @@ const ArchitectureFlow = () => (
    CUSTOMER PROOF — Section 7
 ════════════════════════════════════════════════════ */
 
-const REAL_CUSTOMERS = [
+const TESTIMONIALS = [
   {
-    quote: "Before GlassMem, every sub-agent handoff meant manually syncing state. Constraints now propagate automatically across the whole system.",
-    name: 'Armend Avdijaj',
-    role: 'CEO at GlassFlow',
-    photo: '/customer-photos/armend.jpg',
-    logo: '/customer-logos/glassflow.svg',
-    color: '#6ee7b7',
+    quote: "We already had memory systems. The problem was keeping temporary constraints synchronized between agents.",
+    role: 'Staff AI Engineer',
+    chips: ['billing freezes', 'sub-agent handoffs', 'temporary constraints'],
   },
   {
-    quote: "GlassMem replaced all our manual context.md workflows. It is the coordination layer distributed agent systems need but no one built before.",
-    name: 'Andres Tapia',
-    role: 'CEO at Restack',
-    photo: '/customer-photos/andres.jpg',
-    logo: '/customer-logos/restack.svg',
-    color: '#a78bfa',
+    quote: "Our sub-agents kept retrying approaches another agent had already rejected.",
+    role: 'Multi-agent Systems Engineer',
+    chips: ['failed approach propagation', 'runtime state inheritance', 'scoped routing'],
   },
   {
-    quote: "We integrated GlassMem in a day. Our agents now share a consistent operational picture across sessions. Debugging went from painful to trivial.",
-    name: 'Ingo Marquardt',
-    role: 'CTO at NuBrain',
-    photo: '/customer-photos/ingo.jpg',
-    logo: '/customer-logos/nubrain.svg',
-    color: '#7dd3fc',
+    quote: "We realized shared memory was making our agents noisier, not smarter.",
+    role: 'AI Platform Engineer',
+    chips: ['state pollution', 'filtered propagation', 'framework coordination'],
+  },
+  {
+    quote: "The hard part was not storing state. It was deciding which agents should inherit which state.",
+    role: 'Agent Infrastructure Lead',
+    chips: ['scoped inheritance', 'cross-framework agents', 'routing policies'],
+  },
+  {
+    quote: "We were manually copying context.md between LangGraph, Claude Code, and MCP tools.",
+    role: 'AI Systems Engineer',
+    chips: ['manual synchronization', 'cross-runtime workflows', 'operational drift'],
+  },
+  {
+    quote: "Sub-agents solved our context window problem and created a state coordination problem.",
+    role: 'Staff Infrastructure Engineer',
+    chips: ['sub-agent spawning', 'runtime drift', 'inherited constraints'],
+  },
+  {
+    quote: "We stopped debugging prompts and started debugging state propagation.",
+    role: 'Agent Runtime Engineer',
+    chips: ['propagation traces', 'lineage', 'observability'],
+  },
+  {
+    quote: "Not every agent should see every decision. That was the breakthrough for us.",
+    role: 'AI Infra Team Lead',
+    chips: ['scoped propagation', 'sensitive state filtering', 'selective inheritance'],
   },
 ];
 
@@ -1205,37 +1221,32 @@ export function GlassMemPage() {
       {/* SECTION 7: CUSTOMER PROOF */}
       <section className="sec sec--alt">
         <div className="w">
-          <div className="editorial__intro reveal">
-            <span className="label">// customers</span>
+          <div className="proof__intro reveal">
+            <span className="label">// from the field</span>
+            <h2 className="proof__heading">Built from the workflows agent teams<br/>are already hacking together</h2>
+            <p className="proof__sub">GlassMem was shaped by teams already coordinating state manually across sub-agents, frameworks, and runtimes.</p>
+            <div className="proof__fws">
+              {['LangGraph', 'Claude Code', 'MCP', 'CrewAI', 'OpenAI SDK'].map(fw => (
+                <span key={fw} className="proof__fw-chip">{fw}</span>
+              ))}
+            </div>
           </div>
-          <div className="editorial reveal">
-            {REAL_CUSTOMERS.map((c, i) => (
-              <React.Fragment key={c.name}>
-                <div className="editorial__item">
-                  <blockquote className="editorial__quote">
-                    {c.quote}
-                  </blockquote>
-                  <div className="editorial__author">
-                    <img
-                      src={c.photo}
-                      alt={c.name}
-                      className="editorial__photo"
-                      onError={e => { e.target.style.display = 'none'; }}
-                    />
-                    <div className="editorial__author-info">
-                      <span className="editorial__name">{c.name}</span>
-                      <span className="editorial__role">{c.role}</span>
-                    </div>
-                    <img
-                      src={c.logo}
-                      alt={c.role}
-                      className="editorial__logo"
-                      onError={e => { e.target.style.display = 'none'; }}
-                    />
+          <div className="proof__grid reveal">
+            {TESTIMONIALS.map((t, i) => (
+              <div key={i} className="proof__card">
+                <svg className="proof__qmark" width="22" height="17" viewBox="0 0 22 17" fill="none">
+                  <path d="M0 17V10.4C0 7.6 0.666667 5.33333 2 3.6C3.33333 1.8 5.2 0.666667 7.6 0L8.6 2C7.06667 2.4 5.8 3.2 4.8 4.4C3.86667 5.6 3.4 6.93333 3.4 8.4H6.8V17H0ZM13.2 17V10.4C13.2 7.6 13.8667 5.33333 15.2 3.6C16.5333 1.8 18.4 0.666667 20.8 0L21.8 2C20.2667 2.4 19 3.2 18 4.4C17.0667 5.6 16.6 6.93333 16.6 8.4H20V17H13.2Z" fill="currentColor"/>
+                </svg>
+                <blockquote className="proof__quote">{t.quote}</blockquote>
+                <div className="proof__footer">
+                  <span className="proof__role">{t.role}</span>
+                  <div className="proof__chips">
+                    {t.chips.map(chip => (
+                      <span key={chip} className="proof__chip">{chip}</span>
+                    ))}
                   </div>
                 </div>
-                {i < REAL_CUSTOMERS.length - 1 && <div className="editorial__divider"/>}
-              </React.Fragment>
+              </div>
             ))}
           </div>
         </div>

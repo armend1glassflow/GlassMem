@@ -7277,3 +7277,125 @@ img { display: block; max-width: 100%; }
   flex: 1 !important;
 }
 
+/* ══════════════════════════════════════════════════
+   PROOF / TESTIMONIALS — 8-card grid
+══════════════════════════════════════════════════ */
+.proof__intro {
+  max-width: 680px;
+  margin-bottom: 56px;
+}
+.proof__intro .label {
+  margin-bottom: 14px;
+}
+.proof__heading {
+  font-family: var(--f-disp);
+  font-size: clamp(22px, 3vw, 34px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  line-height: 1.18;
+  color: var(--tx);
+  margin-bottom: 16px;
+}
+.proof__sub {
+  font-size: 15px;
+  line-height: 1.65;
+  color: var(--tx-2);
+  max-width: 58ch;
+  margin-bottom: 24px;
+}
+.proof__fws {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+.proof__fw-chip {
+  font-family: var(--f-code);
+  font-size: 11px;
+  color: var(--tx-3);
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--bd);
+  border-radius: 5px;
+  padding: 3px 10px;
+  letter-spacing: 0.02em;
+}
+
+/* Grid — 2 columns on desktop */
+.proof__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+@media (max-width: 720px) {
+  .proof__grid { grid-template-columns: 1fr; }
+}
+
+/* Individual card */
+.proof__card {
+  background: var(--bg-2);
+  border: 1px solid var(--bd);
+  border-radius: 12px;
+  padding: 28px 26px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  transition: border-color 0.18s, background 0.18s;
+}
+.proof__card:hover {
+  border-color: var(--bd-2);
+  background: var(--bg-3);
+}
+
+/* Quote mark icon */
+.proof__qmark {
+  color: var(--em);
+  opacity: 0.5;
+  display: block;
+  margin-bottom: 16px;
+  flex-shrink: 0;
+}
+
+/* Quote text */
+.proof__quote {
+  font-family: var(--f-body);
+  font-size: 16px;
+  line-height: 1.65;
+  color: var(--tx);
+  font-style: normal;
+  font-weight: 400;
+  flex: 1;
+  margin: 0 0 22px 0;
+  letter-spacing: -0.01em;
+}
+
+/* Footer: role + chips */
+.proof__footer {
+  border-top: 1px solid var(--bd);
+  padding-top: 16px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+.proof__role {
+  font-family: var(--f-code);
+  font-size: 11px;
+  color: var(--tx-3);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.proof__chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.proof__chip {
+  font-family: var(--f-code);
+  font-size: 10px;
+  color: rgba(110,231,183,0.65);
+  background: rgba(110,231,183,0.06);
+  border: 1px solid rgba(110,231,183,0.15);
+  border-radius: 4px;
+  padding: 2px 8px;
+  white-space: nowrap;
+  letter-spacing: 0.02em;
+}
+
