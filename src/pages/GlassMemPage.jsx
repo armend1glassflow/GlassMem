@@ -1307,7 +1307,7 @@ export function GlassMemPage() {
                 {l:'Docs',          h:'https://docs.glassmem.ai'},
                 {l:'Architecture',  h:'#architecture'},
                 {l:'Observability', h:'#observability'},
-                {l:'Contact',       h:'mailto:hello@glassmem.ai'},
+                {l:'Contact',       h:'/contact'},
                 {l:'Blog',          h:'#'},
               ].map(({ l,h }) => (
                 <a key={l} href={h} className="footer2__nav-link">{l}</a>
