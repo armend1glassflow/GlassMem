@@ -105,11 +105,18 @@ const IconDebuggingBlackBox = () => (
   </svg>
 );
 
-/* ══════════════════════════════════════════════════
+/* ── NOT icon (X mark) for notsec cards ── */
+const NotXIcon = () => (
+  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
+    <circle cx="8" cy="8" r="7.5" stroke="rgba(239,68,68,0.4)" strokeWidth="1"/>
+    <line x1="5" y1="5" x2="11" y2="11" stroke="#ef4444" strokeWidth="1.5" strokeLinecap="round"/>
+    <line x1="11" y1="5" x2="5" y2="11" stroke="#ef4444" strokeWidth="1.5" strokeLinecap="round"/>
+  </svg>
+);
+
+/* ════════════════════════════════════════════════════
    HERO VISUALIZATION — billing migration freeze scenario
 ════════════════════════════════════════════════════ */
-
-const HERO_PHASES = ['write', 'route', 'distribute', 'behavior', 'pause'];
 
 const HERO_AGENTS = [
   { name: 'LangGraph Planner',         pip: '#fb923c', status: 'source',   reason: '',                          framework: 'LangGraph',  logoType: 'langgraph' },
@@ -118,6 +125,7 @@ const HERO_AGENTS = [
   { name: 'CrewAI Billing Sub-Agent',  pip: '#a78bfa', status: 'inherited',reason: 'spawned under billing task',framework: 'CrewAI',     logoType: 'crewai' },
   { name: 'OpenAI Debug Agent',        pip: '#6ee7b7', status: 'allowed',  reason: 'debugging billing incident',framework: 'OpenAI SDK', logoType: 'openai' },
   { name: 'Customer Support Agent',    pip: '#94a3b8', status: 'blocked',  reason: 'out of scope',             framework: '',           logoType: 'support' },
+  { name: 'External MCP Tool',         pip: '#ef4444', status: 'blocked',  reason: 'sensitive constraint',     framework: 'MCP',        logoType: 'support' },
 ];
 
 const STATUS_COLORS = {
@@ -237,19 +245,24 @@ const ContextFlowViz = () => {
         <div className={`cfroute__behavior${showBehavior ? ' cfroute__behavior--on' : ''}`}>
           <div className="cfroute__behavior-row cfroute__behavior-row--before">
             <span className="cfroute__behavior-label cfroute__behavior-label--before">Before</span>
-            <span className="cfroute__behavior-text">"I'll refactor billing writes now."</span>
+            <span className="cfroute__behavior-text">"I'll refactor billing writes."</span>
           </div>
           <div className="cfroute__behavior-arrow">→</div>
           <div className="cfroute__behavior-row cfroute__behavior-row--after">
             <span className="cfroute__behavior-label cfroute__behavior-label--after">After</span>
-            <span className="cfroute__behavior-text cfroute__behavior-text--after">"I'll prepare a read-only analysis and defer writes until the freeze ends."</span>
+            <span className="cfroute__behavior-text cfroute__behavior-text--after">"I'll prepare a read-only analysis until the freeze ends."</span>
           </div>
+        </div>
+
+        {/* Hot-path chip */}
+        <div className="cfroute__hotpath-chip">
+          Designed for hot-path agent loops
         </div>
 
         {/* Footer */}
         <div className={`cfroute__footer${showBehavior ? ' cfroute__footer--done' : ''}`}>
           {showBehavior
-            ? <><span className="cfroute__footer-check">✓</span>3 routed · 2 inherited · 1 blocked · 0 manual steps</>
+            ? <><span className="cfroute__footer-check">✓</span>3 routed · 2 inherited · 2 blocked · 0 manual steps</>
             : phase === 'write'    ? 'waiting for state update...'
             : phase === 'route'   ? 'routing to GlassMem engine...'
             : `evaluating ${ROUTE_AGENTS.length} agents...`
@@ -260,7 +273,7 @@ const ContextFlowViz = () => {
   );
 };
 
-/* ══════════════════════════════════════════════════
+/* ════════════════════════════════════════════════════
    INTERACTIVE LIVE DEMO — Section 3
 ════════════════════════════════════════════════════ */
 
@@ -474,8 +487,8 @@ const LiveDemo = () => {
   );
 };
 
-/* ══════════════════════════════════════════════════
-   COMPARISON TABLE — Section 2
+/* ════════════════════════════════════════════════════
+   COMPARISON TABLE
 ════════════════════════════════════════════════════ */
 
 const COMPARE_ROWS = [
@@ -537,8 +550,8 @@ const ComparisonTable = () => (
   </div>
 );
 
-/* ══════════════════════════════════════════════════
-   OBSERVABILITY PANEL — Section 6
+/* ════════════════════════════════════════════════════
+   OBSERVABILITY PANEL
 ════════════════════════════════════════════════════ */
 
 const ObsPanel = () => (
@@ -593,7 +606,7 @@ const ObsPanel = () => (
   </div>
 );
 
-/* ══════════════════════════════════════════════════
+/* ════════════════════════════════════════════════════
    CAPABILITY MOCKUPS
 ════════════════════════════════════════════════════ */
 
@@ -736,8 +749,8 @@ const MockContextLineage = () => (
   </div>
 );
 
-/* ══════════════════════════════════════════════════
-   BENTO CAPABILITIES GRID — Section 4
+/* ════════════════════════════════════════════════════
+   BENTO CAPABILITIES GRID
 ════════════════════════════════════════════════════ */
 const CAPABILITIES = [
   {
@@ -784,8 +797,8 @@ const CAPABILITIES = [
   },
 ];
 
-/* ══════════════════════════════════════════════════
-   ARCHITECTURE FLOW DIAGRAM — Section 5
+/* ════════════════════════════════════════════════════
+   ARCHITECTURE FLOW DIAGRAM
 ════════════════════════════════════════════════════ */
 
 const ArchitectureFlow = () => (
@@ -854,56 +867,29 @@ const ArchitectureFlow = () => (
       </div>
     </div>
 
-    {/* Explanations */}
+    {/* Architecture notes */}
     <div className="archflow__notes">
       {[
-        'Agents write constraints, failures, decisions, and runtime updates as typed state events.',
-        'GlassMem evaluates each event by scope, agent role, task, sensitivity, freshness, and policy.',
-        'Agents receive selected state slices, not the full system memory.',
-        'Sub-agents inherit scoped parent-task state when spawned.',
-        'Every routing decision is recorded: what was routed, blocked, inherited, expired, and consumed.',
+        { title: 'Where state lives', text: 'GlassMem supports local, self-hosted, or managed deployment models. You choose where operational state lives.' },
+        { title: 'How agents connect', text: 'MCP, SDK, API. Framework-agnostic by design.' },
+        { title: 'How routing works', text: 'GlassMem evaluates scope, task, framework, sensitivity, freshness, and policy before injecting state.' },
+        { title: 'Latency philosophy', text: 'Designed for hot-path agent loops. Routing stays lightweight, scoped, and cacheable. No latency numbers promised — architecture is designed for low-overhead injection.' },
+        { title: 'Preventing garbage state', text: 'Temporary state expires. Superseded state stops routing. Invalid state can be reviewed and blocked.' },
+        { title: 'Observability', text: 'Every routing decision emits traceable events exportable into Langfuse, Arize, Helicone, or OpenTelemetry-compatible systems.' },
       ].map((note, i) => (
         <div key={i} className="archflow__note">
           <span className="archflow__note-num">0{i + 1}</span>
-          <span className="archflow__note-text">{note}</span>
+          <div>
+            <span className="archflow__note-title">{note.title}</span>
+            <span className="archflow__note-text">{note.text}</span>
+          </div>
         </div>
       ))}
     </div>
   </div>
 );
 
-/* ══════════════════════════════════════════════════
-   CUSTOMER PROOF — Section 7
-════════════════════════════════════════════════════ */
-
-const REAL_CUSTOMERS = [
-  {
-    quote: "We already had memory. The problem was keeping temporary constraints synchronized across agents. Sub-agent handoffs were the worst.",
-    name: 'Armend Avdijaj',
-    role: 'CEO at GlassFlow',
-    photo: '/customer-photos/armend.jpg',
-    logo: '/customer-logos/glassflow.svg',
-    color: '#6ee7b7',
-  },
-  {
-    quote: "Our sub-agents kept retrying approaches others had already rejected. Shared memory was making things noisier, not smarter.",
-    name: 'Andres Tapia',
-    role: 'CEO at Restack',
-    photo: '/customer-photos/andres.jpg',
-    logo: '/customer-logos/restack.svg',
-    color: '#a78bfa',
-  },
-  {
-    quote: "We were copying context.md between agents manually. The hard part was not storage. It was deciding what each agent should inherit.",
-    name: 'Ingo Marquardt',
-    role: 'CTO at NuBrain',
-    photo: '/customer-photos/ingo.jpg',
-    logo: '/customer-logos/nubrain.svg',
-    color: '#7dd3fc',
-  },
-];
-
-/* ══════════════════════════════════════════════════
+/* ════════════════════════════════════════════════════
    LOGOS
 ════════════════════════════════════════════════════ */
 const LOGOS = [
@@ -959,9 +945,11 @@ export function GlassMemPage() {
           <a href="/" className="nav__logo"><Logo size={24}/><span className="nav__wordmark">GlassMem</span></a>
           <div className="nav__links">
             <a href="#problem"       className="nav__link">Problem</a>
+            <a href="#dx"            className="nav__link">DX</a>
             <a href="#demo"          className="nav__link">Demo</a>
             <a href="#architecture"  className="nav__link">Architecture</a>
             <a href="#observability" className="nav__link">Observability</a>
+            <a href="https://docs.glassmem.ai" className="nav__link">Docs</a>
           </div>
           <div className="nav__right">
             <a href="/app"    className="btn btn--ghost btn--sm">Log in</a>
@@ -970,7 +958,7 @@ export function GlassMemPage() {
           <button className="nav__mob-toggle" onClick={() => setMobOpen(o => !o)} aria-label="Menu">{mobOpen ? '✕' : '☰'}</button>
         </div>
         <div className={`nav__mob-menu${mobOpen ? ' open' : ''}`}>
-          {['Problem','Demo','Architecture','Observability'].map(l => (
+          {['Problem','DX','Demo','Architecture','Observability','Docs'].map(l => (
             <a key={l} href={`#${l.toLowerCase()}`} className="nav__mob-link" onClick={() => setMobOpen(false)}>{l}</a>
           ))}
         </div>
@@ -990,12 +978,14 @@ export function GlassMemPage() {
                 Context orchestration<br/>for all your agents
               </h1>
               <p className="body-lg hero__sub enter-3">
-                GlassMem keeps agents, sub-agents, frameworks, tools, and sessions aligned with scoped operational state. No blindly shared memory.
+                GlassMem coordinates scoped operational state across agents, sub-agents, frameworks, and tools. No blindly shared memory.
               </p>
-              <div className="hero__ctas enter-4">
-                <a href="/signup" className="btn btn--em btn--lg">Get started</a>
-                <a href="#demo"   className="btn btn--ghost btn--lg">See live demo</a>
-              </div>
+              <p className="hero__differentiator enter-3">
+                Not a vector DB wrapper. Not another memory bucket. A control plane for agent state.
+              </p>
+              <p className="hero__pain enter-3">
+                Sub-agents, Claude Code, and internal agents silently drift out of sync every day.
+              </p>
               <div className="hero__trust enter-4">
                 Scoped. Traceable. Temporal. Cross-framework.
               </div>
@@ -1012,6 +1002,10 @@ export function GlassMemPage() {
                   </li>
                 ))}
               </ul>
+              <div className="hero__ctas enter-4">
+                <a href="/signup" className="btn btn--em btn--lg">Get started</a>
+                <a href="#dx"   className="btn btn--ghost btn--lg">See the DX</a>
+              </div>
             </div>
             <div className="hero__viz-col enter-4">
               <ContextFlowViz/>
@@ -1020,8 +1014,99 @@ export function GlassMemPage() {
         </div>
       </section>
 
-      {/* SECTION 1: ANTI-MEMORY POSITIONING */}
-      <section id="problem" className="sec sec--alt">
+      {/* SECTION: WHAT GLASSMEM IS NOT */}
+      <section id="not-memory" className="sec">
+        <div className="w">
+          <div className="notsec reveal">
+            <div className="notsec__header">
+              <span className="label">// positioning</span>
+              <h2 className="h2">What GlassMem is NOT</h2>
+            </div>
+            <div className="notsec__grid">
+              {[
+                {
+                  title: 'Not a vector DB wrapper',
+                  body: 'GlassMem is not trying to retrieve the most similar chunk. It decides which operational state each agent is allowed to see.',
+                },
+                {
+                  title: 'Not shared memory',
+                  body: 'Not every agent should inherit every decision. Uncontrolled memory creates state pollution.',
+                },
+                {
+                  title: 'Not framework-specific memory',
+                  body: 'Framework-native memory works inside one runtime. GlassMem coordinates state across frameworks and tools.',
+                },
+                {
+                  title: 'Not another giant prompt',
+                  body: 'Agents receive selected state slices, not the full history of the system.',
+                },
+              ].map(card => (
+                <div key={card.title} className="notsec__card">
+                  <div className="notsec__card-icon"><NotXIcon /></div>
+                  <p className="notsec__card-title">{card.title}</p>
+                  <p className="notsec__card-body">{card.body}</p>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION: SHOW ME THE DX */}
+      <section id="dx" className="sec sec--alt">
+        <div className="w">
+          <div className="fail__intro reveal">
+            <div>
+              <span className="label">Developer experience</span>
+              <h2 className="h2">Show me the DX</h2>
+            </div>
+            <p className="body-lg" style={{ maxWidth: '44ch' }}>
+              Start with one workflow. Write scoped state. Let GlassMem decide what each agent receives.
+            </p>
+          </div>
+          <div className="dxsec reveal">
+            <div className="dxsec__block">
+              <div className="dxsec__block-label">Write state</div>
+              <div className="dxsec__code">
+                <span className="dxsec__kw">await</span> glassmem.state.<span className="dxsec__fn">write</span>({'({'}<br/>
+                {'  '}<span className="dxsec__key">scope</span>: <span className="dxsec__str">"project.billing"</span>,<br/>
+                {'  '}<span className="dxsec__key">type</span>: <span className="dxsec__str">"temporary_constraint"</span>,<br/>
+                {'  '}<span className="dxsec__key">content</span>: <span className="dxsec__str">"Do not modify billing until Stripe migration completes"</span>,<br/>
+                {'  '}<span className="dxsec__key">expiresAt</span>: <span className="dxsec__str">"2026-06-14T18:00:00Z"</span>,<br/>
+                {'  '}<span className="dxsec__key">sensitivity</span>: <span className="dxsec__str">"internal"</span><br/>
+                {'})'}<br/>
+                <br/>
+                <span className="dxsec__kw">const</span> <span className="dxsec__key">state</span> = <span className="dxsec__kw">await</span> glassmem.state.<span className="dxsec__fn">forAgent</span>({'({'}<br/>
+                {'  '}<span className="dxsec__key">agent</span>: <span className="dxsec__str">"claude-code"</span>,<br/>
+                {'  '}<span className="dxsec__key">framework</span>: <span className="dxsec__str">"mcp"</span>,<br/>
+                {'  '}<span className="dxsec__key">task</span>: <span className="dxsec__str">"refactor billing sync"</span><br/>
+                {'})'}
+              </div>
+            </div>
+            <div className="dxsec__block">
+              <div className="dxsec__block-label">Receive scoped state</div>
+              <div className="dxsec__code">
+                {'{'}<br/>
+                {'  '}<span className="dxsec__key">allowed</span>: [<br/>
+                {'    '}<span className="dxsec__str">"billing freeze until Friday"</span>,<br/>
+                {'    '}<span className="dxsec__str">"Redis cache caused stale billing reads"</span>,<br/>
+                {'    '}<span className="dxsec__str">"Use Postgres row-level locking"</span><br/>
+                {'  '}],<br/>
+                {'  '}<span className="dxsec__key">blocked</span>: [<br/>
+                {'    '}<span className="dxsec__str">"customer PII"</span>,<br/>
+                {'    '}<span className="dxsec__str">"support-only escalation notes"</span><br/>
+                {'  '}],<br/>
+                {'  '}<span className="dxsec__key">traceId</span>: <span className="dxsec__str">"ctx_trace_7f3a"</span><br/>
+                {'}'}
+              </div>
+            </div>
+          </div>
+          <p className="dxsec__tagline reveal">MCP · SDK · REST API — framework-agnostic by design.</p>
+        </div>
+      </section>
+
+      {/* SECTION: ANTI-MEMORY POSITIONING */}
+      <section id="problem" className="sec">
         <div className="w">
           <div className="antimem reveal">
             <div className="antimem__left">
@@ -1031,7 +1116,7 @@ export function GlassMemPage() {
                 Agent engineers already know the problem is not storing more state. It is controlling where operational state flows.
               </p>
               <p className="antimem__keyline">
-                GlassMem is not a shared memory bucket.<br/>It is a context control plane.
+                GlassMem is not a shared memory bucket.<br/>It is a control plane for agent state.
               </p>
             </div>
             <div className="antimem__cards">
@@ -1043,12 +1128,12 @@ export function GlassMemPage() {
                 },
                 {
                   title: 'Broken handoffs',
-                  desc: 'Sub-agents and external tools lose critical constraints when work moves between runtimes.',
+                  desc: 'Sub-agents and tools lose critical constraints when work moves between runtimes.',
                   Icon: IconBrokenHandoff,
                 },
                 {
                   title: 'Stale propagation',
-                  desc: 'Expired decisions and temporary constraints keep leaking into future runs.',
+                  desc: 'Expired decisions and temporary constraints silently spread.',
                   Icon: IconStalePropagation,
                 },
                 {
@@ -1070,8 +1155,8 @@ export function GlassMemPage() {
         </div>
       </section>
 
-      {/* SECTION 2: WHY CONTEXT BREAKS */}
-      <section className="sec">
+      {/* SECTION: WHY STATE BREAKS */}
+      <section className="sec sec--alt">
         <div className="w">
           <div className="fail__intro reveal">
             <div>
@@ -1089,8 +1174,8 @@ export function GlassMemPage() {
         </div>
       </section>
 
-      {/* SECTION 3: LIVE DEMO */}
-      <section id="demo" className="sec sec--alt">
+      {/* SECTION: LIVE DEMO */}
+      <section id="demo" className="sec">
         <div className="w">
           <div className="fail__intro reveal">
             <div>
@@ -1105,11 +1190,52 @@ export function GlassMemPage() {
         </div>
       </section>
 
-      {/* SECTION 4: CAPABILITIES */}
+      {/* SECTION: START WITH ONE PAINFUL WORKFLOW */}
+      <section id="workflows" className="sec sec--alt">
+        <div className="w">
+          <div className="fail__intro reveal">
+            <div>
+              <span className="label">Use cases</span>
+              <h2 className="h2">Start with one painful workflow</h2>
+            </div>
+            <p className="body-lg" style={{ maxWidth: '44ch' }}>
+              You do not need to migrate your whole agent stack. Start with the workflow where state drift already hurts.
+            </p>
+          </div>
+          <div className="workflows__grid reveal">
+            {[
+              {
+                title: 'Billing freezes',
+                body: 'Keep migration constraints synchronized across planners, coders, debuggers, and sub-agents.',
+              },
+              {
+                title: 'Failed approach tracking',
+                body: 'Prevent agents from retrying Redis, Prisma, GraphQL, or migration strategies that already failed.',
+              },
+              {
+                title: 'Incident coordination',
+                body: 'Route incident learnings to debugging agents without exposing unrelated customer state.',
+              },
+              {
+                title: 'Sub-agent handoffs',
+                body: 'Pass selected parent-task state into spawned agents without copying context.md.',
+              },
+            ].map(card => (
+              <div key={card.title} className="workflows__card">
+                <span className="workflows__card-dot"/>
+                <p className="workflows__card-title">{card.title}</p>
+                <p className="workflows__card-body">{card.body}</p>
+              </div>
+            ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION: CAPABILITIES */}
       <section id="capabilities" className="sec">
         <div className="w">
           <div className="feat__intro reveal">
-            <span className="label">Capabilities</span>
+            <span className="label">Core primitives</span>
             <h2 className="h2">Controlled state propagation<br/>for agent systems</h2>
             <p className="body-lg" style={{ maxWidth:'48ch', marginTop:14 }}>
               Six primitives that solve real coordination failures in distributed agent systems.
@@ -1122,11 +1248,11 @@ export function GlassMemPage() {
                 <p className="bento__title">{cap.title}</p>
                 <div className="bento__ba">
                   <div className="bento__ba-row bento__ba-row--before">
-                    <span className="bento__ba-label">Before</span>
+                    <span className="bento__ba-label">Before GlassMem:</span>
                     <span className="bento__ba-text">{cap.before}</span>
                   </div>
                   <div className="bento__ba-row bento__ba-row--after">
-                    <span className="bento__ba-label bento__ba-label--after">With GlassMem</span>
+                    <span className="bento__ba-label bento__ba-label--after">With GlassMem:</span>
                     <span className="bento__ba-text bento__ba-text--after">{cap.after}</span>
                   </div>
                 </div>
@@ -1136,7 +1262,7 @@ export function GlassMemPage() {
         </div>
       </section>
 
-      {/* SECTION 5: ARCHITECTURE */}
+      {/* SECTION: ARCHITECTURE */}
       <section id="architecture" className="sec sec--alt">
         <div className="w">
           <div className="fail__intro reveal" style={{ marginBottom: 56 }}>
@@ -1154,7 +1280,7 @@ export function GlassMemPage() {
         </div>
       </section>
 
-      {/* SECTION 6: OBSERVABILITY */}
+      {/* SECTION: OBSERVABILITY */}
       <section id="observability" className="sec">
         <div className="w">
           <div className="fail__intro reveal">
@@ -1192,7 +1318,7 @@ export function GlassMemPage() {
                 ))}
               </div>
               <p className="obssec__copy">
-                Answer the question every agent engineer eventually asks: what state did this agent have when it made that decision?
+                What state did this agent have when it made that decision?
               </p>
               <p className="obssec__integrations">
                 Export traces to Langfuse, Arize, Helicone, or OpenTelemetry-compatible pipelines.
@@ -1202,41 +1328,77 @@ export function GlassMemPage() {
         </div>
       </section>
 
-      {/* SECTION 7: CUSTOMER PROOF */}
+      {/* SECTION: FIELD QUOTES */}
       <section className="sec sec--alt">
         <div className="w">
-          <div className="editorial__intro reveal">
-            <span className="label">// customers</span>
+          <div className="field__intro reveal">
+            <span className="label">// from the field</span>
+            <h2 className="h2">What we heard from agent engineers</h2>
+            <p className="body-lg" style={{ maxWidth: '52ch', marginTop: 14 }}>
+              Patterns from teams already coordinating state manually across context.md, sub-agents, frameworks, and tools.
+            </p>
           </div>
-          <div className="editorial reveal">
-            {REAL_CUSTOMERS.map((c, i) => (
-              <React.Fragment key={c.name}>
-                <div className="editorial__item">
-                  <blockquote className="editorial__quote">
-                    {c.quote}
-                  </blockquote>
-                  <div className="editorial__author">
-                    <img
-                      src={c.photo}
-                      alt={c.name}
-                      className="editorial__photo"
-                      onError={e => { e.target.style.display = 'none'; }}
-                    />
-                    <div className="editorial__author-info">
-                      <span className="editorial__name">{c.name}</span>
-                      <span className="editorial__role">{c.role}</span>
-                    </div>
-                    <img
-                      src={c.logo}
-                      alt={c.role}
-                      className="editorial__logo"
-                      onError={e => { e.target.style.display = 'none'; }}
-                    />
-                  </div>
+          <div className="field__grid reveal">
+            {[
+              {
+                quote: "We already had memory. The problem was keeping temporary constraints synchronized across agents.",
+                role: "Founding Engineer building agents",
+              },
+              {
+                quote: "Our sub-agents solved the context window problem and created a handoff problem.",
+                role: "Multi-agent Systems Engineer",
+              },
+              {
+                quote: "We were copying context.md between LangGraph, Claude Code, and MCP tools.",
+                role: "AI Platform Engineer",
+              },
+              {
+                quote: "Shared memory made agents noisier. We needed scoped propagation.",
+                role: "Agent Infrastructure Lead",
+              },
+              {
+                quote: "The hard part was not storage. It was deciding what each agent should inherit.",
+                role: "Staff Engineer",
+              },
+            ].map((q, i) => (
+              <div key={i} className="field__card">
+                <div className="field__quote-icon">
+                  <svg width="20" height="16" viewBox="0 0 20 16" fill="none">
+                    <path d="M0 16V9.6C0 4.267 2.933 1.067 8.8 0L9.6 1.6C7.2 2.267 5.6 3.467 4.8 5.2C4 6.933 3.733 8.667 4 10.4H8V16H0ZM12 16V9.6C12 4.267 14.933 1.067 20.8 0L21.6 1.6C19.2 2.267 17.6 3.467 16.8 5.2C16 6.933 15.733 8.667 16 10.4H20V16H12Z" fill="#6ee7b7" fillOpacity="0.4"/>
+                  </svg>
                 </div>
-                {i < REAL_CUSTOMERS.length - 1 && <div className="editorial__divider"/>}
-              </React.Fragment>
+                <p className="field__card-quote">{q.quote}</p>
+                <p className="field__card-role">{q.role}</p>
+              </div>
             ))}
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION: BUILT FOR EARLY TEAMS */}
+      <section className="sec">
+        <div className="w">
+          <div className="earlyteam reveal">
+            <span className="label">Adoption</span>
+            <h2 className="h2 earlyteam__h2">Built for early teams, not massive migrations</h2>
+            <p className="body-lg earlyteam__body">
+              GlassMem is designed to be adopted incrementally. Start with one source of operational state, one workflow, and one agent handoff. Expand when coordination becomes painful.
+            </p>
+            <ul className="earlyteam__list">
+              {[
+                'no full rewrite',
+                'no framework lock-in',
+                'works alongside existing memory',
+                'compatible with context.md workflows',
+                'built for multi-agent systems already emerging',
+              ].map(item => (
+                <li key={item} className="earlyteam__item">
+                  <span className="earlyteam__check">✓</span>
+                  {item}
+                </li>
+              ))}
+            </ul>
+            <a href="/signup" className="btn btn--em btn--lg earlyteam__cta">Get started</a>
           </div>
         </div>
       </section>

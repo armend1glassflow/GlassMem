@@ -7399,3 +7399,429 @@ img { display: block; max-width: 100%; }
   letter-spacing: 0.02em;
 }
 
+/* ══════════════════════════════════════════════════
+   HERO ADDITIONS — differentiator line, pain line
+══════════════════════════════════════════════════ */
+.hero__differentiator {
+  font-family: var(--f-code);
+  font-size: 13px;
+  font-weight: 500;
+  color: var(--tx-2);
+  letter-spacing: 0.01em;
+  margin: 0 0 10px 0;
+  max-width: 52ch;
+}
+.hero__pain {
+  font-size: 13px;
+  color: var(--tx-3);
+  margin: 0 0 20px 0;
+  max-width: 52ch;
+  line-height: 1.5;
+}
+.hero__trust {
+  font-family: var(--f-code);
+  font-size: 12px;
+  color: var(--tx-3);
+  letter-spacing: 0.06em;
+  margin-bottom: 18px;
+}
+.hero__pills {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  margin: 0 0 28px 0;
+}
+.hero__pill {
+  display: flex;
+  align-items: flex-start;
+  gap: 9px;
+  font-size: 14px;
+  line-height: 1.5;
+  color: var(--tx-2);
+}
+.hero__pill-check {
+  color: var(--em);
+  font-size: 12px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  font-weight: 600;
+}
+
+/* ── Context flow viz: hot-path chip ── */
+.cfroute__hotpath-chip {
+  font-family: var(--f-code);
+  font-size: 10px;
+  color: var(--tx-3);
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--bd);
+  border-radius: 4px;
+  padding: 3px 9px;
+  letter-spacing: 0.04em;
+  align-self: flex-start;
+  margin: 2px 0;
+}
+
+/* ══════════════════════════════════════════════════
+   WHAT GLASSMEM IS NOT — notsec__*
+══════════════════════════════════════════════════ */
+.notsec {
+  display: flex;
+  flex-direction: column;
+  gap: 48px;
+}
+.notsec__header {
+  max-width: 52ch;
+}
+.notsec__header .label {
+  margin-bottom: 12px;
+}
+.notsec__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 12px;
+}
+@media (max-width: 700px) {
+  .notsec__grid { grid-template-columns: 1fr; }
+}
+.notsec__card {
+  background: var(--bg-2);
+  border: 1px solid var(--bd-2);
+  border-radius: var(--r-lg);
+  padding: 24px 24px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: background 0.18s, border-color 0.18s;
+}
+.notsec__card:hover {
+  background: var(--bg-3);
+  border-color: var(--bd-3);
+}
+.notsec__card-icon {
+  display: flex;
+  align-items: center;
+  width: 28px;
+  height: 28px;
+}
+.notsec__card-title {
+  font-family: var(--f-disp);
+  font-size: 15px;
+  font-weight: 700;
+  color: var(--tx);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin: 0;
+}
+.notsec__card-body {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--tx-2);
+  margin: 0;
+}
+
+/* ══════════════════════════════════════════════════
+   DX SECTION — dxsec__*
+══════════════════════════════════════════════════ */
+.dxsec {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 20px;
+}
+@media (max-width: 768px) {
+  .dxsec { grid-template-columns: 1fr; }
+}
+.dxsec__block {
+  background: #0c0d11;
+  border: 1px solid var(--bd-2);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+.dxsec__block-label {
+  font-family: var(--f-code);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tx-3);
+  padding: 10px 16px 9px;
+  background: rgba(255,255,255,0.025);
+  border-bottom: 1px solid var(--bd);
+}
+.dxsec__code {
+  font-family: var(--f-code);
+  font-size: 12.5px;
+  line-height: 1.75;
+  color: rgba(255,255,255,0.65);
+  padding: 18px 20px;
+  white-space: pre;
+  overflow-x: auto;
+}
+/* Syntax token colors */
+.dxsec__kw   { color: #a78bfa; } /* keywords: await, const */
+.dxsec__fn   { color: #7dd3fc; } /* function names */
+.dxsec__str  { color: #6ee7b7; } /* strings */
+.dxsec__key  { color: #7dd3fc; } /* object keys */
+.dxsec__comment { color: var(--tx-3); }
+
+.dxsec__tagline {
+  font-family: var(--f-code);
+  font-size: 13px;
+  color: var(--tx-3);
+  text-align: center;
+  margin-top: 8px;
+  letter-spacing: 0.03em;
+}
+
+/* ══════════════════════════════════════════════════
+   WORKFLOW CARDS — workflows__*
+══════════════════════════════════════════════════ */
+.workflows__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+@media (max-width: 700px) {
+  .workflows__grid { grid-template-columns: 1fr; }
+}
+.workflows__card {
+  background: var(--bg-2);
+  border: 1px solid var(--bd-2);
+  border-radius: var(--r-lg);
+  padding: 28px 26px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  transition: background 0.18s, border-color 0.18s;
+}
+.workflows__card:hover {
+  background: var(--bg-3);
+  border-color: var(--bd-3);
+}
+.workflows__card-dot {
+  display: inline-block;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--em);
+  flex-shrink: 0;
+  align-self: flex-start;
+}
+.workflows__card-title {
+  font-family: var(--f-disp);
+  font-size: 16px;
+  font-weight: 700;
+  color: var(--tx);
+  letter-spacing: -0.02em;
+  line-height: 1.2;
+  margin: 0;
+}
+.workflows__card-body {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--tx-2);
+  margin: 0;
+}
+
+/* ══════════════════════════════════════════════════
+   FIELD QUOTES — field__*
+══════════════════════════════════════════════════ */
+.field__intro {
+  margin-bottom: 48px;
+}
+.field__intro .label {
+  margin-bottom: 12px;
+}
+.field__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 12px;
+}
+@media (max-width: 900px) {
+  .field__grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 600px) {
+  .field__grid { grid-template-columns: 1fr; }
+}
+.field__card {
+  background: var(--bg-2);
+  border: 1px solid var(--bd-2);
+  border-radius: var(--r-lg);
+  padding: 24px 22px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  transition: background 0.18s, border-color 0.18s;
+}
+.field__card:hover {
+  background: var(--bg-3);
+  border-color: var(--bd-3);
+}
+.field__quote-icon {
+  flex-shrink: 0;
+}
+.field__card-quote {
+  font-size: 14px;
+  line-height: 1.7;
+  color: var(--tx);
+  flex: 1;
+  margin: 0;
+  font-style: italic;
+}
+.field__card-role {
+  font-family: var(--f-code);
+  font-size: 11px;
+  color: var(--tx-3);
+  letter-spacing: 0.04em;
+  margin: 0;
+  padding-top: 10px;
+  border-top: 1px solid var(--bd);
+}
+
+/* ══════════════════════════════════════════════════
+   EARLY TEAM SECTION — earlyteam__*
+══════════════════════════════════════════════════ */
+.earlyteam {
+  max-width: 600px;
+  margin: 0 auto;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 24px;
+  padding: 16px 0;
+}
+.earlyteam .label {
+  margin-bottom: 0;
+}
+.earlyteam__h2 {
+  margin: 0;
+}
+.earlyteam__body {
+  max-width: 52ch;
+  margin: 0;
+}
+.earlyteam__list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  text-align: left;
+  align-self: stretch;
+  max-width: 420px;
+  width: 100%;
+  margin: 0 auto;
+}
+.earlyteam__item {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 15px;
+  line-height: 1.5;
+  color: var(--tx-2);
+}
+.earlyteam__check {
+  color: var(--em);
+  font-size: 13px;
+  flex-shrink: 0;
+  margin-top: 2px;
+  font-weight: 600;
+}
+.earlyteam__cta {
+  margin-top: 8px;
+}
+
+/* ══════════════════════════════════════════════════
+   ARCHFLOW NOTES — title + text
+══════════════════════════════════════════════════ */
+.archflow__note {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+}
+.archflow__note-title {
+  display: block;
+  font-family: var(--f-disp);
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--tx);
+  letter-spacing: -0.01em;
+  margin-bottom: 3px;
+}
+.archflow__note-text {
+  display: block;
+  font-size: 13px;
+  line-height: 1.6;
+  color: var(--tx-2);
+}
+
+/* ══════════════════════════════════════════════════
+   DEMO TRIGGER FRAMEWORK BADGE
+══════════════════════════════════════════════════ */
+.demo__trigger-fw {
+  font-family: var(--f-code);
+  font-size: 10px;
+  color: var(--tx-3);
+  background: rgba(255,255,255,0.04);
+  border: 1px solid var(--bd);
+  border-radius: 4px;
+  padding: 2px 7px;
+  flex-shrink: 0;
+}
+.demo__agent-fw-badge {
+  font-family: var(--f-code);
+  font-size: 9px;
+  color: var(--tx-3);
+  background: rgba(255,255,255,0.03);
+  border: 1px solid var(--bd);
+  border-radius: 3px;
+  padding: 1px 5px;
+  flex-shrink: 0;
+}
+
+/* ══════════════════════════════════════════════════
+   INTEG STRIP (logos below CTA)
+══════════════════════════════════════════════════ */
+.integ {
+  background-color: var(--bg-1);
+  background-image: var(--dots);
+  background-size: var(--dot-sz);
+  border-top: 1px solid var(--bd);
+  border-bottom: 1px solid var(--bd);
+  padding: 28px 0;
+  overflow: hidden;
+}
+.integ__inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
+  padding: 0 48px;
+  display: flex;
+  align-items: center;
+  gap: 32px;
+}
+.integ__label {
+  font-size: 13px;
+  color: var(--tx-3);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+@media (max-width: 768px) {
+  .integ__inner { padding: 0 24px; gap: 16px; }
+  .integ__label { display: none; }
+}
+
+/* ══════════════════════════════════════════════════
+   OBSSEC copy line update
+══════════════════════════════════════════════════ */
+.obssec__copy {
+  font-family: var(--f-code);
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--em);
+  margin-bottom: 16px;
+  padding: 10px 14px;
+  background: rgba(110,231,183,0.04);
+  border: 1px solid rgba(110,231,183,0.14);
+  border-radius: 7px;
+}
+
