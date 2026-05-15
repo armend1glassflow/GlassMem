@@ -8419,41 +8419,126 @@ img { display: block; max-width: 100%; }
    MOBILE HERO VIZ — keep text readable at small width
 ══════════════════════════════════════════════════ */
 @media (max-width: 600px) {
-  /* Reduce total height so it fits without scrolling inside the viz */
-  .cfroute__body { height: 580px !important; padding: 12px 10px !important; }
+  /* Total container */
+  .cfroute__body {
+    height: 600px !important;
+    padding: 10px 8px !important;
+    gap: 0 !important;
+  }
 
-  /* Chrome title — truncate gracefully */
+  /* ── Chrome bar ── */
+  .cfroute__chrome { padding: 7px 10px !important; }
   .cfroute__chrome-title {
     font-size: 9px !important;
     overflow: hidden !important;
     text-overflow: ellipsis !important;
     white-space: nowrap !important;
-    max-width: 160px !important;
+    max-width: 150px !important;
+    display: block !important;
   }
 
-  /* Source card — make text fit */
-  .cfroute__source-card { height: 96px !important; max-height: 96px !important; padding: 8px 10px !important; }
-  .cfroute__source-agent { font-size: 12px !important; }
-  .cfroute__source-text { font-size: 11px !important; line-height: 1.4 !important; }
-  .cfroute__source-scope { font-size: 9px !important; }
-  .cfroute__source-verb { font-size: 9px !important; }
+  /* ── Source card ── */
+  .cfroute__source-card {
+    height: 110px !important;
+    max-height: 110px !important;
+    min-height: unset !important;
+    padding: 8px 8px !important;
+    overflow: hidden !important;
+  }
+  /* Source header row: hide "writes constraint" label, only show pip + agent name */
+  .cfroute__source-header {
+    flex-wrap: nowrap !important;
+    overflow: hidden !important;
+    gap: 5px !important;
+  }
+  .cfroute__source-verb { display: none !important; }
+  .cfroute__source-agent {
+    font-size: 12px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    flex: 1 !important;
+    min-width: 0 !important;
+  }
+  /* Source text body */
+  .cfroute__source-text {
+    font-size: 10px !important;
+    line-height: 1.4 !important;
+    overflow: hidden !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+    margin: 4px 0 !important;
+  }
+  .cfroute__source-scope {
+    font-size: 9px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
 
-  /* Agent rows */
-  .cfroute__agents { height: 204px !important; max-height: 204px !important; }
-  .cfroute__agent { height: 48px !important; max-height: 48px !important; }
-  .cfroute__agent-name { font-size: 11px !important; }
-  .cfroute__route-badge { font-size: 10px !important; padding: 2px 7px !important; }
-
-  /* Hub */
+  /* ── Connector / hub ── */
+  .cfroute__connector { padding: 4px 0 !important; }
+  .cfroute__conn-hub { padding: 6px 12px !important; gap: 4px !important; }
   .cfroute__hub-name { font-size: 11px !important; }
   .cfroute__hub-sub { font-size: 9px !important; }
 
-  /* Behavior section */
-  .cfroute__behavior { height: 90px !important; max-height: 90px !important; margin-top: 8px !important; }
-  .cfroute__behavior-text { font-size: 10px !important; line-height: 1.4 !important; }
-  .cfroute__behavior-label { font-size: 9px !important; padding: 2px 7px !important; }
+  /* ── Agent rows ── */
+  .cfroute__agents {
+    height: 192px !important;
+    max-height: 192px !important;
+    gap: 4px !important;
+  }
+  .cfroute__agent {
+    height: 44px !important;
+    max-height: 44px !important;
+    padding: 0 8px !important;
+    gap: 6px !important;
+  }
+  .cfroute__agent-name {
+    font-size: 11px !important;
+    white-space: nowrap !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+  }
+  .cfroute__route-badge {
+    font-size: 10px !important;
+    padding: 2px 6px !important;
+    white-space: nowrap !important;
+  }
+  .cfroute__agent-logo { width: 14px !important; height: 14px !important; }
 
-  /* Footer */
-  .cfroute__footer { height: 32px !important; max-height: 32px !important; font-size: 10px !important; }
+  /* ── Behavior section ── */
+  .cfroute__behavior {
+    height: 88px !important;
+    max-height: 88px !important;
+    margin-top: 6px !important;
+    padding: 8px !important;
+    gap: 4px !important;
+  }
+  .cfroute__behavior-text {
+    font-size: 10px !important;
+    line-height: 1.4 !important;
+    overflow: hidden !important;
+    display: -webkit-box !important;
+    -webkit-line-clamp: 2 !important;
+    -webkit-box-orient: vertical !important;
+  }
+  .cfroute__behavior-label {
+    font-size: 8px !important;
+    padding: 1px 5px !important;
+  }
+  .cfroute__behavior-arrow { font-size: 11px !important; }
+
+  /* ── Hot-path chip ── */
+  .cfroute__hotpath-chip { font-size: 9px !important; padding: 2px 6px !important; margin: 2px 0 !important; }
+
+  /* ── Footer ── */
+  .cfroute__footer {
+    height: 28px !important;
+    max-height: 28px !important;
+    font-size: 9px !important;
+    margin-top: 4px !important;
+  }
 }
 

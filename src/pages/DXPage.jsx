@@ -419,7 +419,7 @@ export function DXPage() {
             <span className="label">Ready to start</span>
             <h2 className="cta__h2">One workflow.<br/>Start today.</h2>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 28 }}>
-              <button className="btn btn--em btn--lg" onClick={() => { setRoadmapOpen(true); window.fathom?.trackEvent('shape_roadmap_dx'); }}>Shape Roadmap</button>
+              <button className="btn btn--em btn--lg" onClick={() => { setRoadmapOpen(true); window.fathom?.trackEvent('shape_roadmap_dx'); }}>Talk Roadmap with us</button>
               <Link to="/architecture" className="btn btn--ghost btn--lg">See the architecture</Link>
             </div>
           </div>

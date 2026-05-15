@@ -450,7 +450,6 @@ const LiveDemo = () => {
 const LOGOS = [
   { img: '/logos/cursor.png',    name: 'Cursor',    h: 22, style: { filter: 'brightness(0) invert(1)', opacity: 0.65 } },
   { img: '/logos/claude.svg',    name: 'Claude',    h: 22, style: { opacity: 0.8  } },
-  { img: '/logos/windsurf.png',  name: 'Windsurf',  h: 22, style: { filter: 'brightness(0) invert(1)', opacity: 0.65 } },
   { img: '/logos/langchain.webp',name: 'LangChain', h: 28, style: { filter: 'brightness(0) invert(1)', opacity: 0.65 } },
   { img: '/logos/openai.svg',    name: 'OpenAI',    h: 22, style: { filter: 'brightness(0) invert(1)', opacity: 0.6  } },
   { img: '/logos/crewai.png',    name: 'CrewAI',    h: 22, style: { opacity: 0.65 } },
@@ -484,7 +483,7 @@ export function RoadmapModal({ open, onClose }) {
         ) : (
           <>
             <div className="rm-modal__header">
-              <span className="label">// shape the roadmap</span>
+              <span className="label">// talk roadmap with us</span>
               <h2 className="rm-modal__title">Help us build what you actually need</h2>
             </div>
             <form className="rm-form" onSubmit={async e => {
@@ -682,7 +681,7 @@ export function GlassMemPage() {
                 Scoped. Traceable. Temporal. Cross-framework.
               </div>
               <div className="hero__ctas enter-4">
-                <button className="btn btn--em btn--lg" onClick={() => { setRoadmapOpen(true); window.fathom?.trackEvent('shape_roadmap_hero'); }}>Shape Roadmap</button>
+                <button className="btn btn--em btn--lg" onClick={() => { setRoadmapOpen(true); window.fathom?.trackEvent('shape_roadmap_hero'); }}>Talk Roadmap with us</button>
                 <Link to="/thesis" className="btn btn--ghost btn--lg" onClick={() => window.fathom?.trackEvent('read_thesis_hero')}>Read the Thesis</Link>
               </div>
             </div>
@@ -1055,7 +1054,7 @@ export function GlassMemPage() {
                 className="btn btn--em btn--lg"
                 onClick={() => { setRoadmapOpen(true); window.fathom?.trackEvent('shape_roadmap_cta'); }}
               >
-                Shape Roadmap
+                Talk Roadmap with us
               </button>
             </div>
           </div>

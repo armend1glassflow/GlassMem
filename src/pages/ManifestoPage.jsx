@@ -151,7 +151,7 @@ export function ManifestoPage() {
             <h2 className="cta__h2">Glass0 is the coordination layer<br/>your agent systems need</h2>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 28, flexWrap: 'wrap' }}>
               <Link to="/architecture" className="btn btn--ghost btn--lg">See how Glass0 works</Link>
-              <button className="btn btn--em btn--lg" onClick={() => { setRoadmapOpen(true); window.fathom?.trackEvent('shape_roadmap_thesis'); }}>Shape Roadmap</button>
+              <button className="btn btn--em btn--lg" onClick={() => { setRoadmapOpen(true); window.fathom?.trackEvent('shape_roadmap_thesis'); }}>Talk Roadmap with us</button>
             </div>
           </div>
         </div>

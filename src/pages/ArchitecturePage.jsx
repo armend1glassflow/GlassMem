@@ -333,7 +333,7 @@ export function ArchitecturePage() {
             <span className="label">Get started</span>
             <h2 className="cta__h2">Build with a control plane<br/>for agent state</h2>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 28 }}>
-              <button className="btn btn--em btn--lg" onClick={() => { setRoadmapOpen(true); window.fathom?.trackEvent('shape_roadmap_architecture'); }}>Shape Roadmap</button>
+              <button className="btn btn--em btn--lg" onClick={() => { setRoadmapOpen(true); window.fathom?.trackEvent('shape_roadmap_architecture'); }}>Talk Roadmap with us</button>
               <Link to="/dx" className="btn btn--ghost btn--lg">See the DX</Link>
             </div>
           </div>

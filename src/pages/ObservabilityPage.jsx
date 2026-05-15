@@ -259,7 +259,7 @@ export function ObservabilityPage() {
             <span className="label">Get started</span>
             <h2 className="cta__h2">Know what every agent knew<br/>before it acted</h2>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 28, flexWrap: 'wrap' }}>
-              <button className="btn btn--em btn--lg" onClick={() => { setRoadmapOpen(true); window.fathom?.trackEvent('shape_roadmap_observability'); }}>Shape Roadmap</button>
+              <button className="btn btn--em btn--lg" onClick={() => { setRoadmapOpen(true); window.fathom?.trackEvent('shape_roadmap_observability'); }}>Talk Roadmap with us</button>
               <Link to="/architecture" className="btn btn--ghost btn--lg">See the architecture</Link>
             </div>
           </div>
