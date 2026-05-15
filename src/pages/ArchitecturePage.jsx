@@ -112,22 +112,22 @@ export function ArchitecturePage() {
               </div>
             </div>
             <div className="arch-routing__arrow">↓</div>
-            <div className="arch-routing__outputs">
-              <div className="arch-routing__output arch-routing__output--green">
-                <span className="arch-routing__badge arch-routing__badge--green">allowed</span>
-                <span className="arch-routing__output-desc">Routed to agent</span>
+            <div className="arch-states">
+              <div className="arch-state">
+                <span className="arch-state__badge arch-state__badge--allowed">allowed</span>
+                <span className="arch-state__label">Routed to agent</span>
               </div>
-              <div className="arch-routing__output arch-routing__output--purple">
-                <span className="arch-routing__badge arch-routing__badge--purple">inherited</span>
-                <span className="arch-routing__output-desc">Propagated to sub-agent</span>
+              <div className="arch-state">
+                <span className="arch-state__badge arch-state__badge--inherited">inherited</span>
+                <span className="arch-state__label">Propagated to sub-agent</span>
               </div>
-              <div className="arch-routing__output arch-routing__output--red">
-                <span className="arch-routing__badge arch-routing__badge--red">blocked</span>
-                <span className="arch-routing__output-desc">Filtered from agent</span>
+              <div className="arch-state">
+                <span className="arch-state__badge arch-state__badge--blocked">blocked</span>
+                <span className="arch-state__label">Filtered from agent</span>
               </div>
-              <div className="arch-routing__output arch-routing__output--gray">
-                <span className="arch-routing__badge arch-routing__badge--gray">expired</span>
-                <span className="arch-routing__output-desc">Temporal validity passed</span>
+              <div className="arch-state">
+                <span className="arch-state__badge arch-state__badge--expired">expired</span>
+                <span className="arch-state__label">Temporal validity passed</span>
               </div>
             </div>
           </div>

@@ -90,39 +90,8 @@
   line-height: 1.5;
 }
 
-.arch-routing__outputs {
-  display: grid;
-  grid-template-columns: repeat(4, 1fr);
-  gap: 10px;
-  width: 100%;
-}
-
 @media (max-width: 700px) {
-  .arch-routing__outputs { grid-template-columns: 1fr 1fr; }
   .arch-routing__dim-row { grid-template-columns: 1fr; gap: 4px; }
-}
-@media (max-width: 460px) {
-  .arch-routing__outputs { grid-template-columns: 1fr; }
-}
-
-.arch-routing__output {
-  padding: 16px 18px;
-  border: 1px solid;
-  border-radius: var(--r-lg);
-  display: flex;
-  flex-direction: column;
-  gap: 8px;
-}
-.arch-routing__output--green  { background: rgba(110,231,183,0.05);  border-color: rgba(110,231,183,0.18); }
-.arch-routing__output--purple { background: rgba(167,139,250,0.05);  border-color: rgba(167,139,250,0.18); }
-.arch-routing__output--red    { background: rgba(239,68,68,0.04);    border-color: rgba(239,68,68,0.15);   }
-.arch-routing__output--gray   { background: rgba(255,255,255,0.02);  border-color: rgba(255,255,255,0.08); }
-
-.arch-routing__output-desc {
-  font-family: var(--f-code);
-  font-size: 11px;
-  color: var(--tx-3);
-  line-height: 1.4;
 }
 
 .arch-routing__badge {
@@ -135,11 +104,58 @@
   display: inline-block;
   align-self: flex-start;
 }
-.arch-routing__badge--input  { color: var(--tx-2);  border-color: var(--bd-2);                background: var(--bg-3); }
-.arch-routing__badge--green  { color: #6ee7b7;      border-color: rgba(110,231,183,0.3);       background: rgba(110,231,183,0.08); }
-.arch-routing__badge--purple { color: #a78bfa;      border-color: rgba(167,139,250,0.3);       background: rgba(167,139,250,0.08); }
-.arch-routing__badge--red    { color: #ef4444;      border-color: rgba(239,68,68,0.3);         background: rgba(239,68,68,0.06); }
-.arch-routing__badge--gray   { color: var(--tx-3);  border-color: var(--bd);                   background: rgba(255,255,255,0.02); }
+.arch-routing__badge--input { color: var(--tx-2); border-color: var(--bd-2); background: var(--bg-3); }
+
+/* ── States strip (new badge design) ── */
+.arch-states {
+  display: flex;
+  gap: 0;
+  justify-content: space-between;
+  align-items: flex-start;
+  padding: 32px 0;
+  position: relative;
+  width: 100%;
+}
+.arch-states::before {
+  content: '\2193';
+  position: absolute;
+  top: -24px;
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--em);
+  font-size: 18px;
+}
+.arch-state {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  text-align: center;
+  padding: 0 16px;
+}
+.arch-state__badge {
+  font-family: var(--f-code);
+  font-size: 13px;
+  font-weight: 600;
+  padding: 6px 16px;
+  border-radius: 9999px;
+  border: 1.5px solid;
+  letter-spacing: 0.03em;
+}
+.arch-state__badge--allowed   { color: #6ee7b7; border-color: rgba(110,231,183,0.4); background: rgba(110,231,183,0.08); }
+.arch-state__badge--inherited { color: #a78bfa; border-color: rgba(167,139,250,0.4); background: rgba(167,139,250,0.08); }
+.arch-state__badge--blocked   { color: #f87171; border-color: rgba(248,113,113,0.4); background: rgba(248,113,113,0.08); }
+.arch-state__badge--expired   { color: #525252; border-color: rgba(82,82,82,0.4);   background: rgba(82,82,82,0.06); }
+.arch-state__label {
+  font-size: 13px;
+  color: var(--tx-3);
+  line-height: 1.5;
+}
+@media (max-width: 600px) {
+  .arch-states { flex-wrap: wrap; justify-content: center; gap: 24px; }
+  .arch-state { flex: 0 0 45%; }
+}
 
 /* ── Deployment cards ── */
 .arch-deploy__grid {

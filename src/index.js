@@ -25,6 +25,7 @@ root.render(
         <Route path="/dx"            element={<DXPage />} />
         <Route path="/architecture"  element={<ArchitecturePage />} />
         <Route path="/manifesto"     element={<ManifestoPage />} />
+        <Route path="/thesis"        element={<ManifestoPage />} />
         <Route path="/observability" element={<ObservabilityPage />} />
         <Route path="/contact"       element={<ContactPage />}  />
         <Route path="/signup"        element={<SignUpPage />}   />

@@ -35,7 +35,7 @@ export function ManifestoPage() {
         <div className="hero__fade"/>
         <div className="w">
           <div style={{ maxWidth: '60ch' }}>
-            <span className="label enter">// manifesto</span>
+            <span className="label enter">// thesis</span>
             <h1 className="h1 enter-2" style={{ marginBottom: 20 }}>Why shared memory breaks<br/>in real agent systems</h1>
             <p className="body-lg enter-3" style={{ maxWidth: '48ch' }}>Storage is solved. Coordination is not.</p>
           </div>

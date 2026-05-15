@@ -481,11 +481,10 @@ export function SiteNav({ scrolled, mobOpen, setMobOpen }) {
           <a href="/#demo"          className="nav__link">Demo</a>
           <Link to="/dx"            className="nav__link">DX</Link>
           <Link to="/architecture"  className="nav__link">Architecture</Link>
-          <Link to="/manifesto"     className="nav__link">Manifesto</Link>
+          <Link to="/thesis"        className="nav__link">Thesis</Link>
           <Link to="/observability" className="nav__link">Observability</Link>
         </div>
         <div className="nav__right">
-          <a href="/app"    className="btn btn--ghost btn--sm">Log in</a>
           <Link to="/signup" className="btn btn--em btn--sm">Get started</Link>
         </div>
         <button className="nav__mob-toggle" onClick={() => setMobOpen(o => !o)} aria-label="Menu">{mobOpen ? '✕' : '☰'}</button>
@@ -495,7 +494,7 @@ export function SiteNav({ scrolled, mobOpen, setMobOpen }) {
         <a href="/#demo"    className="nav__mob-link" onClick={() => setMobOpen(false)}>Demo</a>
         <Link to="/dx"            className="nav__mob-link" onClick={() => setMobOpen(false)}>DX</Link>
         <Link to="/architecture"  className="nav__mob-link" onClick={() => setMobOpen(false)}>Architecture</Link>
-        <Link to="/manifesto"     className="nav__mob-link" onClick={() => setMobOpen(false)}>Manifesto</Link>
+        <Link to="/thesis"        className="nav__mob-link" onClick={() => setMobOpen(false)}>Thesis</Link>
         <Link to="/observability" className="nav__mob-link" onClick={() => setMobOpen(false)}>Observability</Link>
       </div>
     </nav>
@@ -528,17 +527,11 @@ export function SiteFooter() {
           <div className="footer2__top">
             <div className="footer2__left">
               <a href="/" className="footer2__brand"><Logo size={18}/><span className="footer2__wordmark">GlassMem</span></a>
-              <div className="footer2__divider"/>
-              <div className="footer2__socials">
-                <a href="https://discord.gg/glassmem"   className="footer2__social" aria-label="Discord"><DiscordIcon/></a>
-                <a href="https://github.com/glassmem"   className="footer2__social" aria-label="GitHub"><GitHubIcon/></a>
-                <a href="https://twitter.com/glassmem" className="footer2__social" aria-label="X"><XIcon/></a>
-              </div>
             </div>
             <nav className="footer2__nav">
               <Link to="/dx"            className="footer2__nav-link">DX</Link>
               <Link to="/architecture"  className="footer2__nav-link">Architecture</Link>
-              <Link to="/manifesto"     className="footer2__nav-link">Manifesto</Link>
+              <Link to="/thesis"        className="footer2__nav-link">Thesis</Link>
               <Link to="/observability" className="footer2__nav-link">Observability</Link>
               <Link to="/contact"       className="footer2__nav-link">Contact</Link>
             </nav>
@@ -562,12 +555,22 @@ export function GlassMemPage() {
   const [mobOpen,  setMobOpen]  = useState(false);
   const [ctaEmail, setCtaEmail] = useState('');
   const [ctaSent,  setCtaSent]  = useState(false);
+  const [roadmapOpen, setRoadmapOpen] = useState(false);
+  const [roadmapSent, setRoadmapSent] = useState(false);
+  const [roadmapData, setRoadmapData] = useState({ email: '', stack: '', pain: '', deepdive: false });
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 8);
     window.addEventListener('scroll', fn, { passive: true });
     return () => window.removeEventListener('scroll', fn);
   }, []);
+
+  useEffect(() => {
+    if (!roadmapOpen) return;
+    const handler = (e) => { if (e.key === 'Escape') setRoadmapOpen(false); };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [roadmapOpen]);
 
   const handleCtaSubmit = (e) => {
     e.preventDefault();
@@ -605,8 +608,8 @@ export function GlassMemPage() {
                 Scoped. Traceable. Temporal. Cross-framework.
               </div>
               <div className="hero__ctas enter-4">
-                <Link to="/signup" className="btn btn--em btn--lg">Get started</Link>
-                <Link to="/dx"     className="btn btn--ghost btn--lg">See the DX</Link>
+                <button className="btn btn--em btn--lg" onClick={() => setRoadmapOpen(true)}>Shape Roadmap</button>
+                <Link to="/thesis" className="btn btn--ghost btn--lg">Read the Thesis</Link>
               </div>
             </div>
             <div className="hero__viz-col enter-4">
@@ -630,7 +633,7 @@ export function GlassMemPage() {
                 GlassMem is not a shared memory bucket.<br/>It is a control plane for agent state.
               </p>
               <div style={{ marginTop: 24 }}>
-                <Link to="/manifesto" className="btn btn--ghost btn--sm">Read why shared memory breaks →</Link>
+                <Link to="/thesis" className="btn btn--ghost btn--sm">Read why shared memory breaks →</Link>
               </div>
             </div>
             <div className="antimem__cards">
@@ -933,13 +936,6 @@ export function GlassMemPage() {
                 photo: "/customer-photos/ingo.jpg",
                 logo: "/customer-logos/nubrain.svg",
               },
-              {
-                quote: "The hard part was not storage. It was deciding what each agent should inherit.",
-                name: "Marc Hamm",
-                role: "AI engineer at stealth startup",
-                photo: null,
-                logo: null,
-              },
             ].map((q, i, arr) => (
               <React.Fragment key={q.name}>
                 <div className="editorial__item">
@@ -966,7 +962,7 @@ export function GlassMemPage() {
             ))}
           </div>
           <div style={{ marginTop: 32 }} className="reveal">
-            <Link to="/manifesto" className="btn btn--ghost btn--sm">Read the manifesto →</Link>
+            <Link to="/thesis" className="btn btn--ghost btn--sm">Read the thesis →</Link>
           </div>
         </div>
       </section>
@@ -1001,6 +997,82 @@ export function GlassMemPage() {
       </section>
 
       <SiteFooter />
+
+      {roadmapOpen && (
+        <div className="rm-overlay" onClick={e => { if (e.target === e.currentTarget) setRoadmapOpen(false); }}>
+          <div className="rm-modal">
+            <button className="rm-close" onClick={() => setRoadmapOpen(false)} aria-label="Close">&#x2715;</button>
+            {roadmapSent ? (
+              <div className="rm-success">
+                <span className="rm-success__icon">&#x2713;</span>
+                <h3 className="rm-success__title">You're on the list.</h3>
+                <p className="rm-success__sub">We'll reach out with early access details.</p>
+              </div>
+            ) : (
+              <>
+                <div className="rm-modal__header">
+                  <span className="label">// shape the roadmap</span>
+                  <h2 className="rm-modal__title">Help us build what you actually need</h2>
+                  <p className="rm-modal__sub">Two minutes. No pitch. Just the real problem.</p>
+                </div>
+                <form className="rm-form" onSubmit={async e => {
+                  e.preventDefault();
+                  try {
+                    await fetch('/api/roadmap', {
+                      method: 'POST',
+                      headers: { 'Content-Type': 'application/json' },
+                      body: JSON.stringify(roadmapData),
+                    });
+                  } catch(_) {}
+                  setRoadmapSent(true);
+                }}>
+                  <div className="rm-field">
+                    <label className="rm-label">Work Email <span className="rm-req">*</span></label>
+                    <input
+                      className="rm-input"
+                      type="email"
+                      required
+                      placeholder="you@company.com"
+                      value={roadmapData.email}
+                      onChange={e => setRoadmapData(d => ({ ...d, email: e.target.value }))}
+                    />
+                  </div>
+                  <div className="rm-field">
+                    <label className="rm-label">Current Stack</label>
+                    <input
+                      className="rm-input"
+                      type="text"
+                      placeholder='e.g. "LangGraph + Groq", "Custom Autogen"'
+                      value={roadmapData.stack}
+                      onChange={e => setRoadmapData(d => ({ ...d, stack: e.target.value }))}
+                    />
+                  </div>
+                  <div className="rm-field">
+                    <label className="rm-label">The Pain Point</label>
+                    <textarea
+                      className="rm-input rm-input--ta"
+                      rows={3}
+                      placeholder="What's the biggest memory leak in your current agent loop?"
+                      value={roadmapData.pain}
+                      onChange={e => setRoadmapData(d => ({ ...d, pain: e.target.value }))}
+                    />
+                  </div>
+                  <label className="rm-check">
+                    <input
+                      type="checkbox"
+                      className="rm-check__box"
+                      checked={roadmapData.deepdive}
+                      onChange={e => setRoadmapData(d => ({ ...d, deepdive: e.target.checked }))}
+                    />
+                    <span className="rm-check__label">I'm open to a 15-minute technical deep-dive in exchange for lifetime free access.</span>
+                  </label>
+                  <button type="submit" className="rm-submit">Send &#x2192;</button>
+                </form>
+              </>
+            )}
+          </div>
+        </div>
+      )}
 
     </div>
   );
