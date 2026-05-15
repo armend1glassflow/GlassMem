@@ -21,12 +21,12 @@ const FRAMEWORK_SNIPPETS = [
     label: 'LangGraph',
     color: '#1c7a3e',
     code: [
-      { type: 'kw', t: 'from' }, { type: 'tx', t: ' glassmem.integrations.langgraph ' }, { type: 'kw', t: 'import' }, { type: 'tx', t: ' GlassMemState' },
+      { type: 'kw', t: 'from' }, { type: 'tx', t: ' glass0.integrations.langgraph ' }, { type: 'kw', t: 'import' }, { type: 'tx', t: ' Glass0State' },
       { type: 'br' },
       { type: 'kw', t: 'from' }, { type: 'tx', t: ' langgraph.graph ' }, { type: 'kw', t: 'import' }, { type: 'tx', t: ' StateGraph' },
       { type: 'br' },
       { type: 'br' },
-      { type: 'tx', t: 'graph = StateGraph(GlassMemState)' },
+      { type: 'tx', t: 'graph = StateGraph(Glass0State)' },
       { type: 'br' },
       { type: 'cm', t: '# State is automatically scoped and routed' },
       { type: 'br' },
@@ -38,10 +38,10 @@ const FRAMEWORK_SNIPPETS = [
     label: 'CrewAI',
     color: '#f97316',
     code: [
-      { type: 'kw', t: 'from' }, { type: 'tx', t: ' glassmem.integrations.crewai ' }, { type: 'kw', t: 'import' }, { type: 'tx', t: ' GlassMemCrew' },
+      { type: 'kw', t: 'from' }, { type: 'tx', t: ' glass0.integrations.crewai ' }, { type: 'kw', t: 'import' }, { type: 'tx', t: ' Glass0Crew' },
       { type: 'br' },
       { type: 'br' },
-      { type: 'tx', t: 'crew = GlassMemCrew(' },
+      { type: 'tx', t: 'crew = Glass0Crew(' },
       { type: 'br' },
       { type: 'tx', t: '  agents=[billing_agent, debug_agent],' },
       { type: 'br' },
@@ -59,7 +59,7 @@ const FRAMEWORK_SNIPPETS = [
     code: [
       { type: 'cm', t: '# In CLAUDE.md or MCP tool config' },
       { type: 'br' },
-      { type: 'tx', t: 'glassmem_mcp:' },
+      { type: 'tx', t: 'glass0_mcp:' },
       { type: 'br' },
       { type: 'tx', t: '  endpoint: ' }, { type: 'str', t: '"https://api.glassmem.ai/mcp"' },
       { type: 'br' },
@@ -75,12 +75,12 @@ const FRAMEWORK_SNIPPETS = [
     label: 'OpenAI Agents SDK',
     color: '#7dd3fc',
     code: [
-      { type: 'kw', t: 'from' }, { type: 'tx', t: ' glassmem.integrations.openai ' }, { type: 'kw', t: 'import' }, { type: 'tx', t: ' GlassMemAgentContext' },
+      { type: 'kw', t: 'from' }, { type: 'tx', t: ' glass0.integrations.openai ' }, { type: 'kw', t: 'import' }, { type: 'tx', t: ' Glass0AgentContext' },
       { type: 'br' },
       { type: 'br' },
       { type: 'tx', t: 'agent = Agent(' },
       { type: 'br' },
-      { type: 'tx', t: '  context=GlassMemAgentContext(' },
+      { type: 'tx', t: '  context=Glass0AgentContext(' },
       { type: 'br' },
       { type: 'tx', t: '    scope=' }, { type: 'str', t: '"project.billing"' }, { type: 'tx', t: ',' },
       { type: 'br' },
@@ -96,12 +96,12 @@ const FRAMEWORK_SNIPPETS = [
     label: 'Custom agents',
     color: '#a78bfa',
     code: [
-      { type: 'kw', t: 'import' }, { type: 'tx', t: ' glassmem' },
+      { type: 'kw', t: 'import' }, { type: 'tx', t: ' glass0' },
       { type: 'br' },
       { type: 'br' },
       { type: 'cm', t: '# REST API — framework-agnostic' },
       { type: 'br' },
-      { type: 'tx', t: 'state = glassmem.state.for_agent({' },
+      { type: 'tx', t: 'state = glass0.state.for_agent({' },
       { type: 'br' },
       { type: 'tx', t: '  "agent": ' }, { type: 'str', t: '"my-custom-agent"' }, { type: 'tx', t: ',' },
       { type: 'br' },
@@ -167,7 +167,7 @@ export function DXPage() {
             <span className="label enter">// developer experience</span>
             <h1 className="h1 enter-2" style={{ marginBottom: 20 }}>How it works</h1>
             <p className="body-lg enter-3">
-              Start with one workflow. See how GlassMem fits into your agent stack.
+              Start with one workflow. See how Glass0 fits into your agent stack.
             </p>
           </div>
         </div>
@@ -180,7 +180,7 @@ export function DXPage() {
             <span className="label">Step 1</span>
             <h2 className="h2" style={{ marginBottom: 28 }}>Install</h2>
             <CodeBlock>
-              <span style={{ color: '#546e7a' }}>$</span> <span style={{ color: '#c3e88d' }}>npm install glassmem</span>
+              <span style={{ color: '#546e7a' }}>$</span> <span style={{ color: '#c3e88d' }}>npm install glass0</span>
             </CodeBlock>
             <p className="body-sm" style={{ marginTop: 16, color: 'var(--tx-3)' }}>
               Also available via pip, or connect directly via MCP or REST API.
@@ -196,11 +196,11 @@ export function DXPage() {
             <span className="label">Step 2</span>
             <h2 className="h2" style={{ marginBottom: 16 }}>Write state</h2>
             <p className="body-lg" style={{ maxWidth: '48ch', marginBottom: 32 }}>
-              Write operational state with a scope, type, and optional expiry. GlassMem handles routing to the right agents.
+              Write operational state with a scope, type, and optional expiry. Glass0 handles routing to the right agents.
             </p>
             <CodeBlock label="TypeScript">
               <span style={{ color: '#c792ea' }}>await</span>
-              {' glassmem.state.'}
+              {' glass0.state.'}
               <span style={{ color: '#82aaff' }}>write</span>
               {'({'}
               {'\n  '}
@@ -244,7 +244,7 @@ export function DXPage() {
               <span style={{ color: '#f78c6c' }}>state</span>
               {' = '}
               <span style={{ color: '#c792ea' }}>await</span>
-              {' glassmem.state.'}
+              {' glass0.state.'}
               <span style={{ color: '#82aaff' }}>forAgent</span>
               {'({'}
               {'\n  '}
@@ -292,7 +292,7 @@ export function DXPage() {
               <span style={{ color: '#f78c6c' }}>subAgent</span>
               {' = '}
               <span style={{ color: '#c792ea' }}>await</span>
-              {' glassmem.'}
+              {' glass0.'}
               <span style={{ color: '#82aaff' }}>spawn</span>
               {'({'}
               {'\n  '}
@@ -331,7 +331,7 @@ export function DXPage() {
               <h2 className="h2">Framework examples</h2>
             </div>
             <p className="body-lg" style={{ maxWidth: '44ch' }}>
-              GlassMem integrates with every major agent framework via SDK, MCP, or REST API.
+              Glass0 integrates with every major agent framework via SDK, MCP, or REST API.
             </p>
           </div>
           <div className="reveal">
@@ -379,7 +379,7 @@ export function DXPage() {
               <h2 className="h2">Start with one workflow</h2>
             </div>
             <p className="body-lg" style={{ maxWidth: '44ch' }}>
-              Pick the workflow where state drift already hurts. Add GlassMem incrementally.
+              Pick the workflow where state drift already hurts. Add Glass0 incrementally.
             </p>
           </div>
           <div className="workflows__grid reveal">

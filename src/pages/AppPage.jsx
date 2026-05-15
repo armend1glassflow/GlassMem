@@ -73,7 +73,7 @@ export function AppPage() {
       <aside className="app__sidebar">
         <div className="app__sidebar-logo">
           <Logo size={20} />
-          <span className="app__sidebar-wordmark">GlassMem</span>
+          <span className="app__sidebar-wordmark">Glass0</span>
         </div>
 
         {NAV_SECTIONS.map(sec => (
@@ -103,7 +103,7 @@ export function AppPage() {
         {/* Waitlist card */}
         <div className="app__card">
           <span className="app__card-label">// YOU'RE ON THE WAITLIST</span>
-          <h2 className="app__card-heading">Thanks for signing up to GlassMem.</h2>
+          <h2 className="app__card-heading">Thanks for signing up to Glass0.</h2>
           <p className="app__card-body">
             The product is in such high demand that we onboard customers in batches. You
             are in position <strong>#{position}</strong> right now. We will inform you as

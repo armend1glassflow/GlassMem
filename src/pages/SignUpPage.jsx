@@ -79,7 +79,7 @@ export function SignUpPage() {
       <div className="su__card">
         <div className="su__brand">
           <Logo size={36} />
-          <span className="su__wordmark">GlassMem</span>
+          <span className="su__wordmark">Glass0</span>
         </div>
 
         <h1 className="su__heading">Create an account</h1>

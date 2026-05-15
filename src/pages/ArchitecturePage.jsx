@@ -52,7 +52,7 @@ export function ArchitecturePage() {
         <div className="w">
           <div style={{ maxWidth: '56ch' }}>
             <span className="label enter">// architecture</span>
-            <h1 className="h1 enter-2" style={{ marginBottom: 20 }}>How GlassMem coordinates state</h1>
+            <h1 className="h1 enter-2" style={{ marginBottom: 20 }}>How Glass0 coordinates state</h1>
             <p className="body-lg enter-3">See how it works</p>
           </div>
         </div>
@@ -80,7 +80,7 @@ export function ArchitecturePage() {
             <span className="label">Routing engine</span>
             <h2 className="h2" style={{ marginBottom: 16 }}>How routing works</h2>
             <p className="body-lg" style={{ maxWidth: '48ch', marginBottom: 48 }}>
-              Every state event passes through GlassMem's routing layer before reaching any agent. Routing is not probabilistic. It is deterministic.
+              Every state event passes through Glass0's routing layer before reaching any agent. Routing is not probabilistic. It is deterministic.
             </p>
           </div>
           <div className="arch-routing reveal">
@@ -92,7 +92,7 @@ export function ArchitecturePage() {
             <div className="arch-routing__engine">
               <div className="arch-routing__engine-header">
                 <Logo size={16}/>
-                <span className="arch-routing__engine-name">GlassMem evaluates</span>
+                <span className="arch-routing__engine-name">Glass0 evaluates</span>
               </div>
               <div className="arch-routing__dims">
                 {[
@@ -141,26 +141,26 @@ export function ArchitecturePage() {
             <span className="label">Deployment</span>
             <h2 className="h2" style={{ marginBottom: 16 }}>Where state lives</h2>
             <p className="body-lg" style={{ maxWidth: '48ch', marginBottom: 48 }}>
-              GlassMem supports local, self-hosted, or managed deployment. You choose where operational state lives.
+              Glass0 supports local, self-hosted, or managed deployment. You choose where operational state lives.
             </p>
           </div>
           <div className="arch-deploy__grid reveal">
             {[
               {
                 title: 'Local dev',
-                desc: 'Run GlassMem locally during development. State lives in-process. No external dependencies.',
+                desc: 'Run Glass0 locally during development. State lives in-process. No external dependencies.',
                 badge: 'local',
                 color: '#6ee7b7',
               },
               {
                 title: 'Self-hosted',
-                desc: 'Deploy GlassMem on your own infrastructure. Full control over data residency and routing logic.',
+                desc: 'Deploy Glass0 on your own infrastructure. Full control over data residency and routing logic.',
                 badge: 'self-hosted',
                 color: '#a78bfa',
               },
               {
                 title: 'Managed',
-                desc: 'Use the GlassMem cloud service. Routing, storage, and observability managed for you.',
+                desc: 'Use the Glass0 cloud service. Routing, storage, and observability managed for you.',
                 badge: 'managed',
                 color: '#fb923c',
               },
@@ -184,7 +184,7 @@ export function ArchitecturePage() {
               <h2 className="h2">Sub-agent inheritance</h2>
             </div>
             <p className="body-lg" style={{ maxWidth: '48ch' }}>
-              When a sub-agent is spawned, GlassMem attaches the relevant parent-task state slice automatically. Sub-agents receive selected state, not the full parent history.
+              When a sub-agent is spawned, Glass0 attaches the relevant parent-task state slice automatically. Sub-agents receive selected state, not the full parent history.
             </p>
           </div>
           <div className="arch-inherit reveal">
@@ -201,7 +201,7 @@ export function ArchitecturePage() {
             </div>
             <div className="arch-inherit__connector">
               <div className="arch-inherit__line"/>
-              <span className="arch-inherit__connector-label">GlassMem selects relevant slice</span>
+              <span className="arch-inherit__connector-label">Glass0 selects relevant slice</span>
               <div className="arch-inherit__arrow">↓</div>
             </div>
             <div className="arch-inherit__child">

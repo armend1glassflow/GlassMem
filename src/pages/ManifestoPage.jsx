@@ -147,9 +147,9 @@ export function ManifestoPage() {
         <div className="w">
           <div style={{ textAlign: 'center', maxWidth: 520, margin: '0 auto' }} className="reveal">
             <span className="label">See how it works</span>
-            <h2 className="cta__h2">GlassMem is the coordination layer<br/>your agent systems need</h2>
+            <h2 className="cta__h2">Glass0 is the coordination layer<br/>your agent systems need</h2>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 28, flexWrap: 'wrap' }}>
-              <Link to="/architecture" className="btn btn--ghost btn--lg">See how GlassMem works</Link>
+              <Link to="/architecture" className="btn btn--ghost btn--lg">See how Glass0 works</Link>
               <Link to="/signup" className="btn btn--em btn--lg">Get started</Link>
             </div>
           </div>

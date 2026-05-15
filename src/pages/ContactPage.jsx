@@ -104,7 +104,7 @@ export function ContactPage() {
       {/* NAV — same as landing page */}
       <nav className="nav" style={{ borderBottomColor: scrolled ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.06)' }}>
         <div className="nav__row">
-          <Link to="/" className="nav__logo"><Logo size={24}/><span className="nav__wordmark">GlassMem</span></Link>
+          <Link to="/" className="nav__logo"><Logo size={24}/><span className="nav__wordmark">Glass0</span></Link>
           <div className="nav__links">
             <a href="/#problem"       className="nav__link">Problem</a>
             <a href="/#demo"          className="nav__link">Demo</a>
@@ -129,12 +129,12 @@ export function ContactPage() {
         <div className="contact-wrap">
 
           {/* Breadcrumb */}
-          <p className="contact-breadcrumb">// glassmem · contact</p>
+          <p className="contact-breadcrumb">// glass0 · contact</p>
 
           {/* Heading */}
           <h1 className="contact-heading">Contact us</h1>
           <p className="contact-sub">
-            Have questions about GlassMem, early access, or integrations? Send us a message and we'll get back to you.
+            Have questions about Glass0, early access, or integrations? Send us a message and we'll get back to you.
           </p>
 
           {/* Form card */}

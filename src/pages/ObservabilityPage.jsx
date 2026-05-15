@@ -39,7 +39,7 @@ const ObsPanel = () => (
         <span className="obspanel__macdot" style={{ background: '#febc2e' }}/>
         <span className="obspanel__macdot" style={{ background: '#28c840' }}/>
       </div>
-      <span className="obspanel__chrome-title"><Logo size={11}/>glassmem · state-packet · ctx_a2f9c01b</span>
+      <span className="obspanel__chrome-title"><Logo size={11}/>glass0 · state-packet · ctx_a2f9c01b</span>
       <span className="obspanel__status">active</span>
     </div>
 
@@ -71,7 +71,7 @@ const ObsPanel = () => (
     <div className="obspanel__trace">
       <span className="obspanel__trace-label">Lineage trace</span>
       <div className="obspanel__trace-line">
-        {['OpenAI Debug Agent', 'GlassMem', 'Claude Code', 'CrewAI Billing Sub-Agent'].map((node, i, arr) => (
+        {['OpenAI Debug Agent', 'Glass0', 'Claude Code', 'CrewAI Billing Sub-Agent'].map((node, i, arr) => (
           <React.Fragment key={node}>
             <span className="obspanel__trace-node">{node}</span>
             {i < arr.length - 1 && <span className="obspanel__trace-arrow">→</span>}
@@ -231,7 +231,7 @@ export function ObservabilityPage() {
               <h2 className="h2">Export to your existing stack</h2>
             </div>
             <p className="body-lg" style={{ maxWidth: '44ch' }}>
-              GlassMem exports routing traces to your existing observability stack. No new dashboards required.
+              Glass0 exports routing traces to your existing observability stack. No new dashboards required.
             </p>
           </div>
           <div className="obs-export__grid reveal">

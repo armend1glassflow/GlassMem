@@ -168,7 +168,7 @@ const ContextFlowViz = () => {
           <span className="cfroute__macdot" style={{ background: '#febc2e' }}/>
           <span className="cfroute__macdot" style={{ background: '#28c840' }}/>
         </div>
-        <span className="cfroute__chrome-title">glassmem · context-routing · billing-migration-freeze</span>
+        <span className="cfroute__chrome-title">glass0 · context-routing · billing-migration-freeze</span>
         <span className="cfroute__chrome-live">
           <span className="cfroute__live-dot"/>LIVE
         </span>
@@ -189,7 +189,7 @@ const ContextFlowViz = () => {
           <div className={`cfroute__conn-line${flowing ? ' cfroute__conn-line--active' : ''}`}/>
           <div className={`cfroute__conn-hub${distributing ? ' cfroute__conn-hub--active' : ''}`}>
             <Logo size={14}/>
-            <span className="cfroute__hub-name">GlassMem</span>
+            <span className="cfroute__hub-name">Glass0</span>
             <span className="cfroute__hub-sub">Context Orchestrator</span>
           </div>
           <div className={`cfroute__conn-line${distributing ? ' cfroute__conn-line--active' : ''}`}/>
@@ -247,7 +247,7 @@ const ContextFlowViz = () => {
           {showBehavior
             ? <><span className="cfroute__footer-check">✓</span>1 allowed · 1 inherited · 1 blocked · 0 manual steps</>
             : phase === 'write'    ? 'waiting for state update...'
-            : phase === 'route'   ? 'routing to GlassMem engine...'
+            : phase === 'route'   ? 'routing to Glass0 engine...'
             : `evaluating ${ROUTE_AGENTS.length} agents...`
           }
         </div>
@@ -277,7 +277,7 @@ const DEMO_SCENARIOS = [
     ],
     steps: [
       'LangGraph Planner writes billing freeze to state store',
-      'GlassMem evaluates routing for all 6 agents',
+      'Glass0 evaluates routing for all 6 agents',
       'Claude Code, Cursor, and Debug Agent receive constraint',
       'CrewAI Billing Sub-Agent inherits freeze at spawn',
       'Customer Support and External MCP Tool blocked',
@@ -301,7 +301,7 @@ const DEMO_SCENARIOS = [
     ],
     steps: [
       'OpenAI Debug Agent records Redis failure to state store',
-      'GlassMem marks Redis as failed approach in billing scope',
+      'Glass0 marks Redis as failed approach in billing scope',
       'Claude Code, Cursor, and Planner receive failure state',
       'CrewAI Billing Sub-Agent inherits failed approach at spawn',
       'Customer Support and Marketing agents not routed',
@@ -325,7 +325,7 @@ const DEMO_SCENARIOS = [
     ],
     steps: [
       'Security Agent writes PII exposure alert to state store',
-      'GlassMem propagates to security-cleared agents only',
+      'Glass0 propagates to security-cleared agents only',
       'Security Team and Data Agent receive incident state',
       'Audit Logger inherits incident state as sub-process',
       'Claude Code, External Tool, Customer Support blocked',
@@ -348,7 +348,7 @@ const DEMO_SCENARIOS = [
     ],
     steps: [
       'Support Agent writes P1 escalation to state store',
-      'GlassMem evaluates all agents for Acme Corp scope',
+      'Glass0 evaluates all agents for Acme Corp scope',
       'Incident Manager and On-call Debug Agent receive state',
       'Deployment and Feature agents blocked immediately',
       'Billing Agent enters read-only mode for escalation window',
@@ -416,7 +416,7 @@ const LiveDemo = () => {
         </div>
         <div className="demo__hub">
           <div className="demo__hub-line"/>
-          <div className="demo__hub-node"><Logo size={14}/><span>GlassMem</span></div>
+          <div className="demo__hub-node"><Logo size={14}/><span>Glass0</span></div>
           <div className="demo__hub-line"/>
           <p className="demo__hub-count">
             {step >= 0 ? `${Math.min(step + 1, sc.agents.length)} / ${sc.agents.length} evaluated` : 'propagating...'}
@@ -475,7 +475,7 @@ export function SiteNav({ scrolled, mobOpen, setMobOpen }) {
   return (
     <nav className="nav" style={{ borderBottomColor: scrolled ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.06)' }}>
       <div className="nav__row">
-        <a href="/" className="nav__logo"><Logo size={24}/><span className="nav__wordmark">GlassMem</span></a>
+        <a href="/" className="nav__logo"><Logo size={24}/><span className="nav__wordmark">Glass0</span></a>
         <div className="nav__links">
           <a href="/#problem"       className="nav__link">Problem</a>
           <a href="/#demo"          className="nav__link">Demo</a>
@@ -526,7 +526,7 @@ export function SiteFooter() {
         <div className="footer2__inner">
           <div className="footer2__top">
             <div className="footer2__left">
-              <a href="/" className="footer2__brand"><Logo size={18}/><span className="footer2__wordmark">GlassMem</span></a>
+              <a href="/" className="footer2__brand"><Logo size={18}/><span className="footer2__wordmark">Glass0</span></a>
             </div>
             <nav className="footer2__nav">
               <Link to="/dx"            className="footer2__nav-link">DX</Link>
@@ -538,7 +538,7 @@ export function SiteFooter() {
           </div>
           <div className="footer2__bottom">
             <div className="footer2__status"><span className="footer2__status-dot"/>All systems operational</div>
-            <span className="footer2__copy">2026 GlassMem</span>
+            <span className="footer2__copy">2026 Glass0</span>
           </div>
         </div>
       </footer>
@@ -553,8 +553,6 @@ export function GlassMemPage() {
   useReveal();
   const [scrolled, setScrolled] = useState(false);
   const [mobOpen,  setMobOpen]  = useState(false);
-  const [ctaEmail, setCtaEmail] = useState('');
-  const [ctaSent,  setCtaSent]  = useState(false);
   const [roadmapOpen, setRoadmapOpen] = useState(false);
   const [roadmapSent, setRoadmapSent] = useState(false);
   const [roadmapData, setRoadmapData] = useState({ email: '', stack: '', pain: '', deepdive: false });
@@ -572,11 +570,6 @@ export function GlassMemPage() {
     return () => window.removeEventListener('keydown', handler);
   }, [roadmapOpen]);
 
-  const handleCtaSubmit = (e) => {
-    e.preventDefault();
-    if (ctaEmail) setCtaSent(true);
-  };
-
   return (
     <div>
 
@@ -590,13 +583,13 @@ export function GlassMemPage() {
             <div>
               <div className="hero__badge enter">
                 <span className="hero__badge-dot"/>
-                Context orchestration for agent systems
+                Control the memory across agents
               </div>
               <h1 className="h1 hero__h1 enter-2">
                 Context orchestration<br/>for all your agents
               </h1>
               <p className="body-lg hero__sub enter-3">
-                GlassMem coordinates scoped operational state across agents, sub-agents, frameworks, and tools. No blindly shared memory.
+                Glass0 coordinates scoped operational state across agents, sub-agents, frameworks, and tools. No blindly shared memory.
               </p>
               <p className="hero__differentiator enter-3">
                 Not a vector DB wrapper. Not another memory bucket. A control plane for agent state.
@@ -630,7 +623,7 @@ export function GlassMemPage() {
                 Agent engineers already know the problem is not storing more state. It is controlling where operational state flows.
               </p>
               <p className="antimem__keyline">
-                GlassMem is not a shared memory bucket.<br/>It is a control plane for agent state.
+                Glass0 is not a shared memory bucket.<br/>It is a control plane for agent state.
               </p>
               <div style={{ marginTop: 24 }}>
                 <Link to="/thesis" className="btn btn--ghost btn--sm">Read why shared memory breaks →</Link>
@@ -681,7 +674,7 @@ export function GlassMemPage() {
               <h2 className="h2">One update.<br/>Only the right agents adapt.</h2>
             </div>
             <p className="body-lg" style={{ maxWidth:'44ch' }}>
-              Select a scenario to see GlassMem route operational state across distributed agents in real time.
+              Select a scenario to see Glass0 route operational state across distributed agents in real time.
             </p>
           </div>
           <div className="reveal"><LiveDemo/></div>
@@ -713,7 +706,7 @@ export function GlassMemPage() {
                   <span className="prim-bento__route-line"/>
                 </div>
                 <div className="prim-bento__route-hub">
-                  <span className="prim-bento__route-hub-label">GlassMem</span>
+                  <span className="prim-bento__route-hub-label">Glass0</span>
                 </div>
                 <div className="prim-bento__route-arrow">
                   <span className="prim-bento__route-line"/>
@@ -742,7 +735,7 @@ export function GlassMemPage() {
             {/* Card 2: Cross-framework */}
             <div className="prim-bento__card">
               <div className="prim-bento__visual prim-bento__visual--hub">
-                <div className="prim-bento__hub-center">GlassMem</div>
+                <div className="prim-bento__hub-center">Glass0</div>
                 <div className="prim-bento__hub-pills">
                   {['LangGraph','CrewAI','Claude Code','MCP'].map(fw => (
                     <span key={fw} className="prim-bento__hub-pill">{fw}</span>
@@ -774,7 +767,7 @@ export function GlassMemPage() {
             {/* Card 4: State lineage */}
             <div className="prim-bento__card">
               <div className="prim-bento__visual prim-bento__visual--trace">
-                {['Debug Agent','GlassMem','Claude Code'].map((node, i, arr) => (
+                {['Debug Agent','Glass0','Claude Code'].map((node, i, arr) => (
                   <React.Fragment key={node}>
                     <span className="prim-bento__trace-node">{node}</span>
                     {i < arr.length - 1 && <span className="prim-bento__trace-arrow">→</span>}
@@ -975,22 +968,14 @@ export function GlassMemPage() {
               <span className="label">Get started</span>
               <h2 className="cta__h2">Coordinate state before<br/>your agents drift apart</h2>
               <p className="body-lg cta__sub">
-                GlassMem gives distributed agents scoped, traceable, temporal operational state across frameworks, tools, and sessions. Start with one workflow. No full rewrite needed.
+                Glass0 gives distributed agents scoped, traceable, temporal operational state across frameworks, tools, and sessions. Start with one workflow. No full rewrite needed.
               </p>
-              {ctaSent ? (
-                <div style={{ display:'inline-flex', alignItems:'center', gap:10, padding:'12px 20px', borderRadius:'var(--r)', background:'rgba(110,231,183,0.08)', border:'1px solid rgba(110,231,183,0.2)', color:'var(--em)', fontFamily:'var(--f-code)', fontSize:13, marginBottom:20 }}>
-                  <span style={{ width:7, height:7, borderRadius:'50%', background:'var(--em)', display:'inline-block' }}/>
-                  You are on the list. We will be in touch.
-                </div>
-              ) : (
-                <form className="cta__email-form" onSubmit={handleCtaSubmit} style={{ justifyContent:'center' }}>
-                  <input className="cta__email-input" type="email" placeholder="you@company.com" value={ctaEmail} onChange={e => setCtaEmail(e.target.value)} required/>
-                  <button type="submit" className="btn btn--em btn--lg">Get started</button>
-                </form>
-              )}
-              <div style={{ marginTop:14 }}>
-                <a href="mailto:hello@glassmem.ai" className="btn btn--ghost btn--sm">Book demo</a>
-              </div>
+              <button
+                className="btn btn--em btn--lg"
+                onClick={() => setRoadmapOpen(true)}
+              >
+                Shape Roadmap
+              </button>
             </div>
           </div>
         </div>
@@ -1013,7 +998,6 @@ export function GlassMemPage() {
                 <div className="rm-modal__header">
                   <span className="label">// shape the roadmap</span>
                   <h2 className="rm-modal__title">Help us build what you actually need</h2>
-                  <p className="rm-modal__sub">Two minutes. No pitch. Just the real problem.</p>
                 </div>
                 <form className="rm-form" onSubmit={async e => {
                   e.preventDefault();
