@@ -165,9 +165,9 @@ export function DXPage() {
         <div className="w">
           <div style={{ maxWidth: '56ch' }}>
             <span className="label enter">// developer experience</span>
-            <h1 className="h1 enter-2" style={{ marginBottom: 20 }}>Show me the DX</h1>
+            <h1 className="h1 enter-2" style={{ marginBottom: 20 }}>How it works</h1>
             <p className="body-lg enter-3">
-              How would I actually use this? Start with one workflow. Write scoped state. Let GlassMem decide what each agent receives.
+              Start with one workflow. See how GlassMem fits into your agent stack.
             </p>
           </div>
         </div>

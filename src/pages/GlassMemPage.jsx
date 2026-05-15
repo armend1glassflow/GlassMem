@@ -113,11 +113,8 @@ const IconDebuggingBlackBox = () => (
 const HERO_AGENTS = [
   { name: 'LangGraph Planner',         pip: '#fb923c', status: 'source',   reason: '',                          framework: 'LangGraph',  logoType: 'langgraph' },
   { name: 'Claude Code',               pip: '#6ee7b7', status: 'allowed',  reason: 'task touches billing',      framework: 'Claude Code',logoType: 'claude' },
-  { name: 'Cursor',                    pip: '#6ee7b7', status: 'allowed',  reason: 'editing billing module',    framework: 'Cursor',     logoType: 'cursor' },
   { name: 'CrewAI Billing Sub-Agent',  pip: '#a78bfa', status: 'inherited',reason: 'spawned under billing task',framework: 'CrewAI',     logoType: 'crewai' },
-  { name: 'OpenAI Debug Agent',        pip: '#6ee7b7', status: 'allowed',  reason: 'debugging billing incident',framework: 'OpenAI SDK', logoType: 'openai' },
-  { name: 'Customer Support Agent',    pip: '#94a3b8', status: 'blocked',  reason: 'out of scope',             framework: '',           logoType: 'support' },
-  { name: 'External MCP Tool',         pip: '#ef4444', status: 'blocked',  reason: 'sensitive constraint',     framework: 'MCP',        logoType: 'support' },
+  { name: 'Customer Support Agent',    pip: '#94a3b8', status: 'blocked',  reason: 'out of scope',              framework: '',           logoType: 'support' },
 ];
 
 const STATUS_COLORS = {
@@ -248,7 +245,7 @@ const ContextFlowViz = () => {
 
         <div className={`cfroute__footer${showBehavior ? ' cfroute__footer--done' : ''}`}>
           {showBehavior
-            ? <><span className="cfroute__footer-check">✓</span>3 routed · 2 inherited · 2 blocked · 0 manual steps</>
+            ? <><span className="cfroute__footer-check">✓</span>1 allowed · 1 inherited · 1 blocked · 0 manual steps</>
             : phase === 'write'    ? 'waiting for state update...'
             : phase === 'route'   ? 'routing to GlassMem engine...'
             : `evaluating ${ROUTE_AGENTS.length} agents...`
@@ -607,19 +604,6 @@ export function GlassMemPage() {
               <div className="hero__trust enter-4">
                 Scoped. Traceable. Temporal. Cross-framework.
               </div>
-              <ul className="hero__pills enter-4">
-                {[
-                  'route only relevant state',
-                  'prevent stale propagation',
-                  'inherit state into sub-agents',
-                  'coordinate across frameworks',
-                  'trace what every agent knew',
-                ].map(pill => (
-                  <li key={pill} className="hero__pill">
-                    <span className="hero__pill-check">✓</span>{pill}
-                  </li>
-                ))}
-              </ul>
               <div className="hero__ctas enter-4">
                 <Link to="/signup" className="btn btn--em btn--lg">Get started</Link>
                 <Link to="/dx"     className="btn btn--ghost btn--lg">See the DX</Link>
@@ -714,35 +698,90 @@ export function GlassMemPage() {
               Four primitives that solve the most common coordination failures in distributed agent systems.
             </p>
           </div>
-          <div className="bento reveal">
-            {[
-              {
-                title: 'Scoped routing',
-                desc: 'State reaches only the agents whose task and scope match. Billing state stays in billing context.',
-                color: '#6ee7b7',
-              },
-              {
-                title: 'Cross-framework coordination',
-                desc: 'LangGraph, CrewAI, Claude Code, MCP tools, and custom agents share operational state through one routing layer.',
-                color: '#a78bfa',
-              },
-              {
-                title: 'Sub-agent inheritance',
-                desc: 'Sub-agents automatically inherit the selected slice of parent-task state at spawn time.',
-                color: '#fb923c',
-              },
-              {
-                title: 'State lineage',
-                desc: 'Every state packet records source, route, recipient, and consumption. No more debugging black boxes.',
-                color: '#7dd3fc',
-              },
-            ].map(cap => (
-              <div key={cap.title} className="bento__card bento__card--simple">
-                <div className="bento__simple-dot" style={{ background: cap.color }}/>
-                <p className="bento__title">{cap.title}</p>
-                <p className="bento__simple-desc">{cap.desc}</p>
+          <div className="prim-bento reveal">
+            {/* Card 1: Scoped routing — featured/large */}
+            <div className="prim-bento__card prim-bento__card--featured">
+              <div className="prim-bento__visual">
+                <div className="prim-bento__route-source">
+                  <span className="prim-bento__route-badge" style={{ borderColor:'rgba(251,146,60,0.4)', color:'#fb923c', background:'rgba(251,146,60,0.08)' }}>billing constraint</span>
+                  <span className="prim-bento__route-scope">scope: project.billing</span>
+                </div>
+                <div className="prim-bento__route-arrow">
+                  <span className="prim-bento__route-line"/>
+                </div>
+                <div className="prim-bento__route-hub">
+                  <span className="prim-bento__route-hub-label">GlassMem</span>
+                </div>
+                <div className="prim-bento__route-arrow">
+                  <span className="prim-bento__route-line"/>
+                </div>
+                <div className="prim-bento__route-outputs">
+                  <div className="prim-bento__route-row" style={{ color:'#6ee7b7', borderColor:'rgba(110,231,183,0.2)', background:'rgba(110,231,183,0.06)' }}>
+                    <span className="prim-bento__route-icon">✓</span>
+                    <span>Claude Code</span>
+                    <span className="prim-bento__route-status">allowed</span>
+                  </div>
+                  <div className="prim-bento__route-row" style={{ color:'#a78bfa', borderColor:'rgba(167,139,250,0.2)', background:'rgba(167,139,250,0.06)' }}>
+                    <span className="prim-bento__route-icon">↓</span>
+                    <span>CrewAI Billing Sub-Agent</span>
+                    <span className="prim-bento__route-status">inherited</span>
+                  </div>
+                  <div className="prim-bento__route-row" style={{ color:'#94a3b8', borderColor:'rgba(148,163,184,0.15)', background:'rgba(148,163,184,0.04)' }}>
+                    <span className="prim-bento__route-icon">✗</span>
+                    <span>Customer Support</span>
+                    <span className="prim-bento__route-status">blocked</span>
+                  </div>
+                </div>
               </div>
-            ))}
+              <p className="prim-bento__title">Scoped routing</p>
+              <p className="prim-bento__copy">Only the agents that need state receive it.</p>
+            </div>
+            {/* Card 2: Cross-framework */}
+            <div className="prim-bento__card">
+              <div className="prim-bento__visual prim-bento__visual--hub">
+                <div className="prim-bento__hub-center">GlassMem</div>
+                <div className="prim-bento__hub-pills">
+                  {['LangGraph','CrewAI','Claude Code','MCP'].map(fw => (
+                    <span key={fw} className="prim-bento__hub-pill">{fw}</span>
+                  ))}
+                </div>
+              </div>
+              <p className="prim-bento__title">Cross-framework</p>
+              <p className="prim-bento__copy">State flows across runtimes through one layer.</p>
+            </div>
+            {/* Card 3: Sub-agent inheritance */}
+            <div className="prim-bento__card">
+              <div className="prim-bento__visual prim-bento__visual--tree">
+                <div className="prim-bento__tree-parent">
+                  <span className="prim-bento__tree-dot" style={{ background:'#fb923c' }}/>
+                  <span className="prim-bento__tree-name">Planner Agent</span>
+                </div>
+                <div className="prim-bento__tree-connector"/>
+                <div className="prim-bento__tree-child">
+                  <span className="prim-bento__tree-dot" style={{ background:'#a78bfa' }}/>
+                  <div>
+                    <span className="prim-bento__tree-name">Billing Sub-Agent</span>
+                    <span className="prim-bento__tree-badge">inherits: billing freeze</span>
+                  </div>
+                </div>
+              </div>
+              <p className="prim-bento__title">Sub-agent inheritance</p>
+              <p className="prim-bento__copy">Spawn agents with selected parent-task state.</p>
+            </div>
+            {/* Card 4: State lineage */}
+            <div className="prim-bento__card">
+              <div className="prim-bento__visual prim-bento__visual--trace">
+                {['Debug Agent','GlassMem','Claude Code'].map((node, i, arr) => (
+                  <React.Fragment key={node}>
+                    <span className="prim-bento__trace-node">{node}</span>
+                    {i < arr.length - 1 && <span className="prim-bento__trace-arrow">→</span>}
+                  </React.Fragment>
+                ))}
+                <div className="prim-bento__trace-ts">ctx_7f3a · 2 min ago</div>
+              </div>
+              <p className="prim-bento__title">State lineage</p>
+              <p className="prim-bento__copy">Every propagation event is traceable.</p>
+            </div>
           </div>
           <div style={{ marginTop: 32 }} className="reveal">
             <Link to="/architecture" className="btn btn--ghost btn--sm">See the architecture →</Link>
@@ -759,34 +798,101 @@ export function GlassMemPage() {
               <h2 className="h2">Start with one painful workflow</h2>
             </div>
             <p className="body-lg" style={{ maxWidth: '44ch' }}>
-              You do not need to migrate your whole agent stack. Start where state drift already hurts.
+              You do not need to replace your stack.
             </p>
           </div>
-          <div className="workflows__grid reveal">
-            {[
-              {
-                title: 'Billing freezes',
-                body: 'Keep migration constraints synchronized across planners, coders, debuggers, and sub-agents.',
-              },
-              {
-                title: 'Failed approach tracking',
-                body: 'Prevent agents from retrying Redis, Prisma, GraphQL, or migration strategies that already failed.',
-              },
-              {
-                title: 'Incident coordination',
-                body: 'Route incident learnings to debugging agents without exposing unrelated customer state.',
-              },
-              {
-                title: 'Sub-agent handoffs',
-                body: 'Pass selected parent-task state into spawned agents without copying context.md.',
-              },
-            ].map(card => (
-              <div key={card.title} className="workflows__card">
-                <span className="workflows__card-dot"/>
-                <p className="workflows__card-title">{card.title}</p>
-                <p className="workflows__card-body">{card.body}</p>
+          <div className="workflow-bento reveal">
+            {/* Card 1: Billing freezes — wide/featured */}
+            <div className="workflow-bento__card workflow-bento__card--featured">
+              <div className="workflow-bento__visual">
+                <div className="workflow-bento__constraint">
+                  <div className="workflow-bento__constraint-row">
+                    <span className="workflow-bento__constraint-key">constraint:</span>
+                    <span className="workflow-bento__constraint-val" style={{ color:'#fb923c' }}>billing freeze</span>
+                  </div>
+                  <div className="workflow-bento__constraint-row">
+                    <span className="workflow-bento__constraint-key">scope:</span>
+                    <span className="workflow-bento__constraint-val" style={{ color:'#a78bfa' }}>project.billing</span>
+                  </div>
+                  <div className="workflow-bento__constraint-row">
+                    <span className="workflow-bento__constraint-key">expires:</span>
+                    <span className="workflow-bento__constraint-val">Friday 18:00</span>
+                  </div>
+                  <div className="workflow-bento__constraint-row">
+                    <span className="workflow-bento__constraint-key">status:</span>
+                    <span className="workflow-bento__constraint-val" style={{ color:'#6ee7b7' }}>active</span>
+                  </div>
+                </div>
               </div>
-            ))}
+              <p className="workflow-bento__title">Billing freezes</p>
+              <p className="workflow-bento__copy">Keep migration constraints in sync across planners, coders, and sub-agents.</p>
+            </div>
+            {/* Card 2: Failed approach tracking */}
+            <div className="workflow-bento__card">
+              <div className="workflow-bento__visual">
+                <div className="workflow-bento__blocked-list">
+                  {[
+                    { label: 'Redis cache retry', age: 'blocked 2h ago' },
+                    { label: 'GraphQL migration', age: 'blocked 1d ago' },
+                    { label: 'Stripe direct write', age: 'blocked 3d ago' },
+                  ].map(item => (
+                    <div key={item.label} className="workflow-bento__blocked-row">
+                      <span className="workflow-bento__blocked-x">✗</span>
+                      <span className="workflow-bento__blocked-label">{item.label}</span>
+                      <span className="workflow-bento__blocked-age">{item.age}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+              <p className="workflow-bento__title">Failed approach tracking</p>
+              <p className="workflow-bento__copy">Prevent agents from retrying what already failed.</p>
+            </div>
+            {/* Card 3: Incident coordination */}
+            <div className="workflow-bento__card">
+              <div className="workflow-bento__visual">
+                <div className="workflow-bento__incident-source">
+                  <span className="workflow-bento__incident-dot"/>
+                  <span className="workflow-bento__incident-label">incident alert</span>
+                </div>
+                <div className="workflow-bento__incident-routes">
+                  <div className="workflow-bento__incident-row" style={{ color:'#6ee7b7', borderColor:'rgba(110,231,183,0.2)' }}>
+                    <span>✓</span><span>Security Agent</span>
+                  </div>
+                  <div className="workflow-bento__incident-row" style={{ color:'#6ee7b7', borderColor:'rgba(110,231,183,0.2)' }}>
+                    <span>✓</span><span>Data Agent</span>
+                  </div>
+                  <div className="workflow-bento__incident-row" style={{ color:'#94a3b8', borderColor:'rgba(148,163,184,0.12)' }}>
+                    <span>✗</span><span>Feature Agent</span>
+                  </div>
+                  <div className="workflow-bento__incident-row" style={{ color:'#94a3b8', borderColor:'rgba(148,163,184,0.12)' }}>
+                    <span>✗</span><span>Claude Code</span>
+                  </div>
+                </div>
+              </div>
+              <p className="workflow-bento__title">Incident coordination</p>
+              <p className="workflow-bento__copy">Route incident learnings without leaking unrelated state.</p>
+            </div>
+            {/* Card 4: Sub-agent handoffs */}
+            <div className="workflow-bento__card">
+              <div className="workflow-bento__visual">
+                <div className="workflow-bento__handoff-tree">
+                  <div className="workflow-bento__handoff-parent">
+                    <span className="workflow-bento__handoff-dot" style={{ background:'#fb923c' }}/>
+                    <span>Planner Agent</span>
+                  </div>
+                  <div className="workflow-bento__handoff-branch"/>
+                  <div className="workflow-bento__handoff-child">
+                    <span className="workflow-bento__handoff-dot" style={{ background:'#a78bfa' }}/>
+                    <div>
+                      <div>Debug Sub-Agent</div>
+                      <div className="workflow-bento__handoff-inherits">inherits: billing freeze, Redis failure</div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <p className="workflow-bento__title">Sub-agent handoffs</p>
+              <p className="workflow-bento__copy">Pass selected state into spawned agents automatically.</p>
+            </div>
           </div>
           <div style={{ marginTop: 32 }} className="reveal">
             <Link to="/dx" className="btn btn--ghost btn--sm">See the developer experience →</Link>
@@ -804,34 +910,59 @@ export function GlassMemPage() {
               Patterns from teams already coordinating state manually across context.md, sub-agents, frameworks, and tools.
             </p>
           </div>
-          <div className="field__grid reveal">
+          <div className="editorial reveal">
             {[
               {
                 quote: "We already had memory. The problem was keeping temporary constraints synchronized across agents.",
-                role: "Founding Engineer building agents",
+                name: "Armend Avdijaj",
+                role: "vibe coder, founder at GlassFlow",
+                photo: "/customer-photos/armend.jpg",
+                logo: "/customer-logos/glassflow.svg",
               },
               {
                 quote: "Our sub-agents solved the context window problem and created a handoff problem.",
-                role: "Multi-agent Systems Engineer",
+                name: "Andres Almansa",
+                role: "Founder at Restack",
+                photo: "/customer-photos/andres.jpg",
+                logo: "/customer-logos/restack.svg",
               },
               {
                 quote: "We were copying context.md between LangGraph, Claude Code, and MCP tools.",
-                role: "AI Platform Engineer",
+                name: "Ingo Marquardt",
+                role: "CTO and founder at NuBrain",
+                photo: "/customer-photos/ingo.jpg",
+                logo: "/customer-logos/nubrain.svg",
               },
               {
                 quote: "The hard part was not storage. It was deciding what each agent should inherit.",
-                role: "Staff Engineer",
+                name: "Marc Hamm",
+                role: "AI engineer at stealth startup",
+                photo: null,
+                logo: null,
               },
-            ].map((q, i) => (
-              <div key={i} className="field__card">
-                <div className="field__quote-icon">
-                  <svg width="20" height="16" viewBox="0 0 20 16" fill="none">
-                    <path d="M0 16V9.6C0 4.267 2.933 1.067 8.8 0L9.6 1.6C7.2 2.267 5.6 3.467 4.8 5.2C4 6.933 3.733 8.667 4 10.4H8V16H0ZM12 16V9.6C12 4.267 14.933 1.067 20.8 0L21.6 1.6C19.2 2.267 17.6 3.467 16.8 5.2C16 6.933 15.733 8.667 16 10.4H20V16H12Z" fill="#6ee7b7" fillOpacity="0.4"/>
-                  </svg>
+            ].map((q, i, arr) => (
+              <React.Fragment key={q.name}>
+                <div className="editorial__item">
+                  <p className="editorial__quote">{q.quote}</p>
+                  <div className="editorial__author">
+                    {q.photo ? (
+                      <img src={q.photo} alt={q.name} className="editorial__photo" onError={e => e.currentTarget.style.display='none'} />
+                    ) : (
+                      <div className="editorial__initials">
+                        {q.name.split(' ').map(n => n[0]).join('')}
+                      </div>
+                    )}
+                    <div className="editorial__author-info">
+                      <span className="editorial__name">{q.name}</span>
+                      <span className="editorial__role">{q.role}</span>
+                    </div>
+                    {q.logo && (
+                      <img src={q.logo} alt="" className="editorial__logo" onError={e => e.currentTarget.style.display='none'} />
+                    )}
+                  </div>
                 </div>
-                <p className="field__card-quote">{q.quote}</p>
-                <p className="field__card-role">{q.role}</p>
-              </div>
+                {i < arr.length - 1 && <div className="editorial__divider"/>}
+              </React.Fragment>
             ))}
           </div>
           <div style={{ marginTop: 32 }} className="reveal">

@@ -53,7 +53,7 @@ export function ArchitecturePage() {
           <div style={{ maxWidth: '56ch' }}>
             <span className="label enter">// architecture</span>
             <h1 className="h1 enter-2" style={{ marginBottom: 20 }}>How GlassMem coordinates state</h1>
-            <p className="body-lg enter-3">Designed for skeptical founding engineers.</p>
+            <p className="body-lg enter-3">See how it works</p>
           </div>
         </div>
       </section>

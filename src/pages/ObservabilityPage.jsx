@@ -247,6 +247,19 @@ export function ObservabilityPage() {
               </div>
             ))}
           </div>
+          <div className="obs-integrations reveal">
+            {[
+              { name: 'Langfuse',       src: '/logos/langfuse.png'       },
+              { name: 'Arize',          src: '/logos/arize.png'          },
+              { name: 'Helicone',       src: '/logos/helicone.png'       },
+              { name: 'OpenTelemetry',  src: '/logos/opentelemetry.png'  },
+            ].map(i => (
+              <div key={i.name} className="obs-integration">
+                <img src={i.src} alt={i.name} className="obs-integration__logo" onError={e => e.target.style.display='none'} />
+                <span className="obs-integration__name">{i.name}</span>
+              </div>
+            ))}
+          </div>
         </div>
       </section>
 
