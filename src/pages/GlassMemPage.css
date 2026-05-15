@@ -7811,6 +7811,29 @@ img { display: block; max-width: 100%; }
 }
 
 /* ══════════════════════════════════════════════════
+   BENTO SIMPLE CARDS (homepage simplified primitives)
+══════════════════════════════════════════════════ */
+.bento__card--simple {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding: 28px 26px;
+}
+
+.bento__simple-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.bento__simple-desc {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--tx-2);
+}
+
+/* ══════════════════════════════════════════════════
    OBSSEC copy line update
 ══════════════════════════════════════════════════ */
 .obssec__copy {

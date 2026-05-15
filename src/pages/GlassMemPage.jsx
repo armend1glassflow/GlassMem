@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react';
+import { Link } from 'react-router-dom';
 import './GlassMemPage.css';
 
 /* ── Agent framework logo components ── */
@@ -105,17 +106,8 @@ const IconDebuggingBlackBox = () => (
   </svg>
 );
 
-/* ── NOT icon (X mark) for notsec cards ── */
-const NotXIcon = () => (
-  <svg width="16" height="16" viewBox="0 0 16 16" fill="none">
-    <circle cx="8" cy="8" r="7.5" stroke="rgba(239,68,68,0.4)" strokeWidth="1"/>
-    <line x1="5" y1="5" x2="11" y2="11" stroke="#ef4444" strokeWidth="1.5" strokeLinecap="round"/>
-    <line x1="11" y1="5" x2="5" y2="11" stroke="#ef4444" strokeWidth="1.5" strokeLinecap="round"/>
-  </svg>
-);
-
 /* ════════════════════════════════════════════════════
-   HERO VISUALIZATION — billing migration freeze scenario
+   HERO VISUALIZATION
 ════════════════════════════════════════════════════ */
 
 const HERO_AGENTS = [
@@ -186,7 +178,6 @@ const ContextFlowViz = () => {
       </div>
 
       <div className="cfroute__body">
-        {/* Source card */}
         <div className="cfroute__source-card">
           <div className="cfroute__source-header">
             <span className="cfroute__pip" style={{ background: '#fb923c' }}/>
@@ -197,7 +188,6 @@ const ContextFlowViz = () => {
           <span className="cfroute__source-scope">scope: project.billing · temporary constraint</span>
         </div>
 
-        {/* Connector arrow */}
         <div className="cfroute__connector">
           <div className={`cfroute__conn-line${flowing ? ' cfroute__conn-line--active' : ''}`}/>
           <div className={`cfroute__conn-hub${distributing ? ' cfroute__conn-hub--active' : ''}`}>
@@ -208,7 +198,6 @@ const ContextFlowViz = () => {
           <div className={`cfroute__conn-line${distributing ? ' cfroute__conn-line--active' : ''}`}/>
         </div>
 
-        {/* Agent routing rows */}
         <div className="cfroute__agents">
           {ROUTE_AGENTS.map((r, i) => {
             const revealed = i < agentsDone;
@@ -241,7 +230,6 @@ const ContextFlowViz = () => {
           })}
         </div>
 
-        {/* Behavior change */}
         <div className={`cfroute__behavior${showBehavior ? ' cfroute__behavior--on' : ''}`}>
           <div className="cfroute__behavior-row cfroute__behavior-row--before">
             <span className="cfroute__behavior-label cfroute__behavior-label--before">Before</span>
@@ -254,12 +242,10 @@ const ContextFlowViz = () => {
           </div>
         </div>
 
-        {/* Hot-path chip */}
         <div className="cfroute__hotpath-chip">
           Designed for hot-path agent loops
         </div>
 
-        {/* Footer */}
         <div className={`cfroute__footer${showBehavior ? ' cfroute__footer--done' : ''}`}>
           {showBehavior
             ? <><span className="cfroute__footer-check">✓</span>3 routed · 2 inherited · 2 blocked · 0 manual steps</>
@@ -274,7 +260,7 @@ const ContextFlowViz = () => {
 };
 
 /* ════════════════════════════════════════════════════
-   INTERACTIVE LIVE DEMO — Section 3
+   INTERACTIVE LIVE DEMO
 ════════════════════════════════════════════════════ */
 
 const DEMO_SCENARIOS = [
@@ -373,30 +359,6 @@ const DEMO_SCENARIOS = [
     behaviorBefore: 'All agents operate normally.',
     behaviorAfter:  'Non-essential work paused. Incident response agents coordinated.',
   },
-  {
-    id: 'architecture', label: 'Architecture migration', color: '#a78bfa',
-    trigger: {
-      agent: 'Architect Agent', pip: '#a78bfa', framework: 'LangGraph', action: 'writes decision',
-      content: '"Migrate from REST to GraphQL. No new REST endpoints after 2026-06-15."',
-    },
-    agents: [
-      { name: 'Claude Code',         pip: '#6ee7b7', framework: 'Claude Code', before: 'Building a new REST endpoint',     after: 'Switching to GraphQL resolver instead',               status: 'allowed'   },
-      { name: 'Cursor',              pip: '#6ee7b7', framework: 'Cursor',      before: 'Editing REST API layer',           after: 'Updating API layer for GraphQL migration',            status: 'allowed'   },
-      { name: 'API Agent',           pip: '#fb923c', framework: 'OpenAI SDK',  before: 'Generating REST API docs',         after: 'GraphQL schema generation. Migration active',         status: 'allowed'   },
-      { name: 'Review Agent',        pip: '#a78bfa', framework: 'CrewAI',      before: 'Reviewing API change PRs',         after: 'Inherited: flagging new REST endpoints in reviews',   status: 'inherited' },
-      { name: 'Docs Agent',          pip: '#6ee7b7', framework: 'Custom',      before: 'Writing REST API documentation',   after: 'Updating docs for GraphQL migration',                status: 'allowed'   },
-      { name: 'Legacy Service Agent',pip: '#94a3b8', framework: 'Custom',      before: 'Running legacy REST service',      after: 'Blocked. REST-only agent. Irrelevant to migration',  status: 'blocked'   },
-    ],
-    steps: [
-      'Architect writes REST-to-GraphQL migration decision',
-      'GlassMem routes to all API-scope agents',
-      'Claude Code, Cursor, API Agent, Docs Agent receive decision',
-      'Review Agent inherits: flags new REST endpoint PRs',
-      'Legacy Service Agent blocked. REST-only scope.',
-    ],
-    behaviorBefore: 'Claude Code creates new REST endpoint.',
-    behaviorAfter:  'Claude Code builds GraphQL resolver instead. REST endpoint rejected.',
-  },
 ];
 
 const LiveDemo = () => {
@@ -487,411 +449,7 @@ const LiveDemo = () => {
   );
 };
 
-/* ════════════════════════════════════════════════════
-   COMPARISON TABLE
-════════════════════════════════════════════════════ */
-
-const COMPARE_ROWS = [
-  {
-    approach: 'context.md',
-    inspectable: '✓', routing: '✗', handoff: '✗', temporal: '✗', crossfw: '✗', lineage: '✗',
-    isGlass: false,
-  },
-  {
-    approach: 'Vector DB / memory',
-    inspectable: '✓', routing: '✗', handoff: '✗', temporal: '✗', crossfw: '✗', lineage: '✗',
-    isGlass: false,
-  },
-  {
-    approach: 'Framework-native memory',
-    inspectable: '✓', routing: '~', handoff: '~', temporal: '~', crossfw: '✗', lineage: '✗',
-    isGlass: false,
-  },
-  {
-    approach: 'Ad-hoc sub-agents',
-    inspectable: '~', routing: '✗', handoff: '✗', temporal: '~', crossfw: '~', lineage: '✗',
-    isGlass: false,
-  },
-  {
-    approach: 'GlassMem',
-    inspectable: '✓', routing: '✓', handoff: '✓', temporal: '✓', crossfw: '✓', lineage: '✓',
-    isGlass: true,
-  },
-];
-
-const cellClass = (v) => {
-  if (v === '✓') return 'ctable__cell ctable__cell--pos';
-  if (v === '✗') return 'ctable__cell ctable__cell--neg';
-  return 'ctable__cell ctable__cell--neu';
-};
-
-const ComparisonTable = () => (
-  <div className="ctable">
-    <div className="ctable__head">
-      <div className="ctable__hcell ctable__hcell--feat">Approach</div>
-      <div className="ctable__hcell">Inspectable</div>
-      <div className="ctable__hcell">Routing</div>
-      <div className="ctable__hcell">Sub-agent handoff</div>
-      <div className="ctable__hcell">Temporal</div>
-      <div className="ctable__hcell">Cross-framework</div>
-      <div className="ctable__hcell">Lineage</div>
-    </div>
-    {COMPARE_ROWS.map((row) => (
-      <div key={row.approach} className={`ctable__row${row.isGlass ? ' ctable__row--em' : ''}`}>
-        <div className={`ctable__cell ctable__cell--name${row.isGlass ? ' ctable__cell--glass' : ''}`}>{row.approach}</div>
-        <div className={cellClass(row.inspectable)}>{row.inspectable}</div>
-        <div className={cellClass(row.routing)}>{row.routing}</div>
-        <div className={cellClass(row.handoff)}>{row.handoff}</div>
-        <div className={cellClass(row.temporal)}>{row.temporal}</div>
-        <div className={cellClass(row.crossfw)}>{row.crossfw}</div>
-        <div className={cellClass(row.lineage)}>{row.lineage}</div>
-      </div>
-    ))}
-  </div>
-);
-
-/* ════════════════════════════════════════════════════
-   OBSERVABILITY PANEL
-════════════════════════════════════════════════════ */
-
-const ObsPanel = () => (
-  <div className="obspanel">
-    <div className="obspanel__chrome">
-      <div className="obspanel__chrome-dots">
-        <span className="obspanel__macdot" style={{ background: '#ff5f57' }}/>
-        <span className="obspanel__macdot" style={{ background: '#febc2e' }}/>
-        <span className="obspanel__macdot" style={{ background: '#28c840' }}/>
-      </div>
-      <span className="obspanel__chrome-title"><Logo size={11}/>glassmem · state-packet · ctx_a2f9c01b</span>
-      <span className="obspanel__status">active</span>
-    </div>
-
-    <div className="obspanel__content-line">
-      "Redis cache caused stale billing reads. Do not retry."
-    </div>
-
-    <div className="obspanel__fields">
-      {[
-        { k: 'source',            v: 'OpenAI Debug Agent',                            color: '#7dd3fc' },
-        { k: 'source framework',  v: 'OpenAI Agents SDK',                             color: '#7dd3fc' },
-        { k: 'scope',             v: 'project.billing',                               color: '#a78bfa' },
-        { k: 'status',            v: 'failed_approach',                               color: '#fb923c' },
-        { k: 'created',           v: '3 days ago',                                    color: 'var(--tx-2)' },
-        { k: 'routed to',         v: 'Claude Code, CrewAI Billing Sub-Agent',         color: '#6ee7b7' },
-        { k: 'blocked from',      v: 'Customer Support Agent, External MCP Tool',     color: '#ef4444' },
-        { k: 'reason',            v: 'billing task relevance',                        color: 'var(--tx-2)' },
-        { k: 'used by',           v: 'Claude Code (before implementation plan)',      color: '#6ee7b7' },
-        { k: 'expires',           v: 'never',                                         color: 'var(--tx-2)' },
-        { k: 'supersedes',        v: 'none',                                          color: 'var(--tx-2)' },
-        { k: 'related incident',  v: 'INC-1042',                                      color: '#fb923c' },
-      ].map(({ k, v, color }) => (
-        <div key={k} className="obspanel__field-row">
-          <span className="obspanel__field-key">{k}</span>
-          <span className="obspanel__field-val" style={{ color }}>{v}</span>
-        </div>
-      ))}
-    </div>
-
-    <div className="obspanel__trace">
-      <span className="obspanel__trace-label">Lineage trace</span>
-      <div className="obspanel__trace-line">
-        {['OpenAI Debug Agent', 'GlassMem', 'Claude Code', 'CrewAI Billing Sub-Agent'].map((node, i, arr) => (
-          <React.Fragment key={node}>
-            <span className="obspanel__trace-node">{node}</span>
-            {i < arr.length - 1 && <span className="obspanel__trace-arrow">→</span>}
-          </React.Fragment>
-        ))}
-      </div>
-    </div>
-  </div>
-);
-
-/* ════════════════════════════════════════════════════
-   CAPABILITY MOCKUPS
-════════════════════════════════════════════════════ */
-
-const MockScopedRouting = () => (
-  <div className="cap-mock cap-mock--routing">
-    <div className="cap-mock__header">
-      <span className="cap-mock__label-key">state:</span>
-      <span className="cap-mock__label-val">billing freeze</span>
-      <span className="cap-mock__scope-tag">scope: project.billing</span>
-    </div>
-    <div className="cap-mock__rows">
-      {[
-        { name: 'Claude Code',       status: 'allowed',   color: '#6ee7b7' },
-        { name: 'CrewAI Billing Sub',status: 'inherited', color: '#a78bfa' },
-        { name: 'OpenAI Debug Agent',status: 'allowed',   color: '#6ee7b7' },
-        { name: 'Customer Support',  status: 'blocked',   color: '#f87171' },
-      ].map(r => (
-        <div key={r.name} className="cap-mock__row">
-          <span className="cap-mock__tree-prefix">├─</span>
-          <span className="cap-mock__agent-name">{r.name}</span>
-          <span className="cap-mock__status" style={{ color: r.color }}>
-            {r.status === 'allowed' ? '✓' : r.status === 'inherited' ? '↓' : '✗'} {r.status}
-          </span>
-        </div>
-      ))}
-    </div>
-  </div>
-);
-
-const MockCrossFramework = () => (
-  <div className="cap-mock cap-mock--crossfw">
-    <div className="cap-mock__header">
-      <span className="cap-mock__label-key">routing layer</span>
-    </div>
-    <div className="cap-mock__rows">
-      {[
-        { name: 'LangGraph', color: '#fb923c' },
-        { name: 'CrewAI',    color: '#a78bfa' },
-        { name: 'Claude Code', color: '#6ee7b7' },
-        { name: 'MCP tools', color: '#7dd3fc' },
-      ].map(r => (
-        <div key={r.name} className="cap-mock__row">
-          <span className="cap-mock__pip" style={{ background: r.color }}/>
-          <span className="cap-mock__agent-name">{r.name}</span>
-          <span className="cap-mock__status" style={{ color: '#6ee7b7' }}>✓ connected</span>
-        </div>
-      ))}
-    </div>
-    <div className="cap-mock__inherit-block cap-mock__inherit-block--yes">
-      <span className="cap-mock__inherit-label" style={{ color: '#6ee7b7' }}>one routing layer:</span>
-      <span className="cap-mock__inherit-items">all frameworks share operational state</span>
-    </div>
-  </div>
-);
-
-const MockSubAgentInheritance = () => (
-  <div className="cap-mock cap-mock--inherit">
-    <div className="cap-mock__row cap-mock__row--parent">
-      <span className="cap-mock__pip" style={{ background: '#fb923c' }}/>
-      <span className="cap-mock__agent-name cap-mock__agent-name--bold">LangGraph Planner</span>
-    </div>
-    <div className="cap-mock__row cap-mock__row--child">
-      <span className="cap-mock__tree-prefix" style={{ color: '#a78bfa' }}>└─</span>
-      <span className="cap-mock__pip" style={{ background: '#a78bfa' }}/>
-      <span className="cap-mock__agent-name">CrewAI Billing Sub-Agent</span>
-    </div>
-    <div className="cap-mock__inherit-block cap-mock__inherit-block--yes">
-      <span className="cap-mock__inherit-label" style={{ color: '#6ee7b7' }}>inherits:</span>
-      <span className="cap-mock__inherit-items">billing freeze · Redis failure · lock strategy</span>
-    </div>
-    <div className="cap-mock__inherit-block cap-mock__inherit-block--no">
-      <span className="cap-mock__inherit-label" style={{ color: '#f87171' }}>not inherited:</span>
-      <span className="cap-mock__inherit-items">customer data · auth state</span>
-    </div>
-  </div>
-);
-
-const MockTemporalUpdates = () => (
-  <div className="cap-mock cap-mock--temporal">
-    <div className="cap-mock__header">
-      <span className="cap-mock__label-key">state:</span>
-      <span className="cap-mock__label-val">migration freeze</span>
-    </div>
-    <div className="cap-mock__rows">
-      <div className="cap-mock__row"><span className="cap-mock__tree-prefix">├─</span><span className="cap-mock__field-k">created:</span><span className="cap-mock__field-v">Mon 09:00</span></div>
-      <div className="cap-mock__row">
-        <span className="cap-mock__tree-prefix">├─</span>
-        <span className="cap-mock__field-k">expires:</span>
-        <span className="cap-mock__field-v">Fri 18:00</span>
-        <span className="cap-mock__countdown">3d 7h left</span>
-      </div>
-      <div className="cap-mock__row"><span className="cap-mock__tree-prefix">└─</span><span className="cap-mock__field-k">status:</span><span className="cap-mock__field-v" style={{ color: '#6ee7b7' }}>active, will auto-expire</span></div>
-    </div>
-    <div className="cap-mock__bar-wrap">
-      <div className="cap-mock__bar-fill" style={{ width: '55%', background: '#fb923c' }}/>
-    </div>
-  </div>
-);
-
-const MockSensitiveFiltering = () => (
-  <div className="cap-mock cap-mock--filter">
-    <div className="cap-mock__header">
-      <span className="cap-mock__label-key">state:</span>
-      <span className="cap-mock__label-val">customer PII data</span>
-      <span className="cap-mock__scope-tag" style={{ color: '#f87171', borderColor: 'rgba(248,113,113,0.25)' }}>sensitivity: high</span>
-    </div>
-    <div className="cap-mock__rows">
-      {[
-        { name: 'Internal agents',  status: 'allowed', color: '#6ee7b7' },
-        { name: 'External vendors', status: 'blocked', color: '#f87171' },
-        { name: 'Support tools',    status: 'blocked', color: '#f87171' },
-      ].map(r => (
-        <div key={r.name} className="cap-mock__row">
-          <span className="cap-mock__tree-prefix">├─</span>
-          <span className="cap-mock__agent-name">{r.name}</span>
-          <span className="cap-mock__status" style={{ color: r.color }}>
-            {r.status === 'allowed' ? '✓' : '✗'} {r.status}
-          </span>
-        </div>
-      ))}
-    </div>
-  </div>
-);
-
-const MockContextLineage = () => (
-  <div className="cap-mock cap-mock--lineage">
-    {[
-      { agent: 'OpenAI Debug Agent', action: 'wrote',  detail: '"Redis stale reads"',         color: '#7dd3fc' },
-      { agent: 'GlassMem',          action: 'routed',  detail: 'Claude Code, Billing Agent',   color: '#6ee7b7' },
-      { agent: 'Claude Code',        action: 'used',   detail: 'before implementation plan',   color: '#6ee7b7' },
-    ].map((item, i) => (
-      <div key={i} className="cap-mock__lineage-row">
-        <span className="cap-mock__lineage-agent" style={{ color: item.color }}>{item.agent}</span>
-        <span className="cap-mock__lineage-arrow">→</span>
-        <span className="cap-mock__lineage-action">{item.action}</span>
-        <span className="cap-mock__lineage-arrow">→</span>
-        <span className="cap-mock__lineage-detail">{item.detail}</span>
-      </div>
-    ))}
-  </div>
-);
-
-/* ════════════════════════════════════════════════════
-   BENTO CAPABILITIES GRID
-════════════════════════════════════════════════════ */
-const CAPABILITIES = [
-  {
-    title: 'Scoped routing',
-    before: 'Every agent receives the same giant state blob.',
-    after:  'Billing state only reaches billing-related agents.',
-    mockup: <MockScopedRouting />,
-    color: '#6ee7b7',
-  },
-  {
-    title: 'Cross-framework coordination',
-    before: 'LangGraph, CrewAI, Claude Code, and MCP tools maintain separate state.',
-    after:  'Operational state moves across frameworks through one routing layer.',
-    mockup: <MockCrossFramework />,
-    color: '#a78bfa',
-  },
-  {
-    title: 'Sub-agent inheritance',
-    before: 'Sub-agents start with partial summaries or stale parent state.',
-    after:  'Sub-agents inherit the selected slice of task state automatically.',
-    mockup: <MockSubAgentInheritance />,
-    color: '#fb923c',
-  },
-  {
-    title: 'Temporal updates',
-    before: 'Temporary constraints become permanent prompt junk.',
-    after:  'State expires or updates automatically.',
-    mockup: <MockTemporalUpdates />,
-    color: '#fb923c',
-  },
-  {
-    title: 'Sensitive state filtering',
-    before: 'Private customer data can leak into external tools.',
-    after:  'Policies block sensitive state from the wrong agents.',
-    mockup: <MockSensitiveFiltering />,
-    color: '#ef4444',
-  },
-  {
-    title: 'State lineage',
-    before: 'No one knows what an agent knew when it acted.',
-    after:  'Every state packet records source, route, recipient, and consumption.',
-    mockup: <MockContextLineage />,
-    color: '#7dd3fc',
-  },
-];
-
-/* ════════════════════════════════════════════════════
-   ARCHITECTURE FLOW DIAGRAM
-════════════════════════════════════════════════════ */
-
-const ArchitectureFlow = () => (
-  <div className="archflow">
-    {/* Row 1: Agents */}
-    <div className="archflow__layer">
-      <span className="archflow__layer-label">Agents and runtimes</span>
-      <div className="archflow__chips">
-        {['Claude Code', 'Cursor', 'LangGraph', 'CrewAI', 'OpenAI Agents SDK', 'MCP tools', 'Custom agents'].map(n => (
-          <span key={n} className="archflow__chip">{n}</span>
-        ))}
-      </div>
-      <span className="archflow__connect-label">connect via MCP / SDK / API</span>
-    </div>
-
-    <div className="archflow__arrow">↓</div>
-
-    {/* Row 2: Routing layer */}
-    <div className="archflow__layer archflow__layer--core">
-      <div className="archflow__core-header">
-        <Logo size={16}/>
-        <span className="archflow__core-title">GlassMem Routing Layer</span>
-      </div>
-      <div className="archflow__dims">
-        {['scope', 'task', 'agent role', 'framework', 'sensitivity', 'freshness', 'permissions', 'lineage'].map(d => (
-          <span key={d} className="archflow__dim">{d}</span>
-        ))}
-      </div>
-    </div>
-
-    <div className="archflow__arrow">↓</div>
-
-    {/* Row 3: Outputs */}
-    <div className="archflow__outputs">
-      <div className="archflow__output archflow__output--green">
-        <span className="archflow__output-label">Allowed state</span>
-        <span className="archflow__output-sub">routed to relevant agents</span>
-      </div>
-      <div className="archflow__output archflow__output--purple">
-        <span className="archflow__output-label">Inherited state</span>
-        <span className="archflow__output-sub">propagated to sub-agents</span>
-      </div>
-      <div className="archflow__output archflow__output--red">
-        <span className="archflow__output-label">Blocked state</span>
-        <span className="archflow__output-sub">filtered from wrong agents</span>
-      </div>
-    </div>
-
-    <div className="archflow__arrow">↓</div>
-
-    {/* Row 4: Store */}
-    <div className="archflow__layer archflow__layer--store">
-      <span className="archflow__layer-label">Scoped Operational State Store</span>
-      <span className="archflow__store-sub">typed events, temporal validity, immutable history</span>
-    </div>
-
-    <div className="archflow__arrow">↓</div>
-
-    {/* Row 5: Observability */}
-    <div className="archflow__layer archflow__layer--obs">
-      <span className="archflow__layer-label">Observability, Traces, Lineage events</span>
-      <div className="archflow__chips">
-        {['Langfuse', 'Arize', 'Helicone', 'OpenTelemetry'].map(n => (
-          <span key={n} className="archflow__chip archflow__chip--obs">{n}</span>
-        ))}
-      </div>
-    </div>
-
-    {/* Architecture notes */}
-    <div className="archflow__notes">
-      {[
-        { title: 'Where state lives', text: 'GlassMem supports local, self-hosted, or managed deployment models. You choose where operational state lives.' },
-        { title: 'How agents connect', text: 'MCP, SDK, API. Framework-agnostic by design.' },
-        { title: 'How routing works', text: 'GlassMem evaluates scope, task, framework, sensitivity, freshness, and policy before injecting state.' },
-        { title: 'Latency philosophy', text: 'Designed for hot-path agent loops. Routing stays lightweight, scoped, and cacheable. No latency numbers promised — architecture is designed for low-overhead injection.' },
-        { title: 'Preventing garbage state', text: 'Temporary state expires. Superseded state stops routing. Invalid state can be reviewed and blocked.' },
-        { title: 'Observability', text: 'Every routing decision emits traceable events exportable into Langfuse, Arize, Helicone, or OpenTelemetry-compatible systems.' },
-      ].map((note, i) => (
-        <div key={i} className="archflow__note">
-          <span className="archflow__note-num">0{i + 1}</span>
-          <div>
-            <span className="archflow__note-title">{note.title}</span>
-            <span className="archflow__note-text">{note.text}</span>
-          </div>
-        </div>
-      ))}
-    </div>
-  </div>
-);
-
-/* ════════════════════════════════════════════════════
-   LOGOS
-════════════════════════════════════════════════════ */
+/* ── Logos ── */
 const LOGOS = [
   { img: '/logos/cursor.png',    name: 'Cursor',    h: 22, style: { filter: 'brightness(0) invert(1)', opacity: 0.65 } },
   { img: '/logos/claude.svg',    name: 'Claude',    h: 22, style: { opacity: 0.8  } },
@@ -913,6 +471,89 @@ function useReveal() {
     document.querySelectorAll('.reveal').forEach(el => io.observe(el));
     return () => io.disconnect();
   }, []);
+}
+
+/* ── Shared Nav component ── */
+export function SiteNav({ scrolled, mobOpen, setMobOpen }) {
+  return (
+    <nav className="nav" style={{ borderBottomColor: scrolled ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.06)' }}>
+      <div className="nav__row">
+        <a href="/" className="nav__logo"><Logo size={24}/><span className="nav__wordmark">GlassMem</span></a>
+        <div className="nav__links">
+          <a href="/#problem"       className="nav__link">Problem</a>
+          <a href="/#demo"          className="nav__link">Demo</a>
+          <Link to="/dx"            className="nav__link">DX</Link>
+          <Link to="/architecture"  className="nav__link">Architecture</Link>
+          <Link to="/manifesto"     className="nav__link">Manifesto</Link>
+          <Link to="/observability" className="nav__link">Observability</Link>
+        </div>
+        <div className="nav__right">
+          <a href="/app"    className="btn btn--ghost btn--sm">Log in</a>
+          <Link to="/signup" className="btn btn--em btn--sm">Get started</Link>
+        </div>
+        <button className="nav__mob-toggle" onClick={() => setMobOpen(o => !o)} aria-label="Menu">{mobOpen ? '✕' : '☰'}</button>
+      </div>
+      <div className={`nav__mob-menu${mobOpen ? ' open' : ''}`}>
+        <a href="/#problem" className="nav__mob-link" onClick={() => setMobOpen(false)}>Problem</a>
+        <a href="/#demo"    className="nav__mob-link" onClick={() => setMobOpen(false)}>Demo</a>
+        <Link to="/dx"            className="nav__mob-link" onClick={() => setMobOpen(false)}>DX</Link>
+        <Link to="/architecture"  className="nav__mob-link" onClick={() => setMobOpen(false)}>Architecture</Link>
+        <Link to="/manifesto"     className="nav__mob-link" onClick={() => setMobOpen(false)}>Manifesto</Link>
+        <Link to="/observability" className="nav__mob-link" onClick={() => setMobOpen(false)}>Observability</Link>
+      </div>
+    </nav>
+  );
+}
+
+/* ── Shared Footer ── */
+export function SiteFooter() {
+  return (
+    <>
+      <div className="integ">
+        <div className="integ__inner">
+          <span className="integ__label">Integrations</span>
+          <div className="logos__track-wrap">
+            <div className="logos__track">
+              {[...LOGOS, ...LOGOS].map(({ img, name, h, style }, i) => (
+                <div key={i} className="logos__item">
+                  <img src={img} alt={name} className="logos__img" height={h} style={style}/>
+                </div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div className="prefooter"/>
+
+      <footer className="footer2">
+        <div className="footer2__inner">
+          <div className="footer2__top">
+            <div className="footer2__left">
+              <a href="/" className="footer2__brand"><Logo size={18}/><span className="footer2__wordmark">GlassMem</span></a>
+              <div className="footer2__divider"/>
+              <div className="footer2__socials">
+                <a href="https://discord.gg/glassmem"   className="footer2__social" aria-label="Discord"><DiscordIcon/></a>
+                <a href="https://github.com/glassmem"   className="footer2__social" aria-label="GitHub"><GitHubIcon/></a>
+                <a href="https://twitter.com/glassmem" className="footer2__social" aria-label="X"><XIcon/></a>
+              </div>
+            </div>
+            <nav className="footer2__nav">
+              <Link to="/dx"            className="footer2__nav-link">DX</Link>
+              <Link to="/architecture"  className="footer2__nav-link">Architecture</Link>
+              <Link to="/manifesto"     className="footer2__nav-link">Manifesto</Link>
+              <Link to="/observability" className="footer2__nav-link">Observability</Link>
+              <Link to="/contact"       className="footer2__nav-link">Contact</Link>
+            </nav>
+          </div>
+          <div className="footer2__bottom">
+            <div className="footer2__status"><span className="footer2__status-dot"/>All systems operational</div>
+            <span className="footer2__copy">2026 GlassMem</span>
+          </div>
+        </div>
+      </footer>
+    </>
+  );
 }
 
 /* ════════════════════════════════════════════════════
@@ -939,30 +580,7 @@ export function GlassMemPage() {
   return (
     <div>
 
-      {/* NAV */}
-      <nav className="nav" style={{ borderBottomColor: scrolled ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.06)' }}>
-        <div className="nav__row">
-          <a href="/" className="nav__logo"><Logo size={24}/><span className="nav__wordmark">GlassMem</span></a>
-          <div className="nav__links">
-            <a href="#problem"       className="nav__link">Problem</a>
-            <a href="#dx"            className="nav__link">DX</a>
-            <a href="#demo"          className="nav__link">Demo</a>
-            <a href="#architecture"  className="nav__link">Architecture</a>
-            <a href="#observability" className="nav__link">Observability</a>
-            <a href="https://docs.glassmem.ai" className="nav__link">Docs</a>
-          </div>
-          <div className="nav__right">
-            <a href="/app"    className="btn btn--ghost btn--sm">Log in</a>
-            <a href="/signup" className="btn btn--em btn--sm">Get started</a>
-          </div>
-          <button className="nav__mob-toggle" onClick={() => setMobOpen(o => !o)} aria-label="Menu">{mobOpen ? '✕' : '☰'}</button>
-        </div>
-        <div className={`nav__mob-menu${mobOpen ? ' open' : ''}`}>
-          {['Problem','DX','Demo','Architecture','Observability','Docs'].map(l => (
-            <a key={l} href={`#${l.toLowerCase()}`} className="nav__mob-link" onClick={() => setMobOpen(false)}>{l}</a>
-          ))}
-        </div>
-      </nav>
+      <SiteNav scrolled={scrolled} mobOpen={mobOpen} setMobOpen={setMobOpen} />
 
       {/* HERO */}
       <section className="hero">
@@ -1003,8 +621,8 @@ export function GlassMemPage() {
                 ))}
               </ul>
               <div className="hero__ctas enter-4">
-                <a href="/signup" className="btn btn--em btn--lg">Get started</a>
-                <a href="#dx"   className="btn btn--ghost btn--lg">See the DX</a>
+                <Link to="/signup" className="btn btn--em btn--lg">Get started</Link>
+                <Link to="/dx"     className="btn btn--ghost btn--lg">See the DX</Link>
               </div>
             </div>
             <div className="hero__viz-col enter-4">
@@ -1014,98 +632,7 @@ export function GlassMemPage() {
         </div>
       </section>
 
-      {/* SECTION: WHAT GLASSMEM IS NOT */}
-      <section id="not-memory" className="sec">
-        <div className="w">
-          <div className="notsec reveal">
-            <div className="notsec__header">
-              <span className="label">// positioning</span>
-              <h2 className="h2">What GlassMem is NOT</h2>
-            </div>
-            <div className="notsec__grid">
-              {[
-                {
-                  title: 'Not a vector DB wrapper',
-                  body: 'GlassMem is not trying to retrieve the most similar chunk. It decides which operational state each agent is allowed to see.',
-                },
-                {
-                  title: 'Not shared memory',
-                  body: 'Not every agent should inherit every decision. Uncontrolled memory creates state pollution.',
-                },
-                {
-                  title: 'Not framework-specific memory',
-                  body: 'Framework-native memory works inside one runtime. GlassMem coordinates state across frameworks and tools.',
-                },
-                {
-                  title: 'Not another giant prompt',
-                  body: 'Agents receive selected state slices, not the full history of the system.',
-                },
-              ].map(card => (
-                <div key={card.title} className="notsec__card">
-                  <div className="notsec__card-icon"><NotXIcon /></div>
-                  <p className="notsec__card-title">{card.title}</p>
-                  <p className="notsec__card-body">{card.body}</p>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION: SHOW ME THE DX */}
-      <section id="dx" className="sec sec--alt">
-        <div className="w">
-          <div className="fail__intro reveal">
-            <div>
-              <span className="label">Developer experience</span>
-              <h2 className="h2">Show me the DX</h2>
-            </div>
-            <p className="body-lg" style={{ maxWidth: '44ch' }}>
-              Start with one workflow. Write scoped state. Let GlassMem decide what each agent receives.
-            </p>
-          </div>
-          <div className="dxsec reveal">
-            <div className="dxsec__block">
-              <div className="dxsec__block-label">Write state</div>
-              <div className="dxsec__code">
-                <span className="dxsec__kw">await</span> glassmem.state.<span className="dxsec__fn">write</span>({'({'}<br/>
-                {'  '}<span className="dxsec__key">scope</span>: <span className="dxsec__str">"project.billing"</span>,<br/>
-                {'  '}<span className="dxsec__key">type</span>: <span className="dxsec__str">"temporary_constraint"</span>,<br/>
-                {'  '}<span className="dxsec__key">content</span>: <span className="dxsec__str">"Do not modify billing until Stripe migration completes"</span>,<br/>
-                {'  '}<span className="dxsec__key">expiresAt</span>: <span className="dxsec__str">"2026-06-14T18:00:00Z"</span>,<br/>
-                {'  '}<span className="dxsec__key">sensitivity</span>: <span className="dxsec__str">"internal"</span><br/>
-                {'})'}<br/>
-                <br/>
-                <span className="dxsec__kw">const</span> <span className="dxsec__key">state</span> = <span className="dxsec__kw">await</span> glassmem.state.<span className="dxsec__fn">forAgent</span>({'({'}<br/>
-                {'  '}<span className="dxsec__key">agent</span>: <span className="dxsec__str">"claude-code"</span>,<br/>
-                {'  '}<span className="dxsec__key">framework</span>: <span className="dxsec__str">"mcp"</span>,<br/>
-                {'  '}<span className="dxsec__key">task</span>: <span className="dxsec__str">"refactor billing sync"</span><br/>
-                {'})'}
-              </div>
-            </div>
-            <div className="dxsec__block">
-              <div className="dxsec__block-label">Receive scoped state</div>
-              <div className="dxsec__code">
-                {'{'}<br/>
-                {'  '}<span className="dxsec__key">allowed</span>: [<br/>
-                {'    '}<span className="dxsec__str">"billing freeze until Friday"</span>,<br/>
-                {'    '}<span className="dxsec__str">"Redis cache caused stale billing reads"</span>,<br/>
-                {'    '}<span className="dxsec__str">"Use Postgres row-level locking"</span><br/>
-                {'  '}],<br/>
-                {'  '}<span className="dxsec__key">blocked</span>: [<br/>
-                {'    '}<span className="dxsec__str">"customer PII"</span>,<br/>
-                {'    '}<span className="dxsec__str">"support-only escalation notes"</span><br/>
-                {'  '}],<br/>
-                {'  '}<span className="dxsec__key">traceId</span>: <span className="dxsec__str">"ctx_trace_7f3a"</span><br/>
-                {'}'}
-              </div>
-            </div>
-          </div>
-          <p className="dxsec__tagline reveal">MCP · SDK · REST API — framework-agnostic by design.</p>
-        </div>
-      </section>
-
-      {/* SECTION: ANTI-MEMORY POSITIONING */}
+      {/* SECTION: PROBLEM */}
       <section id="problem" className="sec">
         <div className="w">
           <div className="antimem reveal">
@@ -1118,6 +645,9 @@ export function GlassMemPage() {
               <p className="antimem__keyline">
                 GlassMem is not a shared memory bucket.<br/>It is a control plane for agent state.
               </p>
+              <div style={{ marginTop: 24 }}>
+                <Link to="/manifesto" className="btn btn--ghost btn--sm">Read why shared memory breaks →</Link>
+              </div>
             </div>
             <div className="antimem__cards">
               {[
@@ -1155,27 +685,8 @@ export function GlassMemPage() {
         </div>
       </section>
 
-      {/* SECTION: WHY STATE BREAKS */}
-      <section className="sec sec--alt">
-        <div className="w">
-          <div className="fail__intro reveal">
-            <div>
-              <span className="label">Why state coordination breaks</span>
-              <h2 className="h2">Why state breaks<br/>in real agent systems</h2>
-            </div>
-            <p className="body-lg" style={{ maxWidth:'44ch' }}>
-              Your agents already span frameworks. Their operational state does not.
-            </p>
-          </div>
-          <div className="reveal">
-            <ComparisonTable/>
-          </div>
-          <p className="ctable__keyline reveal">Storage is solved. Coordination is not.</p>
-        </div>
-      </section>
-
       {/* SECTION: LIVE DEMO */}
-      <section id="demo" className="sec">
+      <section id="demo" className="sec sec--alt">
         <div className="w">
           <div className="fail__intro reveal">
             <div>
@@ -1187,6 +698,55 @@ export function GlassMemPage() {
             </p>
           </div>
           <div className="reveal"><LiveDemo/></div>
+          <div style={{ marginTop: 32 }} className="reveal">
+            <Link to="/architecture" className="btn btn--ghost btn--sm">See how routing works →</Link>
+          </div>
+        </div>
+      </section>
+
+      {/* SECTION: CORE PRIMITIVES */}
+      <section className="sec">
+        <div className="w">
+          <div className="feat__intro reveal">
+            <span className="label">Core primitives</span>
+            <h2 className="h2">Controlled state propagation<br/>for agent systems</h2>
+            <p className="body-lg" style={{ maxWidth:'48ch', marginTop:14 }}>
+              Four primitives that solve the most common coordination failures in distributed agent systems.
+            </p>
+          </div>
+          <div className="bento reveal">
+            {[
+              {
+                title: 'Scoped routing',
+                desc: 'State reaches only the agents whose task and scope match. Billing state stays in billing context.',
+                color: '#6ee7b7',
+              },
+              {
+                title: 'Cross-framework coordination',
+                desc: 'LangGraph, CrewAI, Claude Code, MCP tools, and custom agents share operational state through one routing layer.',
+                color: '#a78bfa',
+              },
+              {
+                title: 'Sub-agent inheritance',
+                desc: 'Sub-agents automatically inherit the selected slice of parent-task state at spawn time.',
+                color: '#fb923c',
+              },
+              {
+                title: 'State lineage',
+                desc: 'Every state packet records source, route, recipient, and consumption. No more debugging black boxes.',
+                color: '#7dd3fc',
+              },
+            ].map(cap => (
+              <div key={cap.title} className="bento__card bento__card--simple">
+                <div className="bento__simple-dot" style={{ background: cap.color }}/>
+                <p className="bento__title">{cap.title}</p>
+                <p className="bento__simple-desc">{cap.desc}</p>
+              </div>
+            ))}
+          </div>
+          <div style={{ marginTop: 32 }} className="reveal">
+            <Link to="/architecture" className="btn btn--ghost btn--sm">See the architecture →</Link>
+          </div>
         </div>
       </section>
 
@@ -1199,7 +759,7 @@ export function GlassMemPage() {
               <h2 className="h2">Start with one painful workflow</h2>
             </div>
             <p className="body-lg" style={{ maxWidth: '44ch' }}>
-              You do not need to migrate your whole agent stack. Start with the workflow where state drift already hurts.
+              You do not need to migrate your whole agent stack. Start where state drift already hurts.
             </p>
           </div>
           <div className="workflows__grid reveal">
@@ -1228,108 +788,14 @@ export function GlassMemPage() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* SECTION: CAPABILITIES */}
-      <section id="capabilities" className="sec">
-        <div className="w">
-          <div className="feat__intro reveal">
-            <span className="label">Core primitives</span>
-            <h2 className="h2">Controlled state propagation<br/>for agent systems</h2>
-            <p className="body-lg" style={{ maxWidth:'48ch', marginTop:14 }}>
-              Six primitives that solve real coordination failures in distributed agent systems.
-            </p>
-          </div>
-          <div className="bento reveal">
-            {CAPABILITIES.map(cap => (
-              <div key={cap.title} className="bento__card">
-                <div className="bento__mockup">{cap.mockup}</div>
-                <p className="bento__title">{cap.title}</p>
-                <div className="bento__ba">
-                  <div className="bento__ba-row bento__ba-row--before">
-                    <span className="bento__ba-label">Before GlassMem:</span>
-                    <span className="bento__ba-text">{cap.before}</span>
-                  </div>
-                  <div className="bento__ba-row bento__ba-row--after">
-                    <span className="bento__ba-label bento__ba-label--after">With GlassMem:</span>
-                    <span className="bento__ba-text bento__ba-text--after">{cap.after}</span>
-                  </div>
-                </div>
-              </div>
-            ))}
+          <div style={{ marginTop: 32 }} className="reveal">
+            <Link to="/dx" className="btn btn--ghost btn--sm">See the developer experience →</Link>
           </div>
         </div>
       </section>
 
-      {/* SECTION: ARCHITECTURE */}
-      <section id="architecture" className="sec sec--alt">
-        <div className="w">
-          <div className="fail__intro reveal" style={{ marginBottom: 56 }}>
-            <div>
-              <span className="label">Architecture</span>
-              <h2 className="h2">How GlassMem coordinates<br/>state across frameworks</h2>
-            </div>
-            <p className="body-lg" style={{ maxWidth: '44ch' }}>
-              GlassMem sits between your agents and their state. Every read and write passes through a routing layer that decides what each agent sees.
-            </p>
-          </div>
-          <div className="reveal">
-            <ArchitectureFlow/>
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION: OBSERVABILITY */}
-      <section id="observability" className="sec">
-        <div className="w">
-          <div className="fail__intro reveal">
-            <div>
-              <span className="label">Observability</span>
-              <h2 className="h2">Debug state<br/>like you debug code</h2>
-            </div>
-            <p className="body-lg" style={{ maxWidth:'44ch' }}>
-              GlassMem shows what operational state each agent had when it acted.
-            </p>
-          </div>
-          <div className="obssec reveal">
-            <div className="obssec__panel">
-              <ObsPanel/>
-            </div>
-            <div className="obssec__prose">
-              <p className="body-lg" style={{ marginBottom: 20 }}>
-                Every state packet records source, propagation path, blocked agents, expiry, and the agent that consumed it.
-              </p>
-              <div className="obssec__items">
-                {[
-                  { label: 'Who wrote it',    val: 'source agent + framework + timestamp' },
-                  { label: 'Where it went',   val: 'routed to + blocked from' },
-                  { label: 'Why it routed',   val: 'scope + task relevance reason' },
-                  { label: 'When it expires', val: 'temporal validity window' },
-                  { label: 'Who consumed it', val: 'used by agent + decision context' },
-                ].map(i => (
-                  <div key={i.label} className="obssec__item">
-                    <span className="obssec__item-check">✓</span>
-                    <div>
-                      <span className="obssec__item-label">{i.label}</span>
-                      <span className="obssec__item-val">{i.val}</span>
-                    </div>
-                  </div>
-                ))}
-              </div>
-              <p className="obssec__copy">
-                What state did this agent have when it made that decision?
-              </p>
-              <p className="obssec__integrations">
-                Export traces to Langfuse, Arize, Helicone, or OpenTelemetry-compatible pipelines.
-              </p>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* SECTION: FIELD QUOTES */}
-      <section className="sec sec--alt">
+      {/* SECTION: TESTIMONIALS */}
+      <section className="sec">
         <div className="w">
           <div className="field__intro reveal">
             <span className="label">// from the field</span>
@@ -1353,10 +819,6 @@ export function GlassMemPage() {
                 role: "AI Platform Engineer",
               },
               {
-                quote: "Shared memory made agents noisier. We needed scoped propagation.",
-                role: "Agent Infrastructure Lead",
-              },
-              {
                 quote: "The hard part was not storage. It was deciding what each agent should inherit.",
                 role: "Staff Engineer",
               },
@@ -1372,33 +834,8 @@ export function GlassMemPage() {
               </div>
             ))}
           </div>
-        </div>
-      </section>
-
-      {/* SECTION: BUILT FOR EARLY TEAMS */}
-      <section className="sec">
-        <div className="w">
-          <div className="earlyteam reveal">
-            <span className="label">Adoption</span>
-            <h2 className="h2 earlyteam__h2">Built for early teams, not massive migrations</h2>
-            <p className="body-lg earlyteam__body">
-              GlassMem is designed to be adopted incrementally. Start with one source of operational state, one workflow, and one agent handoff. Expand when coordination becomes painful.
-            </p>
-            <ul className="earlyteam__list">
-              {[
-                'no full rewrite',
-                'no framework lock-in',
-                'works alongside existing memory',
-                'compatible with context.md workflows',
-                'built for multi-agent systems already emerging',
-              ].map(item => (
-                <li key={item} className="earlyteam__item">
-                  <span className="earlyteam__check">✓</span>
-                  {item}
-                </li>
-              ))}
-            </ul>
-            <a href="/signup" className="btn btn--em btn--lg earlyteam__cta">Get started</a>
+          <div style={{ marginTop: 32 }} className="reveal">
+            <Link to="/manifesto" className="btn btn--ghost btn--sm">Read the manifesto →</Link>
           </div>
         </div>
       </section>
@@ -1411,7 +848,7 @@ export function GlassMemPage() {
               <span className="label">Get started</span>
               <h2 className="cta__h2">Coordinate state before<br/>your agents drift apart</h2>
               <p className="body-lg cta__sub">
-                GlassMem gives distributed agents scoped, traceable, temporal operational state across frameworks, tools, and sessions.
+                GlassMem gives distributed agents scoped, traceable, temporal operational state across frameworks, tools, and sessions. Start with one workflow. No full rewrite needed.
               </p>
               {ctaSent ? (
                 <div style={{ display:'inline-flex', alignItems:'center', gap:10, padding:'12px 20px', borderRadius:'var(--r)', background:'rgba(110,231,183,0.08)', border:'1px solid rgba(110,231,183,0.2)', color:'var(--em)', fontFamily:'var(--f-code)', fontSize:13, marginBottom:20 }}>
@@ -1432,56 +869,7 @@ export function GlassMemPage() {
         </div>
       </section>
 
-      {/* INTEGRATIONS */}
-      <div className="integ">
-        <div className="integ__inner">
-          <span className="integ__label">Integrations</span>
-          <div className="logos__track-wrap">
-            <div className="logos__track">
-              {[...LOGOS, ...LOGOS].map(({ img, name, h, style }, i) => (
-                <div key={i} className="logos__item">
-                  <img src={img} alt={name} className="logos__img" height={h} style={style}/>
-                </div>
-              ))}
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {/* PRE-FOOTER */}
-      <div className="prefooter"/>
-
-      {/* FOOTER */}
-      <footer className="footer2">
-        <div className="footer2__inner">
-          <div className="footer2__top">
-            <div className="footer2__left">
-              <a href="/" className="footer2__brand"><Logo size={18}/><span className="footer2__wordmark">GlassMem</span></a>
-              <div className="footer2__divider"/>
-              <div className="footer2__socials">
-                <a href="https://discord.gg/glassmem"   className="footer2__social" aria-label="Discord"><DiscordIcon/></a>
-                <a href="https://github.com/glassmem"   className="footer2__social" aria-label="GitHub"><GitHubIcon/></a>
-                <a href="https://twitter.com/glassmem" className="footer2__social" aria-label="X"><XIcon/></a>
-              </div>
-            </div>
-            <nav className="footer2__nav">
-              {[
-                {l:'Docs',          h:'https://docs.glassmem.ai'},
-                {l:'Architecture',  h:'#architecture'},
-                {l:'Observability', h:'#observability'},
-                {l:'Contact',       h:'/contact'},
-                {l:'Blog',          h:'#'},
-              ].map(({ l,h }) => (
-                <a key={l} href={h} className="footer2__nav-link">{l}</a>
-              ))}
-            </nav>
-          </div>
-          <div className="footer2__bottom">
-            <div className="footer2__status"><span className="footer2__status-dot"/>All systems operational</div>
-            <span className="footer2__copy">© 2026 GlassMem</span>
-          </div>
-        </div>
-      </footer>
+      <SiteFooter />
 
     </div>
   );

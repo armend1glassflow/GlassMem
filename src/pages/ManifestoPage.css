@@ -1,0 +1,49 @@
+/* ============================================================
+   ManifestoPage styles
+   Long-form editorial layout
+   ============================================================ */
+
+.manifesto {
+  max-width: 680px;
+  margin: 0 auto;
+}
+
+.manifesto__section {
+  margin-bottom: 64px;
+}
+.manifesto__section:last-child {
+  margin-bottom: 0;
+}
+
+.manifesto__h2 {
+  font-family: var(--f-disp);
+  font-size: clamp(20px, 2.4vw, 28px);
+  font-weight: 700;
+  letter-spacing: -0.03em;
+  color: var(--tx);
+  line-height: 1.15;
+  margin-bottom: 22px;
+}
+
+.manifesto__p {
+  font-size: 17px;
+  line-height: 1.8;
+  color: var(--tx-2);
+  margin-bottom: 18px;
+}
+.manifesto__p:last-child {
+  margin-bottom: 0;
+}
+
+.manifesto__keyline {
+  text-align: center;
+  font-family: var(--f-disp);
+  font-size: clamp(24px, 3.2vw, 42px);
+  font-weight: 800;
+  letter-spacing: -0.04em;
+  color: var(--em);
+  line-height: 1.1;
+  padding: 64px 0;
+  margin: 48px 0 0;
+  border-top: 1px solid rgba(110,231,183,0.15);
+}

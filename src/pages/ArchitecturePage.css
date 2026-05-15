@@ -1,0 +1,413 @@
+/* ============================================================
+   ArchitecturePage styles
+   ============================================================ */
+
+/* ── Routing engine diagram ── */
+.arch-routing {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  max-width: 760px;
+  margin: 0 auto;
+}
+
+.arch-routing__input {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 14px 24px;
+  background: var(--bg-2);
+  border: 1px solid var(--bd-2);
+  border-radius: var(--r-lg);
+  width: 100%;
+}
+
+.arch-routing__text {
+  font-family: var(--f-disp);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--tx);
+}
+
+.arch-routing__arrow {
+  font-size: 20px;
+  color: var(--em);
+  padding: 8px 0;
+  opacity: 0.6;
+  align-self: center;
+}
+
+.arch-routing__engine {
+  width: 100%;
+  background: rgba(110,231,183,0.04);
+  border: 1px solid rgba(110,231,183,0.18);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+
+.arch-routing__engine-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 20px;
+  border-bottom: 1px solid rgba(110,231,183,0.12);
+  background: rgba(110,231,183,0.04);
+}
+
+.arch-routing__engine-name {
+  font-family: var(--f-disp);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--em);
+  letter-spacing: -0.01em;
+}
+
+.arch-routing__dims {
+  padding: 8px 0;
+}
+
+.arch-routing__dim-row {
+  display: grid;
+  grid-template-columns: 120px 1fr;
+  gap: 20px;
+  padding: 10px 20px;
+  border-bottom: 1px solid rgba(255,255,255,0.04);
+  align-items: center;
+}
+.arch-routing__dim-row:last-child { border-bottom: none; }
+
+.arch-routing__dim-name {
+  font-family: var(--f-code);
+  font-size: 12px;
+  color: var(--em);
+  letter-spacing: 0.04em;
+}
+
+.arch-routing__dim-desc {
+  font-size: 13px;
+  color: var(--tx-2);
+  line-height: 1.5;
+}
+
+.arch-routing__outputs {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 10px;
+  width: 100%;
+}
+
+@media (max-width: 700px) {
+  .arch-routing__outputs { grid-template-columns: 1fr 1fr; }
+  .arch-routing__dim-row { grid-template-columns: 1fr; gap: 4px; }
+}
+@media (max-width: 460px) {
+  .arch-routing__outputs { grid-template-columns: 1fr; }
+}
+
+.arch-routing__output {
+  padding: 16px 18px;
+  border: 1px solid;
+  border-radius: var(--r-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.arch-routing__output--green  { background: rgba(110,231,183,0.05);  border-color: rgba(110,231,183,0.18); }
+.arch-routing__output--purple { background: rgba(167,139,250,0.05);  border-color: rgba(167,139,250,0.18); }
+.arch-routing__output--red    { background: rgba(239,68,68,0.04);    border-color: rgba(239,68,68,0.15);   }
+.arch-routing__output--gray   { background: rgba(255,255,255,0.02);  border-color: rgba(255,255,255,0.08); }
+
+.arch-routing__output-desc {
+  font-family: var(--f-code);
+  font-size: 11px;
+  color: var(--tx-3);
+  line-height: 1.4;
+}
+
+.arch-routing__badge {
+  font-family: var(--f-code);
+  font-size: 11px;
+  letter-spacing: 0.04em;
+  padding: 3px 9px;
+  border-radius: 5px;
+  border: 1px solid;
+  display: inline-block;
+  align-self: flex-start;
+}
+.arch-routing__badge--input  { color: var(--tx-2);  border-color: var(--bd-2);                background: var(--bg-3); }
+.arch-routing__badge--green  { color: #6ee7b7;      border-color: rgba(110,231,183,0.3);       background: rgba(110,231,183,0.08); }
+.arch-routing__badge--purple { color: #a78bfa;      border-color: rgba(167,139,250,0.3);       background: rgba(167,139,250,0.08); }
+.arch-routing__badge--red    { color: #ef4444;      border-color: rgba(239,68,68,0.3);         background: rgba(239,68,68,0.06); }
+.arch-routing__badge--gray   { color: var(--tx-3);  border-color: var(--bd);                   background: rgba(255,255,255,0.02); }
+
+/* ── Deployment cards ── */
+.arch-deploy__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+@media (max-width: 700px) {
+  .arch-deploy__grid { grid-template-columns: 1fr; }
+}
+
+.arch-deploy__card {
+  background: var(--bg-2);
+  border: 1px solid var(--bd-2);
+  border-radius: var(--r-lg);
+  padding: 24px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.arch-deploy__badge {
+  font-family: var(--f-code);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  border: 1px solid;
+  padding: 3px 9px;
+  border-radius: 4px;
+  display: inline-block;
+  align-self: flex-start;
+}
+
+.arch-deploy__title {
+  font-family: var(--f-disp);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--tx);
+  letter-spacing: -0.02em;
+}
+
+.arch-deploy__desc {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--tx-2);
+}
+
+/* ── Sub-agent inheritance ── */
+.arch-inherit {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0;
+  max-width: 600px;
+}
+
+.arch-inherit__parent,
+.arch-inherit__child {
+  width: 100%;
+}
+
+.arch-inherit__role {
+  display: block;
+  font-family: var(--f-code);
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--tx-3);
+  margin-bottom: 10px;
+}
+
+.arch-inherit__bubble {
+  background: var(--bg-2);
+  border: 1px solid var(--bd-2);
+  border-radius: var(--r-lg);
+  padding: 20px 22px;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+.arch-inherit__bubble--child {
+  border-color: rgba(110,231,183,0.2);
+  background: rgba(110,231,183,0.03);
+}
+
+.arch-inherit__name {
+  font-family: var(--f-disp);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--tx);
+  letter-spacing: -0.01em;
+}
+
+.arch-inherit__state-list {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.arch-inherit__state-item {
+  font-family: var(--f-code);
+  font-size: 12px;
+  color: var(--tx-2);
+  padding: 5px 10px;
+  background: var(--bg-3);
+  border: 1px solid var(--bd);
+  border-radius: 5px;
+  display: block;
+}
+.arch-inherit__state-item--yes { color: var(--em); background: rgba(110,231,183,0.06); border-color: rgba(110,231,183,0.18); }
+.arch-inherit__state-item--no  { color: var(--tx-3); text-decoration: line-through; text-decoration-color: rgba(255,255,255,0.15); }
+
+.arch-inherit__connector {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 14px 0;
+}
+
+.arch-inherit__line {
+  width: 1px;
+  height: 20px;
+  background: linear-gradient(to bottom, rgba(110,231,183,0.3), rgba(110,231,183,0.6));
+}
+
+.arch-inherit__connector-label {
+  font-family: var(--f-code);
+  font-size: 10px;
+  color: var(--em);
+  opacity: 0.8;
+  letter-spacing: 0.04em;
+}
+
+.arch-inherit__arrow {
+  font-size: 18px;
+  color: var(--em);
+  opacity: 0.6;
+}
+
+.arch-inherit__received {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.arch-inherit__section {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+}
+
+.arch-inherit__section-label {
+  font-family: var(--f-code);
+  font-size: 10px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin-bottom: 3px;
+  display: block;
+}
+.arch-inherit__section-label--yes { color: var(--em); }
+.arch-inherit__section-label--no  { color: var(--tx-3); }
+
+/* ── Temporal cards ── */
+.arch-temporal__grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 14px;
+}
+@media (max-width: 640px) {
+  .arch-temporal__grid { grid-template-columns: 1fr; }
+}
+
+.arch-temporal__card {
+  background: var(--bg-2);
+  border: 1px solid var(--bd-2);
+  border-radius: var(--r-lg);
+  padding: 22px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.arch-temporal__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.arch-temporal__title {
+  font-family: var(--f-disp);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--tx);
+  letter-spacing: -0.01em;
+}
+
+.arch-temporal__desc {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--tx-2);
+}
+
+/* ── Framework grid ── */
+.arch-fw__grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin-bottom: 32px;
+}
+
+.arch-fw__chip {
+  font-family: var(--f-code);
+  font-size: 13px;
+  color: var(--tx-2);
+  background: var(--bg-2);
+  border: 1px solid var(--bd-2);
+  border-radius: 6px;
+  padding: 8px 16px;
+}
+
+.arch-fw__connections {
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  border: 1px solid var(--bd-2);
+  border-radius: var(--r-lg);
+  overflow: hidden;
+}
+
+.arch-fw__connection {
+  display: grid;
+  grid-template-columns: 80px 1fr;
+  gap: 24px;
+  padding: 16px 24px;
+  border-bottom: 1px solid var(--bd);
+  align-items: center;
+}
+.arch-fw__connection:last-child { border-bottom: none; }
+
+.arch-fw__connection-label {
+  font-family: var(--f-code);
+  font-size: 12px;
+  color: var(--em);
+  font-weight: 500;
+}
+
+.arch-fw__connection-desc {
+  font-size: 14px;
+  color: var(--tx-2);
+  line-height: 1.5;
+}
+
+/* ── Observability integrations ── */
+.arch-obs {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-top: 32px;
+}
+
+.arch-obs__chip {
+  font-family: var(--f-code);
+  font-size: 13px;
+  color: var(--tx-2);
+  background: var(--bg-2);
+  border: 1px solid var(--bd-2);
+  border-radius: 6px;
+  padding: 10px 20px;
+}

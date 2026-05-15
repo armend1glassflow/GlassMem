@@ -1,0 +1,84 @@
+/* ============================================================
+   ObservabilityPage styles
+   ============================================================ */
+
+/* ── Tracing capabilities grid ── */
+.obs-trace__grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 14px;
+}
+@media (max-width: 900px) {
+  .obs-trace__grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 560px) {
+  .obs-trace__grid { grid-template-columns: 1fr; }
+}
+
+.obs-trace__card {
+  background: var(--bg-2);
+  border: 1px solid var(--bd-2);
+  border-radius: var(--r-lg);
+  padding: 22px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.obs-trace__dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.obs-trace__title {
+  font-family: var(--f-disp);
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--tx);
+  letter-spacing: -0.01em;
+}
+
+.obs-trace__desc {
+  font-size: 14px;
+  line-height: 1.65;
+  color: var(--tx-2);
+}
+
+/* ── Export integrations ── */
+.obs-export__grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 14px;
+}
+@media (max-width: 900px) {
+  .obs-export__grid { grid-template-columns: repeat(2, 1fr); }
+}
+@media (max-width: 500px) {
+  .obs-export__grid { grid-template-columns: 1fr; }
+}
+
+.obs-export__card {
+  background: var(--bg-2);
+  border: 1px solid var(--bd-2);
+  border-radius: var(--r-lg);
+  padding: 22px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.obs-export__name {
+  font-family: var(--f-disp);
+  font-size: 16px;
+  font-weight: 600;
+  color: var(--tx);
+  letter-spacing: -0.02em;
+}
+
+.obs-export__desc {
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--tx-2);
+}
