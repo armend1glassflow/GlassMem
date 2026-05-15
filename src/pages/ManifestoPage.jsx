@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './GlassMemPage.css';
 import './ManifestoPage.css';
-import { SiteNav, SiteFooter } from './GlassMemPage';
+import { SiteNav, SiteFooter, RoadmapModal } from './GlassMemPage';
 
 function useReveal() {
   useEffect(() => {
@@ -17,8 +17,9 @@ function useReveal() {
 
 export function ManifestoPage() {
   useReveal();
-  const [scrolled, setScrolled] = useState(false);
-  const [mobOpen,  setMobOpen]  = useState(false);
+  const [scrolled,    setScrolled]    = useState(false);
+  const [mobOpen,     setMobOpen]     = useState(false);
+  const [roadmapOpen, setRoadmapOpen] = useState(false);
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 8);
@@ -150,13 +151,15 @@ export function ManifestoPage() {
             <h2 className="cta__h2">Glass0 is the coordination layer<br/>your agent systems need</h2>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 28, flexWrap: 'wrap' }}>
               <Link to="/architecture" className="btn btn--ghost btn--lg">See how Glass0 works</Link>
-              <Link to="/signup" className="btn btn--em btn--lg">Get started</Link>
+              <button className="btn btn--em btn--lg" onClick={() => { setRoadmapOpen(true); window.fathom?.trackEvent('shape_roadmap_thesis'); }}>Shape Roadmap</button>
             </div>
           </div>
         </div>
       </section>
 
       <SiteFooter />
+
+      <RoadmapModal open={roadmapOpen} onClose={() => setRoadmapOpen(false)} />
     </div>
   );
 }

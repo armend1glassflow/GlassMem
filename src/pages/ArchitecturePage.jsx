@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './GlassMemPage.css';
 import './ArchitecturePage.css';
-import { SiteNav, SiteFooter } from './GlassMemPage';
+import { SiteNav, SiteFooter, RoadmapModal } from './GlassMemPage';
 
 function useReveal() {
   useEffect(() => {
@@ -33,8 +33,9 @@ const Logo = ({ size = 26 }) => (
 
 export function ArchitecturePage() {
   useReveal();
-  const [scrolled, setScrolled] = useState(false);
-  const [mobOpen,  setMobOpen]  = useState(false);
+  const [scrolled,    setScrolled]    = useState(false);
+  const [mobOpen,     setMobOpen]     = useState(false);
+  const [roadmapOpen, setRoadmapOpen] = useState(false);
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 8);
@@ -332,7 +333,7 @@ export function ArchitecturePage() {
             <span className="label">Get started</span>
             <h2 className="cta__h2">Build with a control plane<br/>for agent state</h2>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 28 }}>
-              <Link to="/signup" className="btn btn--em btn--lg">Get started</Link>
+              <button className="btn btn--em btn--lg" onClick={() => { setRoadmapOpen(true); window.fathom?.trackEvent('shape_roadmap_architecture'); }}>Shape Roadmap</button>
               <Link to="/dx" className="btn btn--ghost btn--lg">See the DX</Link>
             </div>
           </div>
@@ -340,6 +341,8 @@ export function ArchitecturePage() {
       </section>
 
       <SiteFooter />
+
+      <RoadmapModal open={roadmapOpen} onClose={() => setRoadmapOpen(false)} />
     </div>
   );
 }

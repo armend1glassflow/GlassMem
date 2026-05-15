@@ -1,6 +1,6 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 import ReactDOM from 'react-dom/client';
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { BrowserRouter, Routes, Route, Navigate, useLocation } from 'react-router-dom';
 import './index.css';
 import { GlassMemPage } from './pages/GlassMemPage';
 import { ContactPage }  from './pages/ContactPage';
@@ -11,6 +11,12 @@ import { ArchitecturePage } from './pages/ArchitecturePage';
 import { ManifestoPage }    from './pages/ManifestoPage';
 import { ObservabilityPage } from './pages/ObservabilityPage';
 
+function ScrollToTop() {
+  const { pathname } = useLocation();
+  useEffect(() => { window.scrollTo(0, 0); }, [pathname]);
+  return null;
+}
+
 function ProtectedApp() {
   const email = localStorage.getItem('gm_email');
   return email ? <AppPage /> : <Navigate to="/signup" replace />;
@@ -20,6 +26,7 @@ const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(
   <React.StrictMode>
     <BrowserRouter>
+      <ScrollToTop />
       <Routes>
         <Route path="/"              element={<GlassMemPage />} />
         <Route path="/dx"            element={<DXPage />} />

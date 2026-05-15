@@ -375,7 +375,7 @@ const LiveDemo = () => {
     <div className="demo">
       <div className="demo__tabs">
         {DEMO_SCENARIOS.map((s, i) => (
-          <button key={s.id} className={`demo__tab${i === scIdx ? ' demo__tab--on' : ''}`} onClick={() => setScIdx(i)}>
+          <button key={s.id} className={`demo__tab${i === scIdx ? ' demo__tab--on' : ''}`} onClick={() => { setScIdx(i); window.fathom?.trackEvent('demo_tab_' + s.id); }}>
             <span className="demo__tab-dot" style={{ background: s.color }}/>
             {s.label}
           </button>
@@ -450,13 +450,103 @@ const LiveDemo = () => {
 const LOGOS = [
   { img: '/logos/cursor.png',    name: 'Cursor',    h: 22, style: { filter: 'brightness(0) invert(1)', opacity: 0.65 } },
   { img: '/logos/claude.svg',    name: 'Claude',    h: 22, style: { opacity: 0.8  } },
-  { img: '/logos/copilot.png',   name: 'Copilot',   h: 24, style: { opacity: 0.65 } },
-  { img: '/logos/windsurf.png',  name: 'Windsurf',  h: 22, style: { opacity: 0.65 } },
+  { img: '/logos/windsurf.png',  name: 'Windsurf',  h: 22, style: { filter: 'brightness(0) invert(1)', opacity: 0.65 } },
   { img: '/logos/langchain.webp',name: 'LangChain', h: 28, style: { filter: 'brightness(0) invert(1)', opacity: 0.65 } },
   { img: '/logos/openai.svg',    name: 'OpenAI',    h: 22, style: { filter: 'brightness(0) invert(1)', opacity: 0.6  } },
   { img: '/logos/crewai.png',    name: 'CrewAI',    h: 22, style: { opacity: 0.65 } },
   { img: '/logos/arcade.png',    name: 'Arcade',    h: 22, style: { opacity: 0.65 } },
 ];
+
+/* ── Roadmap modal (shared) ── */
+export function RoadmapModal({ open, onClose }) {
+  const [roadmapSent, setRoadmapSent] = useState(false);
+  const [roadmapData, setRoadmapData] = useState({ email: '', stack: '', pain: '', deepdive: false });
+
+  useEffect(() => {
+    if (!open) return;
+    const handler = (e) => { if (e.key === 'Escape') onClose(); };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [open, onClose]);
+
+  if (!open) return null;
+
+  return (
+    <div className="rm-overlay" onClick={e => { if (e.target === e.currentTarget) onClose(); }}>
+      <div className="rm-modal">
+        <button className="rm-close" onClick={onClose} aria-label="Close">&#x2715;</button>
+        {roadmapSent ? (
+          <div className="rm-success">
+            <span className="rm-success__icon">&#x2713;</span>
+            <h3 className="rm-success__title">You're on the list.</h3>
+            <p className="rm-success__sub">We'll reach out with early access details.</p>
+          </div>
+        ) : (
+          <>
+            <div className="rm-modal__header">
+              <span className="label">// shape the roadmap</span>
+              <h2 className="rm-modal__title">Help us build what you actually need</h2>
+            </div>
+            <form className="rm-form" onSubmit={async e => {
+              e.preventDefault();
+              try {
+                await fetch('/api/roadmap', {
+                  method: 'POST',
+                  headers: { 'Content-Type': 'application/json' },
+                  body: JSON.stringify(roadmapData),
+                });
+              } catch(_) {}
+              window.fathom?.trackEvent('roadmap_submitted');
+              setRoadmapSent(true);
+            }}>
+              <div className="rm-field">
+                <label className="rm-label">Work Email <span className="rm-req">*</span></label>
+                <input
+                  className="rm-input"
+                  type="email"
+                  required
+                  placeholder="you@company.com"
+                  value={roadmapData.email}
+                  onChange={e => setRoadmapData(d => ({ ...d, email: e.target.value }))}
+                />
+              </div>
+              <div className="rm-field">
+                <label className="rm-label">Current Stack</label>
+                <input
+                  className="rm-input"
+                  type="text"
+                  placeholder='e.g. "LangGraph + Groq", "Custom Autogen"'
+                  value={roadmapData.stack}
+                  onChange={e => setRoadmapData(d => ({ ...d, stack: e.target.value }))}
+                />
+              </div>
+              <div className="rm-field">
+                <label className="rm-label">The Pain Point</label>
+                <textarea
+                  className="rm-input rm-input--ta"
+                  rows={3}
+                  placeholder="What's the biggest memory leak in your current agent loop?"
+                  value={roadmapData.pain}
+                  onChange={e => setRoadmapData(d => ({ ...d, pain: e.target.value }))}
+                />
+              </div>
+              <label className="rm-check">
+                <input
+                  type="checkbox"
+                  className="rm-check__box"
+                  checked={roadmapData.deepdive}
+                  onChange={e => setRoadmapData(d => ({ ...d, deepdive: e.target.checked }))}
+                />
+                <span className="rm-check__label">I'm open to a 15-minute technical deep-dive in exchange for lifetime free access.</span>
+              </label>
+              <button type="submit" className="rm-submit">Send &#x2192;</button>
+            </form>
+          </>
+        )}
+      </div>
+    </div>
+  );
+}
 
 /* ── Hooks ── */
 function useReveal() {
@@ -554,21 +644,12 @@ export function GlassMemPage() {
   const [scrolled, setScrolled] = useState(false);
   const [mobOpen,  setMobOpen]  = useState(false);
   const [roadmapOpen, setRoadmapOpen] = useState(false);
-  const [roadmapSent, setRoadmapSent] = useState(false);
-  const [roadmapData, setRoadmapData] = useState({ email: '', stack: '', pain: '', deepdive: false });
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 8);
     window.addEventListener('scroll', fn, { passive: true });
     return () => window.removeEventListener('scroll', fn);
   }, []);
-
-  useEffect(() => {
-    if (!roadmapOpen) return;
-    const handler = (e) => { if (e.key === 'Escape') setRoadmapOpen(false); };
-    window.addEventListener('keydown', handler);
-    return () => window.removeEventListener('keydown', handler);
-  }, [roadmapOpen]);
 
   return (
     <div>
@@ -601,8 +682,8 @@ export function GlassMemPage() {
                 Scoped. Traceable. Temporal. Cross-framework.
               </div>
               <div className="hero__ctas enter-4">
-                <button className="btn btn--em btn--lg" onClick={() => setRoadmapOpen(true)}>Shape Roadmap</button>
-                <Link to="/thesis" className="btn btn--ghost btn--lg">Read the Thesis</Link>
+                <button className="btn btn--em btn--lg" onClick={() => { setRoadmapOpen(true); window.fathom?.trackEvent('shape_roadmap_hero'); }}>Shape Roadmap</button>
+                <Link to="/thesis" className="btn btn--ghost btn--lg" onClick={() => window.fathom?.trackEvent('read_thesis_hero')}>Read the Thesis</Link>
               </div>
             </div>
             <div className="hero__viz-col enter-4">
@@ -972,7 +1053,7 @@ export function GlassMemPage() {
               </p>
               <button
                 className="btn btn--em btn--lg"
-                onClick={() => setRoadmapOpen(true)}
+                onClick={() => { setRoadmapOpen(true); window.fathom?.trackEvent('shape_roadmap_cta'); }}
               >
                 Shape Roadmap
               </button>
@@ -983,80 +1064,7 @@ export function GlassMemPage() {
 
       <SiteFooter />
 
-      {roadmapOpen && (
-        <div className="rm-overlay" onClick={e => { if (e.target === e.currentTarget) setRoadmapOpen(false); }}>
-          <div className="rm-modal">
-            <button className="rm-close" onClick={() => setRoadmapOpen(false)} aria-label="Close">&#x2715;</button>
-            {roadmapSent ? (
-              <div className="rm-success">
-                <span className="rm-success__icon">&#x2713;</span>
-                <h3 className="rm-success__title">You're on the list.</h3>
-                <p className="rm-success__sub">We'll reach out with early access details.</p>
-              </div>
-            ) : (
-              <>
-                <div className="rm-modal__header">
-                  <span className="label">// shape the roadmap</span>
-                  <h2 className="rm-modal__title">Help us build what you actually need</h2>
-                </div>
-                <form className="rm-form" onSubmit={async e => {
-                  e.preventDefault();
-                  try {
-                    await fetch('/api/roadmap', {
-                      method: 'POST',
-                      headers: { 'Content-Type': 'application/json' },
-                      body: JSON.stringify(roadmapData),
-                    });
-                  } catch(_) {}
-                  setRoadmapSent(true);
-                }}>
-                  <div className="rm-field">
-                    <label className="rm-label">Work Email <span className="rm-req">*</span></label>
-                    <input
-                      className="rm-input"
-                      type="email"
-                      required
-                      placeholder="you@company.com"
-                      value={roadmapData.email}
-                      onChange={e => setRoadmapData(d => ({ ...d, email: e.target.value }))}
-                    />
-                  </div>
-                  <div className="rm-field">
-                    <label className="rm-label">Current Stack</label>
-                    <input
-                      className="rm-input"
-                      type="text"
-                      placeholder='e.g. "LangGraph + Groq", "Custom Autogen"'
-                      value={roadmapData.stack}
-                      onChange={e => setRoadmapData(d => ({ ...d, stack: e.target.value }))}
-                    />
-                  </div>
-                  <div className="rm-field">
-                    <label className="rm-label">The Pain Point</label>
-                    <textarea
-                      className="rm-input rm-input--ta"
-                      rows={3}
-                      placeholder="What's the biggest memory leak in your current agent loop?"
-                      value={roadmapData.pain}
-                      onChange={e => setRoadmapData(d => ({ ...d, pain: e.target.value }))}
-                    />
-                  </div>
-                  <label className="rm-check">
-                    <input
-                      type="checkbox"
-                      className="rm-check__box"
-                      checked={roadmapData.deepdive}
-                      onChange={e => setRoadmapData(d => ({ ...d, deepdive: e.target.checked }))}
-                    />
-                    <span className="rm-check__label">I'm open to a 15-minute technical deep-dive in exchange for lifetime free access.</span>
-                  </label>
-                  <button type="submit" className="rm-submit">Send &#x2192;</button>
-                </form>
-              </>
-            )}
-          </div>
-        </div>
-      )}
+      <RoadmapModal open={roadmapOpen} onClose={() => setRoadmapOpen(false)} />
 
     </div>
   );

@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import './GlassMemPage.css';
 import './DXPage.css';
-import { SiteNav, SiteFooter } from './GlassMemPage';
+import { SiteNav, SiteFooter, RoadmapModal } from './GlassMemPage';
 
 function useReveal() {
   useEffect(() => {
@@ -143,9 +143,10 @@ function CodeBlock({ children, label }) {
 
 export function DXPage() {
   useReveal();
-  const [scrolled,  setScrolled]  = useState(false);
-  const [mobOpen,   setMobOpen]   = useState(false);
-  const [activeTab, setActiveTab] = useState(0);
+  const [scrolled,     setScrolled]     = useState(false);
+  const [mobOpen,      setMobOpen]      = useState(false);
+  const [activeTab,    setActiveTab]    = useState(0);
+  const [roadmapOpen,  setRoadmapOpen]  = useState(false);
 
   useEffect(() => {
     const fn = () => setScrolled(window.scrollY > 8);
@@ -340,7 +341,7 @@ export function DXPage() {
                 <button
                   key={fw.id}
                   className={`dx-tab${activeTab === i ? ' dx-tab--on' : ''}`}
-                  onClick={() => setActiveTab(i)}
+                  onClick={() => { setActiveTab(i); window.fathom?.trackEvent('dx_framework_' + fw.id); }}
                 >
                   <span className="dx-tab__dot" style={{ background: fw.color }}/>
                   {fw.label}
@@ -418,7 +419,7 @@ export function DXPage() {
             <span className="label">Ready to start</span>
             <h2 className="cta__h2">One workflow.<br/>Start today.</h2>
             <div style={{ display: 'flex', gap: 12, justifyContent: 'center', marginTop: 28 }}>
-              <Link to="/signup" className="btn btn--em btn--lg">Get started</Link>
+              <button className="btn btn--em btn--lg" onClick={() => { setRoadmapOpen(true); window.fathom?.trackEvent('shape_roadmap_dx'); }}>Shape Roadmap</button>
               <Link to="/architecture" className="btn btn--ghost btn--lg">See the architecture</Link>
             </div>
           </div>
@@ -426,6 +427,8 @@ export function DXPage() {
       </section>
 
       <SiteFooter />
+
+      <RoadmapModal open={roadmapOpen} onClose={() => setRoadmapOpen(false)} />
     </div>
   );
 }

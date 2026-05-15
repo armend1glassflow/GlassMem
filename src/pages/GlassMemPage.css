@@ -8415,3 +8415,45 @@ img { display: block; max-width: 100%; }
 }
 .rm-success__sub { font-size: 14px; color: var(--tx-2); }
 
+/* ══════════════════════════════════════════════════
+   MOBILE HERO VIZ — keep text readable at small width
+══════════════════════════════════════════════════ */
+@media (max-width: 600px) {
+  /* Reduce total height so it fits without scrolling inside the viz */
+  .cfroute__body { height: 580px !important; padding: 12px 10px !important; }
+
+  /* Chrome title — truncate gracefully */
+  .cfroute__chrome-title {
+    font-size: 9px !important;
+    overflow: hidden !important;
+    text-overflow: ellipsis !important;
+    white-space: nowrap !important;
+    max-width: 160px !important;
+  }
+
+  /* Source card — make text fit */
+  .cfroute__source-card { height: 96px !important; max-height: 96px !important; padding: 8px 10px !important; }
+  .cfroute__source-agent { font-size: 12px !important; }
+  .cfroute__source-text { font-size: 11px !important; line-height: 1.4 !important; }
+  .cfroute__source-scope { font-size: 9px !important; }
+  .cfroute__source-verb { font-size: 9px !important; }
+
+  /* Agent rows */
+  .cfroute__agents { height: 204px !important; max-height: 204px !important; }
+  .cfroute__agent { height: 48px !important; max-height: 48px !important; }
+  .cfroute__agent-name { font-size: 11px !important; }
+  .cfroute__route-badge { font-size: 10px !important; padding: 2px 7px !important; }
+
+  /* Hub */
+  .cfroute__hub-name { font-size: 11px !important; }
+  .cfroute__hub-sub { font-size: 9px !important; }
+
+  /* Behavior section */
+  .cfroute__behavior { height: 90px !important; max-height: 90px !important; margin-top: 8px !important; }
+  .cfroute__behavior-text { font-size: 10px !important; line-height: 1.4 !important; }
+  .cfroute__behavior-label { font-size: 9px !important; padding: 2px 7px !important; }
+
+  /* Footer */
+  .cfroute__footer { height: 32px !important; max-height: 32px !important; font-size: 10px !important; }
+}
+
