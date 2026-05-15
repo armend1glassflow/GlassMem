@@ -560,7 +560,7 @@ function useReveal() {
 }
 
 /* ── Shared Nav component ── */
-export function SiteNav({ scrolled, mobOpen, setMobOpen }) {
+export function SiteNav({ scrolled, mobOpen, setMobOpen, onRoadmap }) {
   return (
     <nav className="nav" style={{ borderBottomColor: scrolled ? 'rgba(255,255,255,0.1)' : 'rgba(255,255,255,0.06)' }}>
       <div className="nav__row">
@@ -574,7 +574,7 @@ export function SiteNav({ scrolled, mobOpen, setMobOpen }) {
           <Link to="/observability" className="nav__link">Observability</Link>
         </div>
         <div className="nav__right">
-          <Link to="/signup" className="btn btn--em btn--sm">Get started</Link>
+          <button className="btn btn--em btn--sm" onClick={() => { onRoadmap?.(); window.fathom?.trackEvent('talk_roadmap_nav'); }}>Talk Roadmap</button>
         </div>
         <button className="nav__mob-toggle" onClick={() => setMobOpen(o => !o)} aria-label="Menu">{mobOpen ? '✕' : '☰'}</button>
       </div>
@@ -585,6 +585,7 @@ export function SiteNav({ scrolled, mobOpen, setMobOpen }) {
         <Link to="/architecture"  className="nav__mob-link" onClick={() => setMobOpen(false)}>Architecture</Link>
         <Link to="/thesis"        className="nav__mob-link" onClick={() => setMobOpen(false)}>Thesis</Link>
         <Link to="/observability" className="nav__mob-link" onClick={() => setMobOpen(false)}>Observability</Link>
+        <button className="nav__mob-link" style={{ textAlign:'left', background:'none', border:'none', cursor:'pointer', color:'var(--tx-2)', padding:'12px 24px', fontSize:'15px', width:'100%' }} onClick={() => { setMobOpen(false); onRoadmap?.(); window.fathom?.trackEvent('talk_roadmap_nav_mob'); }}>Talk Roadmap</button>
       </div>
     </nav>
   );
@@ -653,7 +654,7 @@ export function GlassMemPage() {
   return (
     <div>
 
-      <SiteNav scrolled={scrolled} mobOpen={mobOpen} setMobOpen={setMobOpen} />
+      <SiteNav scrolled={scrolled} mobOpen={mobOpen} setMobOpen={setMobOpen} onRoadmap={() => setRoadmapOpen(true)} />
 
       {/* HERO */}
       <section className="hero">

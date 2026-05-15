@@ -45,7 +45,7 @@ export function ArchitecturePage() {
 
   return (
     <div>
-      <SiteNav scrolled={scrolled} mobOpen={mobOpen} setMobOpen={setMobOpen} />
+      <SiteNav scrolled={scrolled} mobOpen={mobOpen} setMobOpen={setMobOpen} onRoadmap={() => setRoadmapOpen(true)} />
 
       {/* HERO */}
       <section className="hero" style={{ padding: '80px 0 60px' }}>
